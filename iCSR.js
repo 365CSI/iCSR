@@ -48,7 +48,6 @@ function GetAncestor(a, b) { //overloaded by SharePoint core.js implementation, 
     return a;
 }
 
-/* iCSR DEFINITON - start definition */
 
 var iCSR = iCSR || {};
 iCSR._ver = '0.0.3';
@@ -77,6 +76,7 @@ iCSR.initialize = function () {
  * @returns {boolean}
  */
 iCSR.initTemplate = function (iCSRnamespace, modulename, description) {
+    if (iCSR.tracelevel>3) console.log(iCSRnamespace, modulename, description);
     return true;
 };
 
@@ -121,8 +121,8 @@ iCSR.info = function () { //list all iCSR doable functions and methods
 };
 iCSR.trace = function (p1, p2, p3, p4, p5, p6, p7, p8) {
     var tracelevelcolors = ['', '', '', ''];
-    var tracelevelcolor = tracelevelcolors[typeof p1==='number' && p1<4iCSR.tracelevel || 0];
-    if (iCSR.cfg.tracing && console) console.info('%c iCSR ', iCSR.cfg.tracecolor+tracelevelcolor, p1 || '', p2 || '', p3 || '', p4 || '', p5 || '', p6 || '', p7 || '', p8 || '');
+    var tracelevelcolor = tracelevelcolors[0];//TODO: add selective coloring of console statements
+    if (iCSR.cfg.tracing && console) console.info('%c iCSR ', iCSR.cfg.tracecolor + tracelevelcolor, p1 || '', p2 || '', p3 || '', p4 || '', p5 || '', p6 || '', p7 || '', p8 || '');
 };
 iCSR.tracecolor = function (p1, p2, p3, p4, p5, p6, p7, p8) {
     if (iCSR.cfg.tracing && console) console.info('%ciCSR ' + p1, 'background:lightcoral;color:black;', p2 || '', p3 || '', p4 || '', p5 || '', p6 || '', p7 || '', p8 || '');
@@ -201,8 +201,6 @@ iCSR.fn.replacetokens = function (value, tokens) { //replace 'Hello [location]!'
     }
 };
 //endregion
-
-/* iCSR DEFINITON - end definition */
 
 //region iCSR.fn - SharePoint related code                                                                  ### iCSR.fn
 
@@ -306,6 +304,52 @@ iCSR.fn.getconfig = function (ctx, initialconfig, bindconfig) {
 };
 
 //endregion
+
+//region iCSR.CSS - CSS operations                                                              ###     iCSR.CSS
+/*
+
+ resources:
+ http://www.cssscript.com/animated-progress-indicators-with-vanilla-javascript-and-css/
+ */
+iCSR.CSS = {}; //CSS storage and actions
+iCSR.CSS.sheets = {};
+/**
+ *
+ * @param id
+ * @returns {Element}
+ */
+iCSR.CSS.addstylesheet = function (id) {
+    var _styleEl = document.createElement("STYLE");
+    _styleEl.id = id; // _styleEl.setAttribute("media", "only screen and (max-width : 1024px)")
+    _styleEl.appendChild(document.createTextNode("")); // WebKit hack :(
+    document.head.appendChild(_styleEl);
+    if (iCSR.tracelevel > 1) iCSR.tracecolor('added stylesheet', _styleEl.id);
+    return _styleEl;
+};
+/**
+ *
+ * @param id
+ * @param rules
+ * @param reload
+ * @param unique
+ */
+iCSR.CSS.addStylesheetWithRules = function (id, rules, reload, unique) {
+    try {
+        var _styleEl = document.getElementById(id); //get stylesheet with id
+        if (reload || unique || !_styleEl) { //attach style only once
+            if (reload && _styleEl) _styleEl.parentNode.removeChild(_styleEl);
+            _styleEl = iCSR.CSS.addstylesheet(id);
+        }
+        rules.forEach(function (rule) {
+            if (iCSR.tracelevel > 2) iCSR.trace('adding ', rules.length, 'rules to', _styleEl.id);
+            if (_styleEl) _styleEl.sheet.insertRule(rule, 0);
+        });
+    } catch (e) {
+        iCSR.catch(e);
+    }
+};
+//endregion
+
 
 //region iCSR.SP - SharePoint interactions using JSOM / REST                                             ###    iCSR.SP
 //TODO: How does this compare with SPUtility https://sputility.codeplex.com/ (last update feb 2015)
@@ -507,6 +551,98 @@ iCSR.DO.progressBar = function (ctx) {
 //endregion
 
 //region iCSR.DO.priority
+//noinspection BadExpressionStatementJS,HtmlUnknownTarget
+iCSR.cfg.priority = {
+    iCSRid: 'Priority',
+    values: {
+        '(1) High': 'lightcoral',
+        '(2) Normal': 'orange',
+        '(3) Low': 'lightgreen'
+    },
+    //colors: ['red', 'orange', 'green'],
+    textcolor: 'black',
+    interactive: iCSR.cfg.interactive || true,
+    width: '110px', //total width
+    widthCurrent: '50%',
+    widthChoice: '15px', //width of the non Current Choice options
+    tracelevel: 4,
+    html: '',
+    Classcontainer: 'iCSRpriority_Container',
+    Classcurrent: 'iCSRpriority_Current',
+    Classchoice: 'iCSRpriority_Choice',
+    border: 'border:1px solid grey',
+    clicktemplate: "iCSR.SP.updateItem(false,'[ID]','[Name]','[keyvalue]');", //ID,Name,value
+    layouts: '/_layouts/15/images/',
+    template: 'default',
+    templates: {
+        kpiCSRCSS: {
+            container: ".[Classcontainer] {}",
+            containerDiv: ".[Classcontainer]>div {position:relative;float:left;}",
+            choice: ".[Classchoice] {cursor:pointer;opacity:.2}",
+            choicehover: ".[Classchoice]:hover {opacity:1;border-color:black}",
+            objectDescription: 'reusable generic CSS for KPI indicators'
+        },
+        default: {
+            container: "<div class='[Classcontainer]'>[html]</div>",
+            template: "<div style='background-color:[color]' class='[classname]' onclick=\"[click]\">[label]</div>",
+            CSS: { //object of strings with tokenized CSS definitions
+                container: ".[Classcontainer] {width:[width];}",
+                containerDiv: ".[Classcontainer]>div {position:relative;float:left;display:inline;}",
+                currenttext: ".[Classcurrent] {font-size:11px;color:[textcolor]}",
+                currentlabel: ".[Classcurrent] {width:[widthCurrent];text-align:center;padding:2px;}",
+                choice: ".[Classchoice] {width:[widthChoice];cursor:pointer;opacity:.4}",
+                choicehover: ".[Classchoice]:hover {opacity:1;border-color:black}",
+                objectDescription: 'CSS for the iCSR default priority interaction'
+            }
+        },
+        kpiCSR1: {
+            template: "<span class='[classname]' onclick=\"[click]\"><img src='[layouts]/kpidefault-[nr].gif'></span>", //default sharepoint images in the layouts folder
+            CSS: "kpiCSRCSS"
+        },
+        kpiCSR2: {
+            template: "<span class='[classname]' onclick=\"[click]\"><img src='[layouts]/kpipeppers-[nr].gif'></span>", //default sharepoint images in the layouts folder
+            CSS: "kpiCSRCSS"
+        },
+        kpiCSR3: {
+            template: "<span class='[classname]' onclick=\"[click]\"><img src='[layouts]/kpipepperalarm-[nr].gif'></span>", //default sharepoint images in the layouts folder
+            CSS: "kpiCSRCSS"
+        },
+        kpiCSR4: {
+            template: "<span class='[classname]' onclick=\"[click]\"><img src='[layouts]/kpinormal-[nr].gif'></span>", //default sharepoint images in the layouts folder
+            CSS: "kpiCSRCSS"
+        }
+    },
+    description: ''
+};
+iCSR.DO.priority = function (ctx) {
+    //TODO: spinner on save
+    var config = iCSR.fn.getconfig(ctx, iCSR.cfg.priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+    var replacetokens = iCSR.fn.replacetokens.bind(config); //bind the current config to the function
+    var rules = config.rules || [];
+    var template = config.templates.hasOwnProperty(config.template) ? config.templates[config.template] : {};
+    if (!template.hasOwnProperty('container')) template.container = config.templates.default.container;
+    var CSS = template.CSS || {};
+    if (typeof template.CSS === 'string')CSS = config.templates[template.CSS];
+    for (var key in CSS) if (CSS.hasOwnProperty(key)) rules.push(replacetokens(CSS[key]));
+    if (config.border || true) rules.push(replacetokens(".[Classcontainer]>div {[border]}"));
+    config.interactive = template.hasOwnProperty('CSS') && config.interactive;
+    iCSR.CSS.addStylesheetWithRules(config.iCSRid, rules, true);
+    config.nr = "0"; //trick replacement in accepting first value as 0 string
+    for (var keyvalue in config.values) {
+        config.keyvalue = keyvalue;
+        var iscurrent = config.value === keyvalue;
+        config.click = replacetokens(config.clicktemplate);
+        config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
+        config.color = config.colors ? config.colors[config.nr] : config.values[config.keyvalue];
+        config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
+        var elementTemplate = template.template || config.template;
+        for (var nestedTokens = 0; nestedTokens < 3; nestedTokens++) elementTemplate = replacetokens(elementTemplate);
+        if (iscurrent || config.interactive) config.html += elementTemplate;
+        config.nr++;
+    }
+    var outputHTML = config.interactive ? template.container : config.html;
+    return replacetokens(outputHTML);
+};
 
 //endregion priority
 
@@ -619,36 +755,6 @@ iCSR.ctrl.duplicates = function (ctx, cfg) {
     button.click(); //first init hide duplicates
 };
 /*PROGRESSBAR*******************************************************************************/
-/*
-
- resources:
- http://www.cssscript.com/animated-progress-indicators-with-vanilla-javascript-and-css/
- */
-iCSR.css = {}; //CSS storage and actions
-iCSR.css.sheets = {};
-iCSR.css.addstylesheet = function (id) {
-    var _styleEl = document.createElement("STYLE");
-    _styleEl.id = id; // _styleEl.setAttribute("media", "only screen and (max-width : 1024px)")
-    _styleEl.appendChild(document.createTextNode("")); // WebKit hack :(
-    document.head.appendChild(_styleEl);
-    if (iCSR.tracelevel > 1) iCSR.tracecolor('added stylesheet', _styleEl.id);
-    return _styleEl;
-};
-iCSR.css.addStylesheetWithRules = function (id, rules, reload, unique) {
-    try {
-        var _styleEl = document.getElementById(id); //get stylesheet with id
-        if (reload || unique || !_styleEl) { //attach style only once
-            if (reload && _styleEl) _styleEl.parentNode.removeChild(_styleEl);
-            _styleEl = iCSR.css.addstylesheet(id);
-        }
-        rules.forEach(function (rule) {
-            if (iCSR.tracelevel > 2) iCSR.trace('adding ', rules.length, 'rules to', _styleEl.id);
-            if (_styleEl) _styleEl.sheet.insertRule(rule, 0);
-        });
-    } catch (e) {
-        iCSR.catch(e);
-    }
-};
 iCSR.ctrl.progressBar = function (config) {
     var progressBar = this;
     var cfg = progressBar.config = config || {}; //shorthand notation for internal config object
@@ -690,7 +796,7 @@ iCSR.ctrl.progressBar = function (config) {
         rules.push(CSSname + ">div:hover:after," + CSSname + " .currentProgress:after{content:'%'}");
         rules.push(CSSname + " .currentProgress{font-size:100%;z-index:3}");
         rules.push(CSSname + " .currentProgress{background-color:" + cfg.barcolor + ";color:" + cfg.color + "}");
-        iCSR.css.addStylesheetWithRules(cfg.CSSid, rules, cfg.cssreload, cfg.unique);
+        iCSR.CSS.addStylesheetWithRules(cfg.CSSid, rules, cfg.cssreload, cfg.unique);
     };
 
     progressBar.html = function (currentProgress) {
