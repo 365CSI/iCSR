@@ -1,7 +1,8 @@
+var iCSR = iCSR || {};
+iCSR._ver = '0.0.4';
 /* iCSR - Client Side Rendering how IKEA would do it
 
  license: MIT
-
  http://iCSR.github.io
 
  History:
@@ -19,17 +20,15 @@
  :view item by groupmembership
 
  JavaScript style notes
-
  - Global namespace iCSR holds all content
  - iCSR.fn = generic functions
  - iCSR.CFG = generic configurations
  - iCSR.SP = SharePoint related code (can be in other places as well)
  - iCSR.DO = methods to be called by user or code
- - iCSR.ctrl = constructors to be called by user (new iCSR.table) or other code
+ - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
 
  - Global configurations
  (optional) iCSR.interactive true/false = indicates default setting to be used by all iCSR (screen) elements, this overrides custom setting
-
  */
 
 //region JSHINT
@@ -54,13 +53,12 @@ function GetAncestor(element, tagType) { //overloaded by SharePoint core.js impl
 //endregion
 
 //noinspection JSUnusedAssignment
-var iCSR = iCSR || {};
-iCSR._ver = '0.0.3';
 iCSR.Template = iCSR.Template || {}; //Template functions return HTML for easy execution in a CSR file
 iCSR.SP = false;//placeholder SP sub-namespace
 iCSR.fn = iCSR.fn || {}; //support functions
 iCSR.DO = iCSR.DO || {}; //doable functions
-iCSR.ctrl = iCSR.ctrl || {}; //controllers created with new ()
+iCSR.Control = iCSR.Control || {}; //controllers created with new ()
+iCSR.Str = iCSR.Str || {}; //String functions because .prototyping is not 100% safe because others can do it as well.
 
 iCSR.init = function () {
     console.info('%c iCSR - Proof of Concept - ' + iCSR._ver + ' ', iCSR.CFG.colorBlueYellow + ';font-size:20px;');
@@ -95,7 +93,7 @@ iCSR.initTemplate = function (iCSRnamespace, modulename, description) {
     }
 };
 
-//region iCSR.CFG - global configuration Namespace, properties and methods                              ###    iCSR.CFG
+//region iCSR.CFG - global configuration Namespace, properties and methods------------------------- ### iCSR.CFG
 iCSR.CFG = iCSR.CFG || { //configuration options
         colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
         tracing: true,
@@ -169,9 +167,9 @@ iCSR.CFG.tokenfunctions.svgcircle = function circle(circleSize, color) {
     return html;
 };
 
-//endregion iCSR.CFG
+//endregion --------------------------------------------------------------------------------------- iCSR.CFG
 
-//region iCSR.info & iCSR.trace                                         ###    iCSR.info iCSR.traceon()  iCSR.traceoff()
+//region iCSR.info & iCSR.trace-------------------------------------------------------------------- ### iCSR.info 
 iCSR.info = function () { //list all iCSR doable functions and methods
     var consoleObject = function (iCSRobject) {
         console.info('iCSR: ' + iCSR._ver, iCSRobject.objectDescription);
@@ -182,7 +180,7 @@ iCSR.info = function () { //list all iCSR doable functions and methods
         }
     };
     consoleObject(iCSR.Template);
-    consoleObject(iCSR.ctrl);
+    consoleObject(iCSR.Control);
 };
 iCSR.trace = function (tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) {
     //TODO: (low) refactor to get rid of those ugly vars
@@ -216,6 +214,7 @@ iCSR.traceon = function (setlevel) {
     iCSR.tracelevel = setlevel || 0; //default tracelevel
     iCSR.CFG.tracing = true; //extra information in the F12 Developer console
     iCSR.CFG.errorcount = 0;
+    iCSR.trace(-1, 'iCSR trace level ' + iCSR.tracelevel + 'template initialized {0:HH:mm:ss}' + new Date());
     return true;
 };
 iCSR.traceoff = function (setlevel) {
@@ -231,11 +230,21 @@ iCSR.catch = function (e, functionname, functionreference) { //generic try/catch
 };
 //endregion
 
-//region iCSR.fn - String utility functions                                                              ###    iCSR.fn
-
-iCSR.fn.nowordbreak = function (s) { //replaces space with nonbreakingspaces
-    return (s.replace(/ /gi, '&nbsp;'));
+//region iCSR.Str - String utility functions------------------------------------------------------- ### iCSR.Str
+iCSR.Str.nowordbreak = function (s) { //replaces space with nonbreakingspaces
+    return s.replace(/ /gi, '&nbsp;');
 };
+iCSR.Str.alphanumeric = function (_string, _replacer) {//replace all non a-z and 0-9 characters
+    return _string.replace(/[^a-z0-9+]+/gi, _replacer || '');
+};
+iCSR.Str.toNumber = function (_string, _default) { //extract FIRST number from string or return _default
+    var _value = _string.match(/(\d+)/);
+    if (_value.length === 1) return _value[0];
+    return _default;
+};
+//endregion --------------------------------------------------------------------------------------- iCSR.Str
+
+//region iCSR.fn - utility functions----------------------------------------------------------------### iCSR.fn
 /**
  *
  * @param value
@@ -278,46 +287,54 @@ iCSR.fn.tokenArray = function (str, identifiers) {
 };
 
 /**
- *
- * @returns {*}
+ * replace 'Hello [location]!' with propertyvalue from _tokensobject {location:'World'}  => 'Hello World!'
  * @param _string
- * @param tokensconfig
+ * @param _tokensobject
+ * @returns {*}
  */
-iCSR.fn.replacetokens = function (_string, tokensconfig) { //replace 'Hello [location]!' with propertyvalue from tokensconfig {location:'World'}  => 'Hello World!'
+iCSR.fn.replacetokens = function (_string, _tokensobject) {
     if (!_string) return _string;
 
-    tokensconfig = tokensconfig || this; //tokens defined in .bind(config)
+    _tokensobject = _tokensobject || this; //tokens defined in optional .bind(config)
     var replacetoken = function (token) {
         var _tokenized = token;
-        if (tokensconfig.hasOwnProperty(token)) {
-            _tokenized = tokensconfig[token]; // predefined tokens defined in .config object take precedence over token
-            if (typeof _tokenized === 'function') {
-                //TODO: (normal) ?? do we want to allow script creation... cool to investigate how far this would lead
+        if (_tokenized !== '.') {//allways ignore tokens
+            if (_tokensobject.hasOwnProperty(token)) {
+                _tokenized = _tokensobject[token]; // predefined tokens defined in .config object take precedence over token
+                if (typeof _tokenized === 'function') {
+                    //TODO: (normal) ?? do we want to allow script creation... cool to investigate how far this would lead
+                }
             }
-        }
-        if (iCSR.CFG.hastokenfunction(_tokenized)) {
-            var functionDef = iCSR.fn.tokenArray(token, '()');//token functions like: svgcircle(20)
-            var functionname = functionDef[0];
-            var parameters = functionDef[1];
-            _tokenized = iCSR.fn.executeTokenfunction(functionname, parameters);
-        }
-        if (token === _tokenized) {
-            var strippedtoken = token.replace(/[^a-z0-9+]+/gi, '');
-            if (strippedtoken === token) {//token is not declared yet
-                _tokenized = '[' + token + ']';
-                iCSR.trace(3, 'replacetoken', '(' + typeof _string + ') UNTOUCHED: ', _tokenized);
+            if (iCSR.CFG.hastokenfunction(_tokenized)) {
+                var functionDef = iCSR.fn.tokenArray(token, '()'),//token functions like: svgcircle(20)
+                    functionname = functionDef[0],
+                    parameters = functionDef[1];
+                _tokenized = iCSR.fn.executeTokenfunction(functionname, parameters);
             }
-        } else {
-            iCSR.trace(3, 'replacetoken', '(' + typeof _string + ') : ', token, '\n', _tokenized);
+            if (token === _tokenized) {
+                var strippedtoken = iCSR.Str.alphanumeric(token);
+                if (strippedtoken === token) {//token is not declared yet
+                    _tokenized = '[' + token + ']';
+                    iCSR.trace(3, 'replacetoken UNTOUCHED: ', _tokenized);
+                }
+            } else {
+                iCSR.trace(3, 'replacetoken:', token, '\n', _tokenized);
+            }
         }
         return _tokenized;
     };
-    var tokenized = iCSR.fn.tokenArray(_string, '[]');//make array
-    iCSR.trace(3, 'tokenized', '\n', tokenized);
-    tokenized = tokenized.map(replacetoken);//process all array elements
-    tokenized = tokenized.join('');//make it one string again
-    iCSR.trace(2, 'replacetokens', '(' + typeof _string + ')\n', _string, '\n', tokenized);
-    return tokenized;
+    var tokenized;//working array breaking string into tokens
+    var tokencount = 1;
+    for (var loop = 0; loop < 5; loop++) {//too lazy to develop recursive code
+        tokenized = iCSR.fn.tokenArray(_string, '[]');//make array
+        if (tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
+        tokencount = tokenized.length;
+        iCSR.trace(3, 'tokenized before processing\n', tokenized);
+        tokenized = tokenized.map(replacetoken);//process all array elements
+        _string = tokenized.join('');//make it one string again
+    }
+    iCSR.trace(2, 'replacetokens', '(' + typeof _string + ') tokenized string: \n', _string, '\n', tokenized);
+    return _string;
 };
 
 /**
@@ -334,9 +351,6 @@ iCSR.fn.getColors = function (ctx) {
     iCSR.trace(2, 'getColors', _fieldname, _colors);
     return _colors;
 };
-//endregion
-
-//region iCSR.fn - SharePoint related code                                                                  ### iCSR.fn
 
 /**
  *
@@ -399,8 +413,7 @@ iCSR.fn.getconfig = function (ctx, initialconfig, bindconfig) {
         //Share specific configuration
         config.Name = ctx.CurrentFieldSchema.Name;
         config.value = ctx.CurrentItem[config.Name]; //initial value
-        config.valuenr = config.value.match(/(\d+)/g); //get all digits from string as array
-        config.valuenr = (config.valuenr && config.valuenr.length > 0) ? config.valuenr / 1 : false;
+        config.valuenr = iCSR.Str.toNumber(config.value, false);
         config['valuenr-1'] = config.valuenr - 1;
         config.shortlabel = config.valuenr ? iCSR.fn.label(config.value) : config.value; //if a valuenr then shorten it
         config.ID = ctx.CurrentItem.ID;
@@ -437,9 +450,9 @@ iCSR.fn.getconfigCSS = function (config, template) {//TODO (high) refactor getco
     return CSS;
 };
 
-//endregion
+//endregion --------------------------------------------------------------------------------------- iCSR.fn
 
-//region iCSR.CSS - CSS operations                                                              ###     iCSR.CSS
+//region iCSR.CSS - CSS operations------------------------------------------------------------------### iCSR.CSS
 /*
 
  resources:
@@ -506,9 +519,9 @@ iCSR.CSS.addStylesheetWithRules = function (id, rules, reload, unique) {
         iCSR.catch(e, 'iCSR.CSS.addStylesheetWithRules', id, rules);
     }
 };
-//endregion iCSR.CSS
+//endregion --------------------------------------------------------------------------------------- iCSR.CSS
 
-//region iCSR.SP - SharePoint interactions using JSOM / REST                                             ###    iCSR.SP
+//region iCSR.SP - SharePoint interactions using JSOM / REST----------------------------------------### iCSR.SP
 //TODO: (high) How does this compare with SPUtility https://sputility.codeplex.com/ (last update feb 2015)
 
 iCSR = iCSR || {};
@@ -615,14 +628,14 @@ iCSR.SP.isGroupHeader = function (ctx) {
     return ctx.CurrentItem.hasOwnProperty(property);
 };
 
-//endregion
+//endregion --------------------------------------------------------------------------------------- iCSR.SP
 
-//region iCSR.DOM -  Generic DOM functions (related to SharePoint DOM structure, ids etc.)       ### iCSR.DOM
+//region iCSR.DOM -  Generic DOM functions (related to SharePoint DOM structure, ids etc.)--------- ### iCSR.DOM
 
 iCSR = iCSR || {};
 iCSR.DOM = {}; //namespace for SP related stuff
 iCSR.DOM.fn = {}; //namespace for SP related stuff
-iCSR.DOM.ctrl = {}; //namespace for SP related stuff
+iCSR.DOM.Control = {}; //namespace for SP related stuff
 
 /**
  *
@@ -646,12 +659,12 @@ iCSR.DOM.waitforelement = function (id, callback, yieldtime) { //  Wait for a DO
 
 /**
  * Usage: in OnPostRender
- * new iCSR.DOM.ctrl.attachAllOption( 'Colors' );
+ * new iCSR.DOM.Control.attachAllOption( 'Colors' );
  *
  * @param fieldname
  * @param allLabel
  */
-iCSR.DOM.ctrl.attachAllOption = function (fieldname, allLabel) {
+iCSR.DOM.Control.attachAllOption = function (fieldname, allLabel) {
     allLabel = allLabel || 'All ' + fieldname;
     var self = this,
         allid = "selectAll_" + fieldname,
@@ -675,11 +688,233 @@ iCSR.DOM.ctrl.attachAllOption = function (fieldname, allLabel) {
     allinput.addEventListener("click", this.selectall);
 };
 
-//endregion iCSR.DOM
+//endregion --------------------------------------------------------------------------------------- iCSR.DOM
 
-//region iCSR.Template - change Browser or SharePoint states *************************************/
+//region iCSR.Control.table--------------------------------------------------------------------------- ### iCSR.Control.table
+/**
+ *  iCSR CONTROL:table - start definition*****************************************************************
+ *
+ * @param ctx
+ */
+iCSR.Control.table = function (ctx) {
+    ctx = ctx || window.ctx;
+    var tableControl = this;
+    tableControl.table = document.getElementById(ctx.clvp.tab.id);
+    tableControl.columnNumbers = {};
+    tableControl.columns = {};
+    tableControl.columnNames = ctx.ListSchema.Field.map(function (field) {
+        tableControl.columnNumbers[field.Name] = field.counter;
+        tableControl.columns[field.Name] = {
+            counter: field.counter,
+            hidden: false
+        };
+        return (field.Name);
+    });
 
-//region iCSR.Template.colordate
+    function getColumnArray(columns) {
+        columns = typeof columns === 'object' ? columns : [columns]; //make sure it is an array
+        return columns.map(function (column) { //make it an array of columnNRs
+            return typeof column === "string" ? tableControl.columnNumbers[column] : column;
+        });
+    }
+
+    //execute action on all rows and cells
+    tableControl.actions = function (table, rowaction, cellaction) {
+        Array.prototype.slice.call(table.rows).forEach(function (row, rownr) {
+            rowaction && rowaction(row);
+            Array.prototype.slice.call(row.cells).forEach(function (cell, colnr) {
+                cellaction && cellaction(cell, rownr, colnr);
+            });
+        });
+    };
+    tableControl.hideheaders = function (el, hide) { //walk up the DOM to the table and hide the header row
+        var headerRow = el ? GetAncestor(el, 'TABLE').firstChild : tableControl.table.firstChild;
+        if (hide) {
+            headerRow.style.visibility = 'hidden'; //hide headers
+        } else {
+            headerRow.style.display = 'none'; //hide headers
+        }
+    };
+    tableControl.hideColumns = function (columns, display) { //array of mixed numbers/strings
+        columns = getColumnArray(columns);
+        display = display || 'none';
+        //var table = document.getElementById(ctx.clvp.tab.id);
+        tableControl.actions(tableControl.table, false,
+            function (cell, rownr, colnr) {
+                var name = tableControl.columnNames[colnr];
+                if (columns.indexOf(colnr) > -1) {
+                    cell.style.display = display;
+                    console.log(name, tableControl.columns[name]);
+                    tableControl.columns[name].hidden = display === 'none';
+                }
+            });
+    };
+    tableControl.showColumns = function () {
+        tableControl.hideColumns(tableControl.columnNames, 'table-cell');
+    };
+    tableControl.colorColumns = function (columnNames, color) { //array of mixed numbers/strings
+        tableControl.actions(tableControl.table, false, function (cell, rownr, colnr) {
+            if (columnNames.indexOf(tableControl.columnNames[colnr]) > -1) {
+                cell.style.backgroundColor = color;
+            }
+        });
+    };
+    iCSR.hideRows = function (ctx, rows) {
+
+    };
+
+};
+
+/*DUPLICATES *****************************************************************************/
+/*
+ Usage: in OnPostRender
+ new iCSR.Control.duplicates(ctx,{title:'Title',color:'pink',buttonlabel:['Show Duplicates', 'Hide Duplicates']});
+ */
+iCSR.Control.duplicates = function (ctx, cfg) {
+    var check = cfg ? cfg.title : 'Title', //name of Item field to check for duplicates
+        color = cfg ? cfg.color : 'ligthcoral',
+        buttonlabel = cfg ? cfg.buttonlabel : ['Show Duplicates', 'Hide Duplicates'],
+        all = [], //holds all values
+        duplicates = [], //holds all duplicate TR elements, EXCLUDING the first value
+        duplicatesShown = true,
+        button = document.createElement('BUTTON');
+    ctx.ListData.Row.forEach(function (item) {
+        if (all.indexOf(item[check]) > -1) {
+            var TR = document.getElementById(GenerateIIDForListItem(ctx, item));
+            TR.style.backgroundColor = color;
+            duplicates.push(TR);
+        }
+        all.push(item[check]);
+    });
+    button.onclick = function (event) {
+        event.preventDefault();
+        duplicatesShown = !duplicatesShown;
+        duplicates.forEach(function (TR) {
+            TR.style.display = duplicatesShown ? 'table-row' : 'none';
+        });
+        button.innerHTML = buttonlabel[duplicatesShown / 1];
+    };
+    document.getElementById('CSRListViewControlDiv' + ctx.wpq).appendChild(button);
+    button.click(); //first init hide duplicates
+};
+
+//endregion --------------------------------------------------------------------------------------- iCSR.Control
+
+//region iCSR.Template.colorLabel ----------------------------------------------------------------- iCSR.Template.colorLabel
+iCSR.Template.colorLabel = function (ctx) {
+    var value = iCSR.fn.getfieldvalue(ctx),
+        label = iCSR.fn.label(value),
+        html = value,
+        color = false;
+    iCSR.trace(2, 'colorLabel', label, value);
+    iCSR.CFG.colorGroupheaders = false;
+    if (iCSR.CFG.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
+        var colors = iCSR.fn.getColors(ctx);
+        var colornr = iCSR.Str.toNumber(value, 0);
+        if (colors.hasOwnProperty(value)) {
+            color = colors[value]
+        } else {
+            if (Array.isArray(colors)) {
+                color = colors[colornr];
+            }
+            else {
+                color = 'inherit';
+            }
+        }
+        //use number from value label
+        html = '<span style="background-color:{0};">&nbsp{1}&nbsp</span>';
+    }
+    return String.format(html, color, iCSR.Str.nowordbreak(label));
+}
+;
+//endregion --------------------------------------------------------------------------------------- iCSR..Template.colorLabel
+
+//region iCSR.Template - change Browser or SharePoint states----------------------------------------### iCSR.Template
+
+//region --- iCSR.Control.PercentComplete
+iCSR.Control.PercentComplete = function (config) {
+    var progressBar = this;
+    var cfg = progressBar.config = config || {}; //shorthand notation for internal config object
+
+    function configError(txt) {
+        iCSR.traceerror('iCSR progressBar', txt);
+    }
+
+    progressBar.setconfig = function (setting, value) {
+        progressBar.config[setting] = config.hasOwnProperty(setting) ? config[setting] : value; //setter
+    };
+    if (!cfg) console.warn('progressBar with default settings. or use .bind({CONFIGURATION})');
+    progressBar.barid = 'iCSRprogressBar_' + (cfg.barid || new Date() / 1); //default random number
+    progressBar.setconfig('interactive', true); //if bar is interactive
+    if (cfg.interactive) progressBar.updateFunction = cfg.update || configError('missing .update definition');
+    progressBar.setconfig('CSSid', 'iCSRprogressBar'); //optional custom CSS for every progressBar, otherwise one per HTML page
+    progressBar.setconfig('barcolor', 'green');
+    progressBar.setconfig('color', 'white');
+    progressBar.setconfig('background', 'lightgrey');
+    progressBar.setconfig('width', '220px');
+    progressBar.setconfig('scalecolor', 'green');
+    progressBar.setconfig('scale', cfg.interactive); //display scale in bar
+    progressBar.setconfig('unique', false); //unique CSS styles for bars
+    progressBar.segments = []; //array DOM elements of all percentage segments making up this progressBar
+    iCSR.trace(2, 'progressBar', cfg.ID, progressBar);
+
+    progressBar.addCSS = function () {
+        var CSSname = "." + cfg.CSSid;
+        var rules = [];
+        rules.push(CSSname + " {width:" + cfg.width + ";height:15px;position:relative;background-color:" + cfg.background + "}");
+        rules.push(CSSname + " {font-family:arial;font-size:11px;}");
+        if (cfg.scale) rules.push(CSSname + " {color:" + cfg.scalecolor + "}"); //scale indicator
+        rules.push(CSSname + ">div {position:absolute;text-align:right;font-size:80%;height:100%;}");
+        if (cfg.scale) rules.push(CSSname + ">div {border-right:1px solid #a9a9a9}");
+        if (cfg.interactive) { //hover actions
+            rules.push(CSSname + ">div:not(.currentProgress):hover{color:black;font-size:100%;background:lightgreen;z-index:4;cursor:pointer;opacity:.8}");
+            rules.push(CSSname + ">div:not(.currentProgress):hover:before{content:'►';font-weight:bold}");
+        }
+        rules.push(CSSname + ">div:hover:after," + CSSname + " .currentProgress:after{content:'%'}");
+        rules.push(CSSname + " .currentProgress{font-size:100%;z-index:3}");
+        rules.push(CSSname + " .currentProgress{background-color:" + cfg.barcolor + ";color:" + cfg.color + "}");
+        iCSR.CSS.addStylesheetWithRules(cfg.CSSid, rules, cfg.cssreload, cfg.unique);
+    };
+
+    progressBar.html = function (currentProgress) {
+        var html = '';
+        currentProgress = currentProgress || progressBar.currentnr;
+        for (var nr = 10; nr > 0; nr--) { //create 10 overlapping DIVs
+            var segmentid = progressBar.barid + "_" + nr;
+            progressBar.segments[nr] = segmentid;
+            html += "<div id='" + segmentid + "'"; //
+            if (nr === currentProgress) html += " class='currentProgress'";
+            if (currentProgress === 0 || nr > currentProgress) html += " onclick='" + progressBar.barid + ".progressClicked(this)'"; //attach click handler for higher values only
+            html += " style='width:" + nr * 10 + "%'>";
+            if (cfg.scale || nr === currentProgress) html += nr * 10; //display scale value
+            html += "</div>";
+        }
+        return "<div id='" + progressBar.barid + "' class='" + cfg.CSSid + "'>" + html + "</div>";
+    };
+    progressBar.setValue = function (nr) { //input value van be in 'nr %' string notation
+        progressBar.value = iCSR.Str.toNumber(nr, 0);// 0-100 without %
+        progressBar.currentnr = Math.round(progressBar.value / 10); // Rounded values 0 to 10
+    };
+    progressBar.progressClicked = function (el) {
+        event.preventDefault();
+        event.stopPropagation();
+        el = (typeof el.click === 'function') ? el : el.srcElement;
+        if (progressBar.currentnr) document.getElementById(progressBar.segments[progressBar.currentnr]).className = ''; //reset previous selection
+        progressBar.setValue(el.innerHTML);
+        el.className = "currentProgress";
+        if (cfg.interactive) progressBar.updateFunction(progressBar);
+    };
+    progressBar.addCSS();
+    progressBar.setValue(cfg.value || configError('missing .value'));
+    window[progressBar.barid] = progressBar; //extra global reference to all progressBars
+    ctx.iCSR = ctx.iCSR || {}; //store progressBars on the global ctx object
+    ctx.iCSR.PercentComplete = ctx.iCSR.PercentComplete || [];
+    ctx.iCSR.PercentComplete.push(progressBar);
+    return progressBar.html();
+};
+//endregion --------------------------------------------------------------------------------------- iCSR.Template.PercentComplete
+
+//region --- iCSR.Template.colordate
 /**
  *
  * @param ctx
@@ -710,11 +945,11 @@ iCSR.Template.colorDate = function (ctx) {
 };
 //endregion
 
-//region iCSR.Template.progressBar
+//region --- iCSR.Template.PercentComplete
 /**
  *
  */
-iCSR.CFG.progressBar = {
+iCSR.CFG.PercentComplete = {
     CSSid: 'iCSRprogressBar', //class name for all progressBars
     colors: ['transparent', 'red', 'orangered', 'indianred', 'goldenrod', 'goldenrod', 'goldenrod', 'yellowgreen', 'mediumseagreen', 'forestgreen', 'green'],
     width: '180px',
@@ -726,8 +961,8 @@ iCSR.CFG.progressBar = {
  *
  * @param ctx
  */
-iCSR.Template.progressBar = function (ctx) {
-    var config = iCSR.fn.getconfig(ctx, iCSR.CFG.progressBar, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+iCSR.Template.PercentComplete = function (ctx) {
+    var config = iCSR.fn.getconfig(ctx, iCSR.CFG.PercentComplete, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
     config.cssreload = true; //force reloading of CSS when live-testing config settings
     config.barid = ctx.wpq + '_' + config.ID; //unique id to this progressBar//TODO (high) move to getconfig
     if (config.unique) config.CSSid += config.barid; //custom class for every progressBar
@@ -740,11 +975,11 @@ iCSR.Template.progressBar = function (ctx) {
             }, 'sp.js');
         };
     }
-    return new iCSR.ctrl.progressBar(config).html();
+    return new iCSR.Control.PercentComplete(config).html();
 };
-//endregion
+//endregion --------------------------------------------------------------------------------------- iCSR.
 
-//region iCSR.Template.priority
+//region --- iCSR.Template.priority
 //noinspection BadExpressionStatementJS,HtmlUnknownTarget
 iCSR.CFG.priority = {
     iCSRid: 'Priority',
@@ -843,13 +1078,11 @@ iCSR.Template.priority = function (ctx) {
         config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
         config.color = config.colors ? config.colors[config.nr] : config.values[config.keyvalue];
         config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
-        var item = template.item || config.template;
-        for (var nestedTokens = 0; nestedTokens < 3; nestedTokens++) item = replacetokens(item);
+        var item = replacetokens(template.item || config.template);
         if (iscurrent || config.interactive) config.html += item;
         config.nr++;
     }
-    var html = config.interactive ? template.container : config.html;
-    for (var nestedTokens = 0; nestedTokens < 3; nestedTokens++) html = replacetokens(html);
+    var html = replacetokens(config.interactive ? template.container : config.html);
     console.log('html:', config.interactive, html);
     //TODO (high) fix trace per Template at end of template
     return html;
@@ -859,215 +1092,6 @@ iCSR.Template.priority = function (ctx) {
 
 //endregion iCSR.Template
 
-//region iCSR.ctrl.table
-/**
- *  iCSR CONTROL:table - start definition*****************************************************************
- *
- * @param ctx
- */
-iCSR.ctrl.table = function (ctx) {
-    ctx = ctx || window.ctx;
-    var tableControl = this;
-    tableControl.table = document.getElementById(ctx.clvp.tab.id);
-    tableControl.columnNumbers = {};
-    tableControl.columns = {};
-    tableControl.columnNames = ctx.ListSchema.Field.map(function (field) {
-        tableControl.columnNumbers[field.Name] = field.counter;
-        tableControl.columns[field.Name] = {
-            counter: field.counter,
-            hidden: false
-        };
-        return (field.Name);
-    });
-
-    function getColumnArray(columns) {
-        columns = typeof columns === 'object' ? columns : [columns]; //make sure it is an array
-        return columns.map(function (column) { //make it an array of columnNRs
-            return typeof column === "string" ? tableControl.columnNumbers[column] : column;
-        });
-    }
-
-    //execute action on all rows and cells
-    tableControl.actions = function (table, rowaction, cellaction) {
-        Array.prototype.slice.call(table.rows).forEach(function (row, rownr) {
-            rowaction && rowaction(row);
-            Array.prototype.slice.call(row.cells).forEach(function (cell, colnr) {
-                cellaction && cellaction(cell, rownr, colnr);
-            });
-        });
-    };
-    tableControl.hideheaders = function (el, hide) { //walk up the DOM to the table and hide the header row
-        var headerRow = el ? GetAncestor(el, 'TABLE').firstChild : tableControl.table.firstChild;
-        if (hide) {
-            headerRow.style.visibility = 'hidden'; //hide headers
-        } else {
-            headerRow.style.display = 'none'; //hide headers
-        }
-    };
-    tableControl.hideColumns = function (columns, display) { //array of mixed numbers/strings
-        columns = getColumnArray(columns);
-        display = display || 'none';
-        //var table = document.getElementById(ctx.clvp.tab.id);
-        tableControl.actions(tableControl.table, false,
-            function (cell, rownr, colnr) {
-                var name = tableControl.columnNames[colnr];
-                if (columns.indexOf(colnr) > -1) {
-                    cell.style.display = display;
-                    console.log(name, tableControl.columns[name]);
-                    tableControl.columns[name].hidden = display === 'none';
-                }
-            });
-    };
-    tableControl.showColumns = function () {
-        tableControl.hideColumns(tableControl.columnNames, 'table-cell');
-    };
-    tableControl.colorColumns = function (columnNames, color) { //array of mixed numbers/strings
-        tableControl.actions(tableControl.table, false, function (cell, rownr, colnr) {
-            if (columnNames.indexOf(tableControl.columnNames[colnr]) > -1) {
-                cell.style.backgroundColor = color;
-            }
-        });
-    };
-    iCSR.hideRows = function (ctx, rows) {
-
-    };
-
-};
-//endregion
-
-/*DUPLICATES *****************************************************************************/
-/*
- Usage: in OnPostRender
- new iCSR.ctrl.duplicates(ctx,{title:'Title',color:'pink',buttonlabel:['Show Duplicates', 'Hide Duplicates']});
- */
-iCSR.ctrl.duplicates = function (ctx, cfg) {
-    var check = cfg ? cfg.title : 'Title', //name of Item field to check for duplicates
-        color = cfg ? cfg.color : 'ligthcoral',
-        buttonlabel = cfg ? cfg.buttonlabel : ['Show Duplicates', 'Hide Duplicates'],
-        all = [], //holds all values
-        duplicates = [], //holds all duplicate TR elements, EXCLUDING the first value
-        duplicatesShown = true,
-        button = document.createElement('BUTTON');
-    ctx.ListData.Row.forEach(function (item) {
-        if (all.indexOf(item[check]) > -1) {
-            var TR = document.getElementById(GenerateIIDForListItem(ctx, item));
-            TR.style.backgroundColor = color;
-            duplicates.push(TR);
-        }
-        all.push(item[check]);
-    });
-    button.onclick = function (event) {
-        event.preventDefault();
-        duplicatesShown = !duplicatesShown;
-        duplicates.forEach(function (TR) {
-            TR.style.display = duplicatesShown ? 'table-row' : 'none';
-        });
-        button.innerHTML = buttonlabel[duplicatesShown / 1];
-    };
-    document.getElementById('CSRListViewControlDiv' + ctx.wpq).appendChild(button);
-    button.click(); //first init hide duplicates
-};
-//region iCSR.ctrl.progressBar
-iCSR.ctrl.progressBar = function (config) {
-    var progressBar = this;
-    var cfg = progressBar.config = config || {}; //shorthand notation for internal config object
-
-    function configError(txt) {
-        iCSR.traceerror('iCSR progressBar', txt);
-    }
-
-    progressBar.setconfig = function (setting, value) {
-        progressBar.config[setting] = config.hasOwnProperty(setting) ? config[setting] : value; //setter
-    };
-    if (!cfg) console.warn('progressBar with default settings. or use .bind({CONFIGURATION})');
-    progressBar.barid = 'iCSRprogressBar_' + (cfg.barid || new Date() / 1); //default random number
-    progressBar.setconfig('interactive', true); //if bar is interactive
-    if (cfg.interactive) progressBar.updateFunction = cfg.update || configError('missing .update definition');
-    progressBar.setconfig('CSSid', 'iCSRprogressBar'); //optional custom CSS for every progressBar, otherwise one per HTML page
-    progressBar.setconfig('barcolor', 'green');
-    progressBar.setconfig('color', 'white');
-    progressBar.setconfig('background', 'lightgrey');
-    progressBar.setconfig('width', '220px');
-    progressBar.setconfig('scalecolor', 'green');
-    progressBar.setconfig('scale', cfg.interactive); //display scale in bar
-    progressBar.setconfig('unique', false); //unique CSS styles for bars
-    progressBar.segments = []; //array DOM elements of all percentage segments making up this progressBar
-    iCSR.trace(2, 'progressBar', cfg.ID, progressBar);
-
-    progressBar.addCSS = function () {
-        var CSSname = "." + cfg.CSSid;
-        var rules = [];
-        rules.push(CSSname + " {width:" + cfg.width + ";height:15px;position:relative;background-color:" + cfg.background + "}");
-        rules.push(CSSname + " {font-family:arial;font-size:11px;}");
-        if (cfg.scale) rules.push(CSSname + " {color:" + cfg.scalecolor + "}"); //scale indicator
-        rules.push(CSSname + ">div {position:absolute;text-align:right;font-size:80%;height:100%;}");
-        if (cfg.scale) rules.push(CSSname + ">div {border-right:1px solid #a9a9a9}");
-        if (cfg.interactive) { //hover actions
-            rules.push(CSSname + ">div:not(.currentProgress):hover{color:black;font-size:100%;background:lightgreen;z-index:4;cursor:pointer;opacity:.8}");
-            rules.push(CSSname + ">div:not(.currentProgress):hover:before{content:'►';font-weight:bold}");
-        }
-        rules.push(CSSname + ">div:hover:after," + CSSname + " .currentProgress:after{content:'%'}");
-        rules.push(CSSname + " .currentProgress{font-size:100%;z-index:3}");
-        rules.push(CSSname + " .currentProgress{background-color:" + cfg.barcolor + ";color:" + cfg.color + "}");
-        iCSR.CSS.addStylesheetWithRules(cfg.CSSid, rules, cfg.cssreload, cfg.unique);
-    };
-
-    progressBar.html = function (currentProgress) {
-        var html = '';
-        currentProgress = currentProgress || progressBar.currentnr;
-        for (var nr = 10; nr > 0; nr--) { //create 10 overlapping DIVs
-            var segmentid = progressBar.barid + "_" + nr;
-            progressBar.segments[nr] = segmentid;
-            html += "<div id='" + segmentid + "'"; //
-            if (nr === currentProgress) html += " class='currentProgress'";
-            if (currentProgress === 0 || nr > currentProgress) html += " onclick='" + progressBar.barid + ".progressClicked(this)'"; //attach click handler for higher values only
-            html += " style='width:" + nr * 10 + "%'>";
-            if (cfg.scale || nr === currentProgress) html += nr * 10; //display scale value
-            html += "</div>";
-        }
-        return "<div id='" + progressBar.barid + "' class='" + cfg.CSSid + "'>" + html + "</div>";
-    };
-    progressBar.setValue = function (nr) { //input value van be in 'nr %' string notation
-        progressBar.value = nr.match(/(\d+)/g)[0] / 1; // 0-100 without %
-        progressBar.currentnr = Math.round(progressBar.value / 10); // Rounded values 0 to 10
-    };
-    progressBar.progressClicked = function (el) {
-        event.preventDefault();
-        event.stopPropagation();
-        el = (typeof el.click === 'function') ? el : el.srcElement;
-        if (progressBar.currentnr) document.getElementById(progressBar.segments[progressBar.currentnr]).className = ''; //reset previous selection
-        progressBar.setValue(el.innerHTML);
-        el.className = "currentProgress";
-        if (cfg.interactive) progressBar.updateFunction(progressBar);
-    };
-    progressBar.addCSS();
-    progressBar.setValue(cfg.value || configError('missing .value'));
-    window[progressBar.barid] = progressBar; //extra global reference to all progressBars
-    ctx.iCSR = ctx.iCSR || {}; //store progressBars on the global ctx object
-    ctx.iCSR.progressBar = ctx.iCSR.progressBar || [];
-    ctx.iCSR.progressBar.push(progressBar);
-    return progressBar.html();
-};
-//endregion
-
-/*COLORS*************************************************************************************/
-
-iCSR.CFG.colorGroupheaders = false;
-//region iCSR.Template.colorLabel
-iCSR.Template.colorLabel = function (ctx) {
-    var value = iCSR.fn.getfieldvalue(ctx),
-        label = iCSR.fn.label(value),
-        html = value,
-        color = false;
-    iCSR.trace(2, 'colorLabel', label, value);
-    if (iCSR.CFG.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
-        var colors = iCSR.fn.getColors(ctx);
-        color = colors.hasOwnProperty(value) ? colors[value] : Array.isArray(colors) ? colors[value.match(/(\d+)/g)] : 'inherit'; //use number from value label
-        html = '<span style="background-color:{0};">&nbsp{1}&nbsp</span>';
-    }
-    return String.format(html, color, iCSR.fn.nowordbreak(label));
-};
-//endregion
 
 iCSR.init();
 
