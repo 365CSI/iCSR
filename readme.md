@@ -7,13 +7,13 @@
 
 ## SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a JavaScript library making CSR development (a bit) easier.
+#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a CSR support library for writing **less** JavaScript code.
 
-#### Customized Views like:
+##### Customized Views like:
 
 ![](http://i.imgur.com/ZUNgWGh.jpg)
 
-#### Can be created with one **iCSR.Me** statement:
+##### Can be created with one **iCSR.Me** statement:
 *Note: This is standard CSR Template code,*
 
 *if you have never seen CSR code, the* **iCSR.Me** *part might not seem cool ... yet*
@@ -26,7 +26,7 @@
           }
     }
 
-#### or customized further with:
+##### or customized further with:
 
             View : iCSR.Me.bind({
                                   colors:['red','yellow','green'],
@@ -36,7 +36,7 @@
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
 
-#### *{5 minute video goes here}*
+##### *{5 minute video goes here}*
 
 ## Project goals:
 
@@ -45,8 +45,6 @@
 * Learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
 
 ## Installation
-
-Add the [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js) library and you will write less code.
 
 #### Install the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
 
