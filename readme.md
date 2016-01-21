@@ -5,16 +5,17 @@
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 * Code may change and refactored for the 1.0 release (hopefully in february)
 
-# SharePoint 2013 Client Side Rendering - IKEA style
+# SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 #### (*using the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) to make CSR development really easy*)
 
-#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js) is a JavaScript library which makes custom CSR development (a bit) easier.
+#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a JavaScript library making CSR development (a bit) easier.
 
 ![](http://i.imgur.com/ZUNgWGh.jpg)
 
 #### Can be created with one **iCSR.Me** statement:
-*Note: This is standard CSR Template code,
-if you have never seen CSR code, the **iCSR.Me** part might not seem as cool as it is*
+*Note: This is standard CSR Template code,*
+
+*if you have never seen CSR code, the **iCSR.Me** part might not seem as cool as it is*
 
     SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
     Templates: {
@@ -41,8 +42,6 @@ if you have never seen CSR code, the **iCSR.Me** part might not seem as cool as 
 * Help people get started with CSR development in 5 minutes  
 (including installing the [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en))  
 * Learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
-iCSR has multiple (configurable) levels of console.log traces
-![](http://i.imgur.com/NkVJTL7.jpg) 
 
 ## Installation
 
@@ -67,8 +66,11 @@ Add the [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js) librar
 
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.  
 Making learning JavaScript hopefully a bit easier.
+iCSR has multiple (configurable) levels of console.log traces
 
-#### oh.. and one more thing.. ehm.. line of code..
+![](http://i.imgur.com/NkVJTL7.jpg)
+
+## oh.. and one more thing.. ehm.. line of code..
 
     iCSR.Interactive = true
 
