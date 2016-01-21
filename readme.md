@@ -5,17 +5,18 @@
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 * Code may change and refactored for the 1.0 release (hopefully in february)
 
-# SharePoint 2013 Client Side Rendering (CSR) - IKEA style
-#### (*using the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) to make CSR development really easy*)
+## SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
 #### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a JavaScript library making CSR development (a bit) easier.
+
+#### Customized Views like:
 
 ![](http://i.imgur.com/ZUNgWGh.jpg)
 
 #### Can be created with one **iCSR.Me** statement:
 *Note: This is standard CSR Template code,*
 
-*if you have never seen CSR code, the **iCSR.Me** part might not seem as cool as it is*
+*if you have never seen CSR code, the **iCSR.Me** part might not seem cool ... yet*
 
     SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
     Templates: {
