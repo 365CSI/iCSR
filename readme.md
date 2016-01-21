@@ -2,8 +2,8 @@
 ### alfa version disclaimer:
 * iCSR has not yet reached version 1.0  
 * Is under active development  
-* Fork this code for learning and contribution purposes, I am open for **all** suggestions.  
-* Code may change and be refactored for the 1.0 release (hopefully in february)  
+* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+* Code may change and refactored for the 1.0 release (hopefully in february)
 
 # SharePoint 2013 Client Side Rendering - IKEA style
 #### (*using the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) to make CSR development really easy*)
