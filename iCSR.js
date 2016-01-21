@@ -1,15 +1,18 @@
-var iCSR = iCSR || {};
-iCSR._ver = '0.0.4';
+var iCSR = iCSR || {};// Office365/SharePoint Client Side Rendering JavaScript programming education and support library
+iCSR._ver = '0.5';
+
+//Globals, comment out what you do not want
+
+iCSR.Interactive = false;//(optional) indicates default setting (overrides Template config!) to be used by all iCSR Templates
+iCSR.ReloadCSSforeveryItem = true;//easy for Cisar developing, set to false for delivery
+//Globals
+
 /* iCSR - Client Side Rendering how IKEA would do it
 
  license: MIT
  http://iCSR.github.io
 
- History:
- december 2015 - first Proof of Concept
-
- Author/support information:
- Danny Engelman - danny@engelman.nl
+ History: december 2015 - first Proof of Concept
 
  TODO:
  - load client templates inside iCSR
@@ -21,14 +24,12 @@ iCSR._ver = '0.0.4';
 
  JavaScript style notes
  - Global namespace iCSR holds all content
- - iCSR.fn = generic functions
- - iCSR.CFG = generic configurations
+ - .Me function auto executes Templates and Controls based on the ctx object fieldnames
+ - iCSR.CFG = generic configurations for Templates and Controls
  - iCSR.SP = SharePoint related code (can be in other places as well)
- - iCSR.DO = methods to be called by user or code
  - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
-
- - Global configurations
- (optional) iCSR.interactive true/false = indicates default setting to be used by all iCSR (screen) elements, this overrides custom setting
+ - iCSR.Template = ready made functionality
+ - iCSR.fn = generic support functions
  */
 
 //region JSHINT
@@ -49,14 +50,12 @@ function GetAncestor(element, tagType) { //overloaded by SharePoint core.js impl
     while (element !== null && element.tagName !== tagType) element = element.parentNode;
     return element;
 }
-
 //endregion
 
-//noinspection JSUnusedAssignment
+//use any predefined code load in previous libraries, all functionality in this file will be appended
 iCSR.Template = iCSR.Template || {}; //Template functions return HTML for easy execution in a CSR file
-iCSR.SP = false;//placeholder SP sub-namespace
+iCSR.SP = iCSR.SP || {};//placeholder SP sub-namespace
 iCSR.fn = iCSR.fn || {}; //support functions
-iCSR.DO = iCSR.DO || {}; //doable functions
 iCSR.Control = iCSR.Control || {}; //controllers created with new ()
 iCSR.Str = iCSR.Str || {}; //String functions because .prototyping is not 100% safe because others can do it as well.
 
@@ -65,16 +64,17 @@ iCSR.init = function () {
     iCSR.traceon();
     if (SP) {
         SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function () {
-            iCSR.trace(0, 'initialized SharePoint clienttemplates.js');
-            iCSR.initTemplate('iCSR.Template', 'progressBar', 'display interactive progressBar');
-            iCSR.initTemplate('iCSR.Template', 'priority', 'display interactive priorityoptions');
+            iTrace(0, 'initialized SharePoint clienttemplates.js');
+            //TODO (low) enhance use of Templates (version 2.0)
+            iCSR.initTemplate('iCSR.Template', 'PercentComplete', 'display interactive progressBar');
+            iCSR.initTemplate('iCSR.Template', 'Priority', 'display interactive priorityoptions');
         });
     } else {
         iCSR.traceerror('no SharePoint environment');
     }
-    if (!window.iC) {
-        window.iC = iCSR;
-    }
+    window.iC = iCSR;//shortcut for F12 console use, better not use it in code, iCSR is the only global variable to be used
+
+    window.ic = iCSR.inspector;//ctx property inspector
 };
 
 /**
@@ -89,12 +89,13 @@ iCSR.initTemplate = function (iCSRnamespace, modulename, description) {
         console.log(iCSRnamespace, modulename, description);
         return true;
     } else {
-        //iCSR.traceerror('Missing: ', modulename);
+        iCSR.traceerror('Missing: ', modulename);
     }
 };
 
 //region iCSR.CFG - global configuration Namespace, properties and methods------------------------- ### iCSR.CFG
 iCSR.CFG = iCSR.CFG || { //configuration options
+        interactive: false,
         colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
         tracing: true,
         colors: { //predefined colors for fieldnames
@@ -109,7 +110,7 @@ iCSR.CFG = iCSR.CFG || { //configuration options
 
 iCSR.CFG.tokenfunctions = {};//if CFG.[token] does not exist, a corresponding function kan be executed
 iCSR.CFG.hastokenfunction = function (functionname) {
-    iCSR.trace(4, 'hastokenfunction:', typeof functionname, functionname);
+    iTrace(5, 'hastokenfunction:', typeof functionname, functionname);
     var hasFunction = false;
     if (typeof(functionname) === 'string') {
         functionname = functionname.split('(')[0];
@@ -120,7 +121,6 @@ iCSR.CFG.hastokenfunction = function (functionname) {
     return hasFunction;
 };
 
-
 /**
  *
  * @param functionname
@@ -130,13 +130,13 @@ iCSR.CFG.hastokenfunction = function (functionname) {
  */
 iCSR.fn.executeTokenfunction = function (functionname, parameters, silent) {
     // TODO: (high) this opens up Script Injection!
-    iCSR.trace(1, 'executeTokenfunction:', silent ? '(silent)' : '', functionname, '(', parameters, ')');
+    iTrace(1, 'executeTokenfunction:', silent ? '(silent)' : '', functionname, '(', parameters, ')');
     var tokenfunctionResult;
     if (iCSR.CFG.allowtokenfunctions) {
         if (iCSR.CFG.hastokenfunction(functionname)) {
             try {
                 var tokenfunction = iCSR.CFG.tokenfunctions[functionname];
-                iCSR.trace(2, 'call: ', functionname, '(', parameters, ')\n', tokenfunction);
+                iTrace(2, 'call: ', functionname, '(', parameters, ')\n', tokenfunction);
                 tokenfunctionResult = tokenfunction.call(this, parameters);
             } catch (e) {
                 iCSR.catch(e, 'executeTokenfunction:' + functionname);
@@ -148,7 +148,7 @@ iCSR.fn.executeTokenfunction = function (functionname, parameters, silent) {
         }
     } else {
         if (!silent) {
-            iCSR.trace(0, 'Tokenfunctions disabled', functionname);
+            iTrace(0, 'Tokenfunctions disabled', functionname);
         }
     }
     return tokenfunctionResult;
@@ -197,9 +197,13 @@ iCSR.trace = function (tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
         }
     }
 };
+var iTrace = iCSR.trace;//global reference to trace, makes it easy to comment them all with // so they are delete in iCSR.min.js
+function cl(p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) {//TODO (high) delete in all code, used for easy development
+    iTrace(0, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15);
+}
 iCSR.traceend = function (tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) {
     iCSR.CFG.errorcount++;
-    iCSR.trace(tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15)
+    iTrace(tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15);
 };
 iCSR.traceerror = function (p1, p2, p3, p4, p5, p6, p7, p8) {
     iCSR.CFG.errorcount++;
@@ -214,7 +218,7 @@ iCSR.traceon = function (setlevel) {
     iCSR.tracelevel = setlevel || 0; //default tracelevel
     iCSR.CFG.tracing = true; //extra information in the F12 Developer console
     iCSR.CFG.errorcount = 0;
-    iCSR.trace(-1, 'iCSR trace level ' + iCSR.tracelevel + 'template initialized {0:HH:mm:ss}' + new Date());
+    iTrace(0, 'iCSR trace level ' + iCSR.tracelevel + 'template initialized - ' + new Date());
     return true;
 };
 iCSR.traceoff = function (setlevel) {
@@ -238,8 +242,9 @@ iCSR.Str.alphanumeric = function (_string, _replacer) {//replace all non a-z and
     return _string.replace(/[^a-z0-9+]+/gi, _replacer || '');
 };
 iCSR.Str.toNumber = function (_string, _default) { //extract FIRST number from string or return _default
-    var _value = _string.match(/(\d+)/);
-    if (_value.length === 1) return _value[0];
+    if (typeof _string !== 'string') return _string;
+    var _value = _string.match(/\d+/);
+    if (_value) return _value[0];
     return _default;
 };
 //endregion --------------------------------------------------------------------------------------- iCSR.Str
@@ -315,10 +320,10 @@ iCSR.fn.replacetokens = function (_string, _tokensobject) {
                 var strippedtoken = iCSR.Str.alphanumeric(token);
                 if (strippedtoken === token) {//token is not declared yet
                     _tokenized = '[' + token + ']';
-                    iCSR.trace(3, 'replacetoken UNTOUCHED: ', _tokenized);
+                    iTrace(3, 'replacetoken UNTOUCHED: ', _tokenized);
                 }
             } else {
-                iCSR.trace(3, 'replacetoken:', token, '\n', _tokenized);
+                iTrace(3, 'replacetoken:', token, '\n', _tokenized);
             }
         }
         return _tokenized;
@@ -329,11 +334,11 @@ iCSR.fn.replacetokens = function (_string, _tokensobject) {
         tokenized = iCSR.fn.tokenArray(_string, '[]');//make array
         if (tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
         tokencount = tokenized.length;
-        iCSR.trace(3, 'tokenized before processing\n', tokenized);
+        iTrace(3, 'tokenized before processing\n', tokenized);
         tokenized = tokenized.map(replacetoken);//process all array elements
         _string = tokenized.join('');//make it one string again
     }
-    iCSR.trace(2, 'replacetokens', '(' + typeof _string + ') tokenized string: \n', _string, '\n', tokenized);
+    iTrace(2, 'replacetokens', '(' + typeof _string + ') tokenized string: \n', _string, '\n', tokenized);
     return _string;
 };
 
@@ -348,7 +353,7 @@ iCSR.fn.getColors = function (ctx) {
     if (iCSR.CFG.colors.hasOwnProperty(_fieldname)) {
         _colors = iCSR.CFG.colors[_fieldname];
     }
-    iCSR.trace(2, 'getColors', _fieldname, _colors);
+    iTrace(2, 'getColors', _fieldname, _colors);
     return _colors;
 };
 
@@ -375,7 +380,7 @@ iCSR.fn.fieldnames = function () { //return the internal fieldnames in the ctx o
  * @returns {string}
  */
 iCSR.fn.getfieldvalue = function (ctx) {
-    iCSR.trace(2, 'getfieldvalue:', typeof ctx, typeof ctx === 'string' ? ctx : ctx.CurrentFieldSchema.Name);
+    iTrace(2, 'getfieldvalue:', typeof ctx, typeof ctx === 'string' ? ctx : ctx.CurrentFieldSchema.Name);
     return (typeof ctx === 'string' ? ctx : ctx.CurrentItem[ctx.CurrentFieldSchema.Name]);
 };
 
@@ -394,7 +399,12 @@ iCSR.fn.configValue = function (configobject, property, defaultvalue) {
  * @returns {{}}
  */
 iCSR.fn.getconfig = function (ctx, initialconfig, bindconfig) {
-    var key = '', config = {}; //new config object so we do not work with this references
+    var key = '', config = {
+        ID: 0,
+        Name: 'none',
+        value: false
+    }; //new config object so we do not work with this references
+
     function mergeConfig(addconfig) {//TODO: (high) this is a shallow copy
         for (key in addconfig) if (addconfig.hasOwnProperty(key)) {
             config[key] = addconfig[key]; //defaultsetting
@@ -402,54 +412,33 @@ iCSR.fn.getconfig = function (ctx, initialconfig, bindconfig) {
     }
 
     try {
-        bindconfig = bindconfig.hasOwnProperty('FieldType') ? {} : bindconfig; //get optional config from .bind()
+        //if scope is the ctx object create a empty object
+        bindconfig = bindconfig.hasOwnProperty('FieldType') ? {} : bindconfig;
+
         bindconfig.trace > 0 ? iCSR.traceon(bindconfig.trace) : iCSR.traceoff(iCSR.tracelevel);
 
         mergeConfig(initialconfig); //defaultsetting
         mergeConfig(bindconfig); //overwrite default settings
-        //global configuration options
-        if (iCSR.hasOwnProperty('interactive')) config.interactive = iCSR.interactive;
 
-        //Share specific configuration
+        //global configuration options overruling config
+        if (iCSR.hasOwnProperty('Interactive')) {
+            config.interactive = iCSR.Interactive;
+        } else {
+
+        }
+
+        //SharePoint specific configuration
+        config.ID = ctx.CurrentItem.ID;
         config.Name = ctx.CurrentFieldSchema.Name;
         config.value = ctx.CurrentItem[config.Name]; //initial value
         config.valuenr = iCSR.Str.toNumber(config.value, false);
-        config['valuenr-1'] = config.valuenr - 1;
         config.shortlabel = config.valuenr ? iCSR.fn.label(config.value) : config.value; //if a valuenr then shorten it
-        config.ID = ctx.CurrentItem.ID;
+
         return (config);
     } catch (e) {
         iCSR.traceerror('getconfig', e, key, config);
     }
 };
-
-/**
- *
- * @param config
- * @param template
- * @returns {iCSR.CFG.priority.templates.default.CSS|{container, containerDiv, choice, choicehover, iCSRdescription}|iCSR.CFG.priority.templates.iCSRbar.CSS|{container, containerDiv, currenttext, currentlabel, choice, choicehover, iCSRdescription}|{}|*}
- */
-iCSR.fn.getconfigCSS = function (config, template) {//TODO (high) refactor getconfigCSS
-    var rules = config.rules || [];
-    var CSS = template.CSS || {};
-
-    function addrule(rule) {
-        rule = iCSR.fn.replacetokens(rule, config);
-        rules.push(rule);
-    }
-
-    if (typeof template.CSS === 'string') CSS = config.templates[template.CSS];
-    //iCSR.CSS.addconfigCSS(typeof template.CSS === 'string')?config.templates[template.CSS]:template.CSS;)
-    for (var key in CSS) {
-        if (CSS.hasOwnProperty(key) && key !== 'iCSRdescription') addrule(CSS[key]);
-    }
-    iCSR.CSS.addStylesheetWithRules(config.iCSRid, rules, true);
-    //iCSR.CSS.addconfigCSS = function (CSS) {
-    //    var CSS = CSS || {};
-    //}
-    return CSS;
-};
-
 //endregion --------------------------------------------------------------------------------------- iCSR.fn
 
 //region iCSR.CSS - CSS operations------------------------------------------------------------------### iCSR.CSS
@@ -476,7 +465,7 @@ iCSR.CSS.appendStyleSheettoHEAD = function (id) {
     _styleEl.id = id; // _styleEl.setAttribute("media", "only screen and (max-width : 1024px)")
     _styleEl.appendChild(document.createTextNode("")); // WebKit hack :(
     document.head.appendChild(_styleEl);
-    iCSR.trace(2, 'added stylesheet', _styleEl.id);
+    iTrace(2, 'added stylesheet', _styleEl.id);
     return _styleEl;
 };
 iCSR.CSS.insertRuleinStyleSheet = function (rule, element) {
@@ -501,17 +490,17 @@ iCSR.CSS.insertRulesfromArray = function (element, rules) {
     }
 };
 /**
- *
- * @param id
- * @param rules
- * @param reload
- * @param unique
+ * append (create) StyleSheet and insert array of Rules
+ * @param id - DOM element id
+ * @param rules - Array of strings
  */
-iCSR.CSS.addStylesheetWithRules = function (id, rules, reload, unique) {
+iCSR.CSS.addStylesheetWithRules = function (id, rules) {
     try {
-        var _styleEl = document.getElementById(id); //get stylesheet with id
-        if (reload || unique || !_styleEl) { //attach style only once
-            if (reload && _styleEl) _styleEl.parentNode.removeChild(_styleEl);
+        var _styleEl = document.getElementById(id); //get existing stylesheet
+        if (iCSR.ReloadCSSforeveryItem || !_styleEl) { //attach style only once
+            if (iCSR.ReloadCSSforeveryItem && _styleEl) {
+                iCSR.DOM.deleteElement(_styleEl);
+            }
             _styleEl = iCSR.CSS.appendStyleSheettoHEAD(id);
             iCSR.CSS.insertRulesfromArray(_styleEl, rules);
         }
@@ -519,6 +508,35 @@ iCSR.CSS.addStylesheetWithRules = function (id, rules, reload, unique) {
         iCSR.catch(e, 'iCSR.CSS.addStylesheetWithRules', id, rules);
     }
 };
+
+/**
+ * Append CSS from Template config definition to the page
+ * @param CSS
+ * @param config
+ * @returns {iCSR.CFG.Priority.templates.default.CSS|{container, containerDiv, choice, choicehover, iCSRdescription}|iCSR.CFG.Priority.templates.iCSRbar.CSS|{container, containerDiv, currenttext, currentlabel, choice, choicehover, iCSRdescription}|{}|*}
+ */
+iCSR.CSS.appendTemplateCSS = function (CSS, config) {
+    var rules = config.rules || [];
+    CSS = CSS || false;
+
+    if (typeof CSS === 'string') {
+        CSS = config.templates[CSS];//get CSS from config definition
+    }
+    if (CSS) {
+        for (var key in CSS) {
+            if (CSS.hasOwnProperty(key) && key !== 'iCSRdescription') {
+                var rule = iCSR.fn.replacetokens(CSS[key], config);
+                rules.push(rule);
+            }
+        }
+        iCSR.CSS.addStylesheetWithRules(config.iCSRid, rules, true);
+        iTrace(1, 'CSS:', CSS);
+    } else {
+        iCSR.traceerror('Missing CSS config.templates:', CSS);
+    }
+    return CSS;
+};
+
 //endregion --------------------------------------------------------------------------------------- iCSR.CSS
 
 //region iCSR.SP - SharePoint interactions using JSOM / REST----------------------------------------### iCSR.SP
@@ -526,6 +544,21 @@ iCSR.CSS.addStylesheetWithRules = function (id, rules, reload, unique) {
 
 iCSR = iCSR || {};
 iCSR.SP = {}; //namespace for SP related stuff
+
+iCSR.Status = function (text, color, title, first) {
+    SP.SOD.executeFunc("sp.js", "SP.ClientContext", function () {
+        if (!text || color === 0) {
+            SP.UI.Status.removeAllStatus(true);
+        }
+        if (text) {
+            var status = SP.UI.Status.addStatus(title || 'iCSR Demo', text, first || false);
+            SP.UI.Status.setStatusPriColor(status, color || 'yellow');
+            window.setTimeout(function () {
+                SP.UI.Status.removeStatus(status);
+            }, 5000);
+        }
+    });
+};
 
 //SOD functions
 //https://msdn.microsoft.com/en-us/library/office/ff408081(v=office.14).aspx
@@ -550,11 +583,12 @@ iCSR.SP.UpdateItem = function (listID, ID, fieldname, value, successFunc, errorF
     var list = web.get_lists().getById(listID);
     var item = list.getItemById(ID);
     context.load(item);
+    value = String(value);//make sure we are writing string values
     item.set_item(fieldname, value);
     item.update();
-    iCSR.trace(2, 'iCSR.SP.UpdateItem', ID, fieldname, value);
+    iTrace(2, 'iCSR.SP.UpdateItem', ID, fieldname, typeof value);
     successFunc = successFunc || function () {
-            iCSR.trace(1, 'SP.UpdateItem', ID, fieldname, value);
+            iTrace(1, 'success SP.UpdateItem', ID, fieldname, value);
             iCSR.SP.refreshView();
         };
     errorFunc = errorFunc || function () {
@@ -657,6 +691,20 @@ iCSR.DOM.waitforelement = function (id, callback, yieldtime) { //  Wait for a DO
     }
 };
 
+/**
+ * Delete a DOM element
+ * @param element
+ */
+iCSR.DOM.deleteElement = function (element) {
+    try {
+        if (typeof element === 'string') {
+            element = document.getElementById(element);
+        }
+        element.parentNode.removeChild(element);
+    } catch (e) {
+        iCSR.tracewarning('deleteElement error:', element);
+    }
+};
 /**
  * Usage: in OnPostRender
  * new iCSR.DOM.Control.attachAllOption( 'Colors' );
@@ -806,13 +854,14 @@ iCSR.Template.colorLabel = function (ctx) {
         label = iCSR.fn.label(value),
         html = value,
         color = false;
-    iCSR.trace(2, 'colorLabel', label, value);
+    iCSR.Status('colorLabel');
     iCSR.CFG.colorGroupheaders = false;
     if (iCSR.CFG.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
+        var config = iCSR.fn.getconfig(ctx, {}, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
         var colors = iCSR.fn.getColors(ctx);
         var colornr = iCSR.Str.toNumber(value, 0);
-        if (colors.hasOwnProperty(value)) {
-            color = colors[value]
+        if (colors.hasOwnProperty(value)) {//colors is a property object
+            color = colors[value];
         } else {
             if (Array.isArray(colors)) {
                 color = colors[colornr];
@@ -821,13 +870,17 @@ iCSR.Template.colorLabel = function (ctx) {
                 color = 'inherit';
             }
         }
+        if (!color) {
+            iCSR.tracewarning('colorLabel: no color', value, colors);
+        }
         //use number from value label
         html = '<span style="background-color:{0};">&nbsp{1}&nbsp</span>';
     }
+    iTrace(2, 'colorLabel', ctx.CurrentItem);
     return String.format(html, color, iCSR.Str.nowordbreak(label));
-}
-;
-//endregion --------------------------------------------------------------------------------------- iCSR..Template.colorLabel
+};
+
+//endregion --------------------------------------------------------------------------------------- iCSR.Template.colorLabel
 
 //region iCSR.Template - change Browser or SharePoint states----------------------------------------### iCSR.Template
 
@@ -856,7 +909,7 @@ iCSR.Control.PercentComplete = function (config) {
     progressBar.setconfig('scale', cfg.interactive); //display scale in bar
     progressBar.setconfig('unique', false); //unique CSS styles for bars
     progressBar.segments = []; //array DOM elements of all percentage segments making up this progressBar
-    iCSR.trace(2, 'progressBar', cfg.ID, progressBar);
+    iTrace(2, 'progressBar', cfg.ID, progressBar);
 
     progressBar.addCSS = function () {
         var CSSname = "." + cfg.CSSid;
@@ -894,12 +947,16 @@ iCSR.Control.PercentComplete = function (config) {
     progressBar.setValue = function (nr) { //input value van be in 'nr %' string notation
         progressBar.value = iCSR.Str.toNumber(nr, 0);// 0-100 without %
         progressBar.currentnr = Math.round(progressBar.value / 10); // Rounded values 0 to 10
+        iTrace(1, nr, progressBar.value, progressBar);
+    };
+    progressBar.resettozero = function () {
+        document.getElementById(progressBar.segments[progressBar.currentnr]).className = ''; //reset previous selection
     };
     progressBar.progressClicked = function (el) {
         event.preventDefault();
         event.stopPropagation();
         el = (typeof el.click === 'function') ? el : el.srcElement;
-        if (progressBar.currentnr) document.getElementById(progressBar.segments[progressBar.currentnr]).className = ''; //reset previous selection
+        if (progressBar.currentnr) progressBar.resettozero();
         progressBar.setValue(el.innerHTML);
         el.className = "currentProgress";
         if (cfg.interactive) progressBar.updateFunction(progressBar);
@@ -907,7 +964,7 @@ iCSR.Control.PercentComplete = function (config) {
     progressBar.addCSS();
     progressBar.setValue(cfg.value || configError('missing .value'));
     window[progressBar.barid] = progressBar; //extra global reference to all progressBars
-    ctx.iCSR = ctx.iCSR || {}; //store progressBars on the global ctx object
+    ctx.iCSR = ctx.iCSR || {}; //store progressBars on the global ctx object//TODO (high) don't do this
     ctx.iCSR.PercentComplete = ctx.iCSR.PercentComplete || [];
     ctx.iCSR.PercentComplete.push(progressBar);
     return progressBar.html();
@@ -967,8 +1024,8 @@ iCSR.Template.PercentComplete = function (ctx) {
     config.barid = ctx.wpq + '_' + config.ID; //unique id to this progressBar//TODO (high) move to getconfig
     if (config.unique) config.CSSid += config.barid; //custom class for every progressBar
     if (!config.update) {
-        iCSR.trace(2, 'using default SharePoint JSOM code to update', config.Name);
         config.update = function (progressBar) {
+            iTrace(2, 'using default SharePoint JSOM code to update', config.Name, progressBar);
             SP.SOD.executeOrDelayUntilScriptLoaded(function updateProgress() {
                 var listID = SP.ListOperation.Selection.getSelectedList();
                 iCSR.SP.UpdateItem(listID, progressBar.config.ID, progressBar.config.Name, progressBar.value / 100);
@@ -979,9 +1036,9 @@ iCSR.Template.PercentComplete = function (ctx) {
 };
 //endregion --------------------------------------------------------------------------------------- iCSR.
 
-//region --- iCSR.Template.priority
+//region --- iCSR.Template.Priority
 //noinspection BadExpressionStatementJS,HtmlUnknownTarget
-iCSR.CFG.priority = {
+iCSR.CFG.Priority = {
     iCSRid: 'Priority',
     trace: 4,//custom tracelevel for this template
     values: {
@@ -1021,6 +1078,7 @@ iCSR.CFG.priority = {
                 containerDiv: ".[Classcontainer]>div {position:relative;float:left;display:inline;border:1px solid grey}",
                 currenttext: ".[Classcurrent] {font-size:11px;color:[textcolor]}",
                 currentlabel: ".[Classcurrent] {width:[widthCurrent];text-align:center;padding:2px;}",
+                currentnoninteractive: ".[Classcurrent].NonInteractive {width:100%}",
                 choice: ".[Classchoice] {width:[widthChoice];cursor:pointer;opacity:.4}",
                 choicehover: ".[Classchoice]:hover {opacity:1;border-color:black}",
                 iCSRdescription: 'CSS for the iCSR default priority interaction'
@@ -1041,10 +1099,17 @@ iCSR.CFG.priority = {
     },
     iCSRdescription: 'iCSR priority configuration'
 };
+/**
+ * pre-Process all configurations (global, Template, custom) into one configuration for a Template
+ * @param config
+ * @returns {iCSR.CFG.Priority.templates.default|{container, item, CSS}|iCSR.CFG.priority.templates.default}
+ */
 iCSR.fn.getconfigTemplate = function (config) {//TODO (high) refactor getconfigtemplate
-    iCSR.trace(1, 'getconfigTemplate2', config.template);
+    iTrace(3, 'getconfigTemplate', config.template);
+
     var ispredefinedtemplate = config.templates.hasOwnProperty(config.template);
     var template = config.templates.default;//start with default template
+
     if (ispredefinedtemplate) {
         var customtemplate = config.templates[config.template];//overwrite with customtemplate
         for (var key in customtemplate) {
@@ -1054,28 +1119,28 @@ iCSR.fn.getconfigTemplate = function (config) {//TODO (high) refactor getconfigt
         template.item = iCSR.fn.replacetokens(config.template);
         //template.item = "<div class='[classname]' onclick=\\"[click]\\">" + config.template + "</div>";
     }
-    //overwrite with userdefined template settings
+    //JavaScript variables are references, so we can also overwrite the input config
     config.template = template;
-    return template;
+    return template;//also return a copy because the Template function uses a local var (for now)
 };
 
-iCSR.Template.priority = function (ctx) {
-    var config = iCSR.fn.getconfig(ctx, iCSR.CFG.priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+iCSR.Template.Priority = function (ctx) {
+    var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
 
     var replacetokens = iCSR.fn.replacetokens.bind(config); //bind the current config to the function
 
     var template = iCSR.fn.getconfigTemplate(config);
-    var CSS = iCSR.fn.getconfigCSS(config, template);
+    iCSR.CSS.appendTemplateCSS(template.CSS, config);
 
     config.nr = "0"; //trick replacement in accepting first value as 0 string
 //    iCSR.traceon(0);
-    iCSR.trace(0, config.iCSRid, 'config.template =', config.template, '\n config:', config, '\n item:', template.item);
-    iCSR.trace(1, 'CSS:', CSS);
+    iTrace(0, config.iCSRid, 'config.template =', config.template, '\n config:', config, '\n item:', template.item);
     for (var keyvalue in config.values) { // jshint ignore:line, Object has those keyvalues
         config.keyvalue = keyvalue;
         var iscurrent = config.value === keyvalue;
         config.click = replacetokens(config.clickupdate);
         config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
+        if (!config.interactive) config.classname += ' NonInteractive';//add CSS class for non-interactive Template
         config.color = config.colors ? config.colors[config.nr] : config.values[config.keyvalue];
         config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
         var item = replacetokens(template.item || config.template);
@@ -1088,11 +1153,48 @@ iCSR.Template.priority = function (ctx) {
     return html;
 };
 
-//endregion iCSR.Template.priority
+//endregion iCSR.Template.Priority
 
 //endregion iCSR.Template
 
 
+/**
+ *
+ * @param ctx
+ * @returns {*}
+ * @constructor
+ */
+iCSR.Me = function (ctx) {
+    //var _fieldtype = ctx.CurrentFieldSchema.FieldType;
+    var _fieldname = ctx.CurrentFieldSchema.RealFieldName;
+    //console.log(_fieldname,iCSR.Template[_fieldname]);
+    if (iCSR.Template[_fieldname]) return iCSR.Template[_fieldname].call(this, ctx);
+    iCSR.tracewarning('Missing iCSR.Me definition for:', _fieldname);
+};
+
+
+//region ctx object inspector can be used from the F12 console - type 'ic' in the console
+iCSR.SP.getctxobjectinfo = function (ctx_object, fieldnames) {
+    var fields = {};
+    ctx_object.forEach(function (field) {
+        var fieldinfo = {};
+        fieldnames.split(',').forEach(function (prop) {
+            fieldinfo[prop] = field[prop];
+        });
+        fields[field.counter] = fieldinfo;
+    });
+    return (fields);
+};
+if (!window.ic) {
+    //noinspection JSUnusedGlobalSymbols
+    Object.defineProperty(window, 'ic', {
+        configurable: true,
+        get: function () {
+            if (ctx) return console.table(iCSR.SP.getctxobjectinfo(ctx.ListSchema.Field, "DisplayName,Name,RealFieldName,FieldType,Type,role"));
+        }
+    });
+}
+//endregion
 iCSR.init();
 
 ///////
