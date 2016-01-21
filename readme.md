@@ -16,7 +16,7 @@
 #### Can be created with one **iCSR.Me** statement:
 *Note: This is standard CSR Template code,*
 
-*if you have never seen CSR code, the **iCSR.Me** part might not seem cool ... yet*
+*if you have never seen CSR code, the* **iCSR.Me** *part might not seem cool ... yet*
 
     SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
     Templates: {
@@ -46,17 +46,23 @@
 
 ## Installation
 
-#### Instal the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
-* No support for FireFox or Microsoft Internet Explorer yet
+Add the [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js) library and you will write less code.
+
+#### Install the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+
+* The free [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) was developed by Andrei Markeev
+ It makes creating CSR files and JSlink connections a breeze.
+ (*No support for FireFox or Microsoft Internet Explorer yet*)
+
 #### Add [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) to your environment
 
-* In the Style Library  
-	* {instructions here}
+* [In the Style Library](./documentation/)
+
+* In the MasterPage
+
+* Loading from a CSR file
+
 ## Usage
-
-The free [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) was developed by Andrei Markeev to make creating CSR files and JSlink connections a breeze.
-
-Add the [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js) library and you will write less code.
 
 #### Ready made iCSR.Me Templates
 
