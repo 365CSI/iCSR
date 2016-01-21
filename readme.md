@@ -13,8 +13,8 @@
 ![](http://i.imgur.com/ZUNgWGh.jpg)
 
 #### Can be created with one **iCSR.Me** statement:
-(*Note: This is standard CSR Template code,
-if you have never seen CSR code the 'iCSR.Me' part might not seem as cool as it is*)
+*Note: This is standard CSR Template code,
+if you have never seen CSR code, the **iCSR.Me** part might not seem as cool as it is*
 
     SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
     Templates: {
