@@ -1,4 +1,3 @@
-![](https://avatars0.githubusercontent.com/u/14222997?v=3&s=96)
 ### alfa version disclaimer:
 * iCSR has not yet reached version 1.0  
 * Is under active development  
@@ -7,7 +6,7 @@
 
 ## SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a CSR support library for writing **less** JavaScript code.
+#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a CSR support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
@@ -35,7 +34,6 @@
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
-
 ##### *{5 minute video goes here}*
 
 ## Project goals:
@@ -43,6 +41,7 @@
 * Help people get started with CSR development in 5 minutes  
 (including installing the [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en))  
 * Learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
+* No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
 ## Installation
 
