@@ -4,7 +4,7 @@
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 * Code may change and refactored for the 1.0 release (hopefully in february)
 
-## ![](https://365csi.nl/iCSR/ipcountlogo/) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
+## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
 #### A support library for writing **less** JavaScript code
 
