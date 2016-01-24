@@ -6,16 +6,13 @@
 
 ## ![](https://avatars0.githubusercontent.com/u/14222997?v=3&s=96) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-#### [**iCSR.js**](https://github.com/365CSI/iCSR/blob/master/iCSR.js), a CSR support library for writing **less** JavaScript code
+#### A support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
 ![](http://i.imgur.com/ZUNgWGh.jpg)
 
 ##### Can be created with one **iCSR.Me** statement:
-*Note: This is standard CSR Template code,*
-
-*if you have never seen CSR code, the* **iCSR.Me** *part might not seem cool ... yet*
 
     SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
     Templates: {
@@ -45,13 +42,10 @@
 
 ## Installation
 
-#### Install the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+1. #### Install and learn to use the [Cisar Chrome plugin](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
 
-* The free [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) was developed by Andrei Markeev
- It makes creating CSR files and JSlink connections a breeze.
- (*No support for FireFox or Microsoft Internet Explorer yet*)
 
-#### Add [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) to your environment
+2. #### Add [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) to your environment
 
 * [In the Style Library](./documentation/)
 
