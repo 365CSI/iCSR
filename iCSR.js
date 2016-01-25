@@ -3,10 +3,13 @@
     var iCSR = window.iCSR;//just to be sure, in case iCSR is added to another Namespace
     Object.defineProperties(iCSR, {
         _VERSION: {
-            value: '0.5', writable: false
+            value: '0.6', writable: false
+        },
+        _DEMO: {
+            value: true, writable: true
         },
         Interactive: {//(optional) indicates default setting (overrides Template config!) to be used by all iCSR Templates
-            value: false, writable: true
+            value: true, writable: true
         },
         ReloadCSSforeveryItem: {//Re-applies CSS for every item; easy for Cisar developing, set to false for delivery
             value: true, writable: true
@@ -14,17 +17,16 @@
     });
     /* iCSR - Client Side Rendering IKEA style
 
-     license: CC-BY
      http://iCSR.github.io
 
      History: december 2015 - first Proof of Concept
 
-     TODO: Host demo version on 365CSI.com or CDN; counter image
-
-     Whishlist:
+     Wishlist:
      - view item by groupmembership
 
      JavaScript style notes
+     - I am sorry, I could NOT find a use for jQuery
+     - _ prefixed variables are local and safe to minify/obfuscate
      - Global namespace iCSR holds all content
      - .Me function auto executes Templates and Controls based on the ctx object fieldnames or fieldtypes
      - iCSR.CFG = generic configurations for Templates and Controls
@@ -33,6 +35,8 @@
      - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
      - iCSR.Template = ready made functionality
      - iCSR.fn = generic support functions
+     - iCSR.Str = String functions
+     - iCSR.Date = Date functions
      */
 
 //region JSHINT
@@ -48,38 +52,53 @@
     /*jshint -W030*/ //allow anonymous function
 //endregion
 
-//region Global overrides - SharePoint core.js is not loaded yet ----------------------------------- ### Global Functions
+//region Global overrides - SharePoint core.js is not loaded yet ---------------------------------- ### Global Functions
     /**
      * Get Ancestor up in the DOM tree - SharePoint overloads this in (loaded later) core.js
-     * @param element
+     * @param _element
      * @param tagType
      * @returns {*}
      * @constructor
      */
-    function GetAncestor(element, tagType) {
-        while (element !== null && element.tagName !== tagType) element = element.parentNode;
-        return element;
+    function GetAncestor(_element, tagType) {
+        while (_element !== null && _element.tagName !== tagType) _element = _element.parentNode;
+        return _element;
     }
 
 //endregion --------------------------------------------------------------------------------------- Global Functions
 
-//region iCSR Namespaces --------------------------------------------------------------------------- ### iCSR Namespaces
+//region iCSR Namespaces -------------------------------------------------------------------------- ### iCSR Namespaces
     /**
-     * use any predefined code declared in previous libraries, all functionality in this file will be appended
-     *
+     * use any predefined iCSR code declared in previous libraries, all functionality in this file will be appended
      */
-    iCSR.Template = iCSR.Template || {}; //Template functions return HTML for easy execution in a CSR file
-    iCSR.SP = iCSR.SP || {};//placeholder SP sub-namespace
-    iCSR.fn = iCSR.fn || {}; //support functions
-    iCSR.Control = iCSR.Control || {}; //controllers created with new ()
-    iCSR.Str = iCSR.Str || {}; //String functions because .prototyping is not 100% safe because others can do it as well.
-    iCSR.CSS = iCSR.CSS || {}; //CSS storage and actions
-    iCSR.Tokens = iCSR.Tokens || {}; // String functions and Custom function declarations for handling [token] in Strings
+    iCSR.Template = iCSR.Template || {};    // Template functions return HTML for easy execution in a CSR file
+    iCSR.Items = {};                        // Store all ListItems configurations by Fieldname
+    iCSR.SP = iCSR.SP || {};                // SP-SharePoint related functions
+    iCSR.fn = iCSR.fn || {};                // generic support functions
+    iCSR.Control = iCSR.Control || {};      // controllers created with new () - for use in OnPostRender functions
+    iCSR.Str = iCSR.Str || {};              // String functions because .prototyping is not 100% safe
+    iCSR.Date = iCSR.Date || {};            // DateTime functions (saves from loading momentJS)
+    iCSR.CSS = iCSR.CSS || {};              // CSS storage and actions
+    iCSR.Tokens = iCSR.Tokens || {};        // String functions and Custom function declarations for handling [token] in Strings
+    iCSR.CFG = iCSR.CFG || {                // configuration options for all Templates
+            interactive: false,
+            colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
+            tracing: true,
+            colors: { //predefined colors for fieldnames
+                "Default": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
+                "Priority": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
+                objectDescription: 'custom colors matching SharePoint internal fieldnames'
+            },
+            objectDescription: 'iCSR global configurations'
+        };
 //endregion --------------------------------------------------------------------------------------- iCSR Namespaces
 
+//region iCSR.Init -------------------------------------------------------------------------------- ### iCSR.init
+    /**
+     * Initialize iCSR
+     */
     iCSR.init = function () {
         console.info('%c iCSR - Proof of Concept - ' + iCSR._VERSION + ' ', iCSR.CFG.colorBlueYellow + ';font-size:20px;');
-        //iCSR.traceon();
         //if (SP) {
         //    //SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function () {
         //        iTrace(0, 'initialized SharePoint clienttemplates.js');
@@ -111,21 +130,7 @@
             iCSR.traceerror('Missing: ', modulename);
         }
     };
-
-//region iCSR.CFG - global configuration Namespace, properties and methods------------------------- ### iCSR.CFG
-    iCSR.CFG = iCSR.CFG || { //configuration options for all Templates
-            interactive: false,
-            colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
-            tracing: true,
-            colors: { //predefined colors for fieldnames
-                "Default": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
-                "Priority": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
-                objectDescription: 'custom colors matching SharePoint internal fieldnames'
-            },
-            objectDescription: 'iCSR global configurations'
-
-        };
-//endregion --------------------------------------------------------------------------------------- iCSR.CFG
+//endregion ---------------------------------------------------------------------------------------- iCSR.init
 
 //region iCSR.Tokens ------------------------------------------------------------------------------ ### iCSR.Tokens
     /**
@@ -167,7 +172,8 @@
                     iTrace(3, 'replacetoken UNTOUCHED: ', _tokenized);
                 }
             } else {
-                iTrace(3, 'replacetoken:', token, '\n', _tokenized);
+//                iTrace(3, 'replacetoken:', token, '\n', _tokenized);
+                if (iCSR.tracelevel > 2) console.log('\t\t', token, ' ==> ', _tokenized);
             }
         }
         return _tokenized;
@@ -185,17 +191,18 @@
         _tokenconfig = _tokenconfig || this; //tokens defined in optional .bind(config)
         var tokenized;//working array breaking string into tokens
         var tokencount = 1;
-        for (var loop = 0; loop < 5; loop++) {//too lazy to develop recursive code
+        var loop;
+        for (loop = 0; loop < 10; loop++) {//too lazy to develop recursive code
             tokenized = iCSR.fn.tokenArray(_string, '[]');//make array
-            if (tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
-            tokencount = tokenized.length;
             iTrace(3, 'tokenized before processing\n', tokenized);
             tokenized = tokenized.map(function (token) {
                 return iCSR.Tokens.replacetoken(token, _tokenconfig);
             }); // jshint ignore:line
             _string = tokenized.join('');//make it one string again
+            if (tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
+            tokencount = tokenized.length;
         }
-        iTrace(2, 'replacetokens', '(' + typeof _string + ') tokenized string: \n', _string, '\n', tokenized);
+        iTrace(2, 'replacetokens', '(' + typeof _string + ') tokenized in ', loop, 'iterations\nstring:', _string, '\narray:', tokenized);
         return _string;
     };
 
@@ -263,7 +270,7 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Tokens
 
 //region iCSR.info & iCSR.trace-------------------------------------------------------------------- ### iCSR.info 
-    iCSR.info = function () { //list all iCSR doable functions and methods
+    iCSR.info = function () {
         var consoleObject = function (iCSRobject) {
             console.info('iCSR: ' + iCSR._VERSION, iCSRobject.objectDescription);
             for (var key in iCSRobject) {
@@ -341,22 +348,64 @@
         if (_value) return _value[0];
         return _default;
     };
-//endregion --------------------------------------------------------------------------------------- iCSR.Str
-
-//region iCSR.fn - utility functions----------------------------------------------------------------### iCSR.fn
-    /**
-     *
-     * @param value
-     * @returns {*}
-     */
-    iCSR.fn.label = function (value) {// (1) Label => Label
+    iCSR.Str.label = function (value) {// (1) Label => Label
         //TODO make generic wih regex to process [n] Label and (1)Label return Object {nr:nr,label:label}
         var valuemarker = ') ',
             label = value.indexOf(valuemarker) > 0 ? value.split(valuemarker)[1] : value;
+
         return (label);
+    };
+//endregion --------------------------------------------------------------------------------------- iCSR.Str
+
+//region iCSR.Date - DateTime utility functions --------------------------------------------------- ### iCSR.Date
+    iCSR.Date.object = function (date) {
+        if (typeof date === 'string') date = new Date(date);
+        date = date || new Date();//today
+        var _date = {
+            "yyyy": date.getFullYear(),
+            "MM": date.getMonth() + 1,//months in JavaScript are zero based
+            "dd": date.getDate(),
+            "hh": date.getHours(),
+            "mm": date.getMinutes(),
+            "ss": date.getSeconds()
+        };
+        _date.yy = String(_date.yyyy).substring(2);
+        return _date;
+    };
+    iCSR.Date.add = function (date, numberOfDays, numberOfMonths, numberOfYears) {
+        date = date || new Date();//today
+        var _Date = iCSR.Date.object(date);
+        return new Date(
+            _Date.yyyy + (numberOfYears ? numberOfYears : 0),
+            _Date.MM + (numberOfMonths ? numberOfMonths : 0) - 1,//months in JavaScript are zero based
+            _Date.dd + (numberOfDays ? numberOfDays : 0),
+            _Date.hh,
+            _Date.mm,
+            _Date.ss
+        );
+    };
+    iCSR.Date.format = function (date, datestring) {//"YYYY"
+        var isSP = true;
+        datestring = datestring || "yyyy-MM-dd";
+        date = date || new Date();//today
+        if (isSP) {
+            return String.format("{0:" + datestring + "}", date);//TODO dates/months need leading zeros
+        }
+
+        var _Date = iCSR.Date.object(date);
+        for (var datekey in _Date) {
+            if (_Date.hasOwnProperty(datekey)) {
+                var replacekey = new RegExp(datekey, 'g');
+                datestring = datestring.replace(replacekey, _Date[datekey]);
+            }
+        }
+        return datestring;
     };
 
 
+//endregion --------------------------------------------------------------------------------------- iCSR.Date
+
+//region iCSR.fn - utility functions----------------------------------------------------------------### iCSR.fn
     /**
      * "Hello [var]" -> 'Hello','var',
      *
@@ -384,6 +433,21 @@
         }
         return tokenized;
     };
+    /**
+     * @return {string}
+     */
+    iCSR.fn.MMDDYYYY = function (_date, _separator) {
+        _separator = _separator || '/';
+        _date = new Date(_date);
+        return ((_date.getMonth() + 1) + _separator + _date.getDate() + _separator + _date.getFullYear());
+    };
+    iCSR.fn.addItem = function (config) {
+        var _key = config.Name;
+        if (!iCSR.Items.hasOwnProperty(_key)) {//init Array
+            iCSR.Items[_key] = [];
+        }
+        iCSR.Items[_key].push(config.value);
+    };
 
     /**
      * return a (choices) named value color object from a String or Array or Object
@@ -394,12 +458,16 @@
     iCSR.fn.extractcolors = function (colorObject, choices) {
         if (typeof colorObject === 'string') {
             var colors = colorObject.split(',');
-            colorObject = {};
-            for (var n = 0; n < choices.length; n++) {
-                var choice = choices[n];
-                var color = colors[n];
-                if (!color)color = 'snow';
-                colorObject[choice] = color;
+            if (choices) {
+                colorObject = {};
+                for (var n = 0; n < choices.length; n++) {
+                    var choice = choices[n];
+                    var color = colors[n];
+                    if (!color)color = 'snow';
+                    colorObject[choice] = color;
+                }
+            } else {
+                colorObject = colors;
             }
             //TODO proces colorObject when it is an Array, check Choices names
         }
@@ -472,10 +540,7 @@
             //global configuration options overruling config
             if (iCSR.hasOwnProperty('Interactive')) {
                 config.interactive = iCSR.Interactive;
-            } else {
-
             }
-            config.demonotice = "Download iCSR.js from iCSR.github.io ► the iCSR.js file you linked is for demonstration use only";
             //SharePoint specific configuration
             //Get Relevant properties from CurrentFieldSchema
             ['Name', 'Display Name', 'RealFieldName', 'FieldType', 'counter', 'Choices'].forEach(function (property) {
@@ -489,10 +554,14 @@
             config.iid = GenerateIID(ctx);
             config.value = ctx.CurrentItem[config.Name]; //initial value
             config.valuenr = iCSR.Str.toNumber(config.value, false);
-            config.shortlabel = config.valuenr ? iCSR.fn.label(config.value) : config.value; //if a valuenr then shorten it
+            config.shortlabel = config.valuenr ? iCSR.Str.label(config.value) : config.value; //if a valuenr then shorten it
+            config.nonbreaklabel = iCSR.Str.nowordbreak(config.shortlabel);
+            config.emptystring = config.value === '';
 
             if (config.FieldType === 'DateTime') {
-                config.days = GetDaysAfterToday(new Date(config.value));
+                var _Date = new Date(config.value);
+                config.days = GetDaysAfterToday(_Date);
+                config.datepickervalue = iCSR.Date.format(_Date, 'yyyy-MM-dd');
                 config.absdays = Math.abs(config.days);
                 if (isNaN(config.days)) {
                     config.days = config.absdays = false;
@@ -507,7 +576,7 @@
     /**
      * pre-Process all configurations (global, Template, custom) into one configuration for a Template
      * @param config
-     * @returns {iCSR.CFG.Priority.templates.default|{container, item, CSS}|iCSR.CFG.priority.templates.default}
+     * @returns {*}
      */
     iCSR.fn.getconfigTemplate = function (config) {//TODO (high) refactor getconfigtemplate
         iTrace(3, 'getconfigTemplate', config.template);
@@ -558,25 +627,35 @@
         iTrace(2, 'added stylesheet', _styleEl.id);
         return _styleEl;
     };
-    iCSR.CSS.insertRuleinStyleSheet = function (rule, element) {
-        //TODO: element=element||this;//to bind(element)
-        if (element) {
+    /**
+     * insert one CSS rule to an existing element
+     * @param rule
+     * @param _element
+     */
+    iCSR.CSS.insertRuleinStyleSheet = function (_element, rule) {
+        //TODO: _element=_element||this;//to bind(_element)
+        if (_element) {
             try {
-                element.sheet.insertRule(rule, 0);
+                _element.sheet.insertRule(rule, 0);
             } catch (e) {
                 iCSR.tracewarning('ignoring CSS definition:', '"' + rule + '"');
             }
         } else {
-            iCSR.traceerror('Not a STYLE sheet', element);
+            iCSR.traceerror('Not a STYLE sheet', _element);
         }
     };
-    iCSR.CSS.insertRulesfromArray = function (element, rules) {
-        if (element && element.tagName === 'STYLE') {
+    /**
+     * insert an array of CSS rules to an existing STYLE element
+     * @param _element
+     * @param rules
+     */
+    iCSR.CSS.insertRulesfromArray = function (_element, rules) {
+        if (_element && _element.tagName === 'STYLE') {
             rules.forEach(function (rule) {
-                iCSR.CSS.insertRuleinStyleSheet(rule, element);
+                iCSR.CSS.insertRuleinStyleSheet(_element, rule);
             });
         } else {
-            iCSR.traceerror('Not a STYLE element:', element);
+            iCSR.traceerror('Not a STYLE element:', _element);
         }
     };
     /**
@@ -603,20 +682,22 @@
      * Append CSS from Template config definition to the page
      * @param CSS
      * @param config
-     * @returns {iCSR.CFG.Priority.templates.default.CSS|{container, containerDiv, choice, choicehover, iCSRdescription}|iCSR.CFG.Priority.templates.iCSRbar.CSS|{container, containerDiv, currenttext, currentlabel, choice, choicehover, iCSRdescription}|{}|*}
+     * @param traceCSS
+     * @returns {*}
      */
-    iCSR.CSS.appendTemplateCSS = function (CSS, config) {
+    iCSR.CSS.appendTemplateCSS = function (CSS, config, traceCSS) {
         var rules = config.rules || [];
         CSS = CSS || false;
 
-        if (typeof CSS === 'string') {
-            CSS = config.templates[CSS];//get CSS from config definition
+        if (typeof CSS === 'string') {//CSS is a reference to a CSS definition in config.templates
+            CSS = config.templates[CSS];
         }
         if (CSS) {
             for (var key in CSS) {
                 if (CSS.hasOwnProperty(key) && key !== 'iCSRdescription') {
                     var rule = iCSR.Tokens.replace(CSS[key], config);
                     rules.push(rule);
+                    if (traceCSS) iTrace(2, 'CSS: ', key, rule);
                 }
             }
             iCSR.CSS.addStylesheetWithRules(config.iCSRid, rules, true);
@@ -635,16 +716,17 @@
     iCSR = iCSR || {};
     iCSR.SP = {}; //namespace for SP related stuff
 
-    iCSR.Status = function (text, color, title, first) {
+    iCSR.SPStatus = function (text, color, title, first) {
         SP.SOD.executeFunc("sp.js", "SP.ClientContext", function () {
+            var Status = SP.UI.Status;
             if (!text || color === 0) {
-                SP.UI.Status.removeAllStatus(true);
+                Status.removeAllStatus(true);
             }
             if (text) {
-                var status = SP.UI.Status.addStatus(title || 'iCSR Demo', text, first || false);
-                SP.UI.Status.setStatusPriColor(status, color || 'yellow');
+                var status = Status.addStatus(title || 'iCSR Demo', text, first || false);
+                Status.setStatusPriColor(status, color || 'yellow');
                 window.setTimeout(function () {
-                    SP.UI.Status.removeStatus(status);
+                    Status.removeStatus(status);
                 }, 5000);
             }
         });
@@ -673,10 +755,11 @@
         var list = web.get_lists().getById(listID);
         var item = list.getItemById(ID);
         context.load(item);
-        value = String(value);//make sure we are writing string values
+        //
+        //value = String(value);//make sure we are writing string values
         item.set_item(fieldname, value);
         item.update();
-        iTrace(2, 'iCSR.SP.UpdateItem', ID, fieldname, typeof value);
+        iTrace(0, 'iCSR.SP.UpdateItem', ID, fieldname, typeof value);
         successFunc = successFunc || function () {
                 iTrace(1, 'success SP.UpdateItem', ID, fieldname, value);
                 iCSR.SP.refreshView();
@@ -686,7 +769,11 @@
             };
         context.executeQueryAsync(successFunc, errorFunc);
     };
+    iCSR.SP.addday = function (listID, ID, currentDate, dayoffset) {
+        //get id element from parent
+        //iCSR.SP.UpdateItem(listID,ID);
 
+    };
     /**
      *
      * @param ID
@@ -769,9 +856,9 @@
      */
     iCSR.DOM.waitforelement = function (id, callback, yieldtime) { //  Wait for a DOM element with id to exist, then execute callback function
         //yieldtime is not a fix millesonds but decreases by 1 millesecond on every loop, so 1000 milliseconds to start with runs for some time!
-        var element = document.getElementById(id);
-        if (element) { //if the element exists, execute callback by putting it at end of the event queue; not using 'callback(element)'
-            setTimeout(callback.bind(null, element), 0);
+        var _element = document.getElementById(id);
+        if (_element) { //if the _element exists, execute callback by putting it at end of the event queue; not using 'callback(element)'
+            setTimeout(callback.bind(null, _element), 0);
         } else {
             if (yieldtime < 0) { //if done waiting then something is wrong
                 iCSR.traceerror('iCSR.DOM.waitforelement failed:', id);
@@ -781,19 +868,45 @@
         }
     };
 
+    iCSR.DOM.appendHTML = function (_parentelement, html, _elementType, className) {
+        className = className || '';
+        _elementType = _elementType || 'DIV';
+        var _element = document.createElement(_elementType);
+        _element.innerHTML = html;
+        _element.className = className;
+        return _parentelement.appendChild(_element);
+    };
     /**
      * Delete a DOM element
-     * @param element
+     * @param _element
      */
-    iCSR.DOM.deleteElement = function (element) {
+    iCSR.DOM.deleteElement = function (_element) {
         try {
-            if (typeof element === 'string') {
-                element = document.getElementById(element);
+            if (typeof _element === 'string') {
+                _element = document.getElementById(_element);
             }
-            element.parentNode.removeChild(element);
+            _element.parentNode.removeChild(_element);
         } catch (e) {
-            iCSR.tracewarning('deleteElement error:', element);
+            iCSR.tracewarning('deleteElement error:', _element);
         }
+    };
+
+    iCSR.DOM.footer = function (message) {//TODO use for iCSR messaging
+        message = message || "Download iCSR.js from iCSR.github.io ► the iCSR.js file you linked to is for demo use only";
+        var demoCSS = ["body::after{color:#FCD500;background:#005AA9;content:'" + message + "';position:fixed;bottom:30px;width:100%;left:0px;font-size:16px;text-align:center;}",
+            ".iCSRlogo {position:fixed;bottom:50px;left:30px;width:96px;height:96px;z-index:1}",
+            ".helplinks {width:300px}"
+        ];
+        iCSR.CSS.addStylesheetWithRules('iCSR', demoCSS);
+        var helplinks = "<h3>Support Links:</h3>";
+        helplinks += "<a href='https://github.com/365CSI/iCSR/blob/master/Documentation/quickstart.md' target='_new'>iCSR Quickstart</a>";
+        helplinks += "<br><a href='http://iCSR.github.io' target='_new'>iCSR on GitHub</a>";
+        helplinks += "<br><a href='http://davidbau.com/colors/' target='_new'>colornames</a>";
+        helplinks = "<div class='helplinks'>"+helplinks+"</div>";
+        var html = "<table><tr><td><img src='https://365csi.nl/iCSR/ipcountlogo'></td><td valign='top'>" + helplinks + "</td></tr></table>";//referenced image counts how many request are made
+        iCSR.DOM.waitforelement('contentRow', function () {
+            iCSR.DOM.appendHTML(document.body, html, 'DIV', 'iCSRlogo');
+        }, 50);
     };
     /**
      * Usage: in OnPostRender
@@ -808,8 +921,8 @@
             allid = "selectAll_" + fieldname,
             allinput = document.getElementById(allid);
         this.elements = document.querySelectorAll('input[id^=' + fieldname + '][id*="MultiChoiceOption"]');
-        this.options = [].map.call(this.elements, function (element) { //make array of DOM node objects
-            return (element);
+        this.options = [].map.call(this.elements, function (_element) { //make array of DOM node objects
+            return (_element);
         });
         this.selectall = function () {
             var checkall = this.checked; //checked state of the All option
@@ -828,122 +941,39 @@
 
 //endregion --------------------------------------------------------------------------------------- iCSR.DOM
 
-//region iCSR.Control.table--------------------------------------------------------------------------- ### iCSR.Control.table
+//region iCSR.Template ---------------------------------------------------------------------------- ### iCSR.Template
+
     /**
-     *  iCSR CONTROL:table - start definition*****************************************************************
-     *
+     * iCSR.Me
      * @param ctx
+     * @returns {*}
+     * @constructor
      */
-    iCSR.Control.table = function (ctx) {
-        ctx = ctx || window.ctx;
-        var tableControl = this;
-        tableControl.table = document.getElementById(ctx.clvp.tab.id);
-        tableControl.columnNumbers = {};
-        tableControl.columns = {};
-        tableControl.columnNames = ctx.ListSchema.Field.map(function (field) {
-            tableControl.columnNumbers[field.Name] = field.counter;
-            tableControl.columns[field.Name] = {
-                counter: field.counter,
-                hidden: false
-            };
-            return (field.Name);
-        });
-
-        function getColumnArray(columns) {
-            columns = typeof columns === 'object' ? columns : [columns]; //make sure it is an array
-            return columns.map(function (column) { //make it an array of columnNRs
-                return typeof column === "string" ? tableControl.columnNumbers[column] : column;
-            });
-        }
-
-        //execute action on all rows and cells
-        tableControl.actions = function (table, rowaction, cellaction) {
-            Array.prototype.slice.call(table.rows).forEach(function (row, rownr) {
-                rowaction && rowaction(row);
-                Array.prototype.slice.call(row.cells).forEach(function (cell, colnr) {
-                    cellaction && cellaction(cell, rownr, colnr);
-                });
-            });
-        };
-        tableControl.hideheaders = function (el, hide) { //walk up the DOM to the table and hide the header row
-            var headerRow = el ? GetAncestor(el, 'TABLE').firstChild : tableControl.table.firstChild;
-            if (hide) {
-                headerRow.style.visibility = 'hidden'; //hide headers
-            } else {
-                headerRow.style.display = 'none'; //hide headers
-            }
-        };
-        tableControl.hideColumns = function (columns, display) { //array of mixed numbers/strings
-            columns = getColumnArray(columns);
-            display = display || 'none';
-            //var table = document.getElementById(ctx.clvp.tab.id);
-            tableControl.actions(tableControl.table, false,
-                function (cell, rownr, colnr) {
-                    var name = tableControl.columnNames[colnr];
-                    if (columns.indexOf(colnr) > -1) {
-                        cell.style.display = display;
-                        console.log(name, tableControl.columns[name]);
-                        tableControl.columns[name].hidden = display === 'none';
-                    }
-                });
-        };
-        tableControl.showColumns = function () {
-            tableControl.hideColumns(tableControl.columnNames, 'table-cell');
-        };
-        tableControl.colorColumns = function (columnNames, color) { //array of mixed numbers/strings
-            tableControl.actions(tableControl.table, false, function (cell, rownr, colnr) {
-                if (columnNames.indexOf(tableControl.columnNames[colnr]) > -1) {
-                    cell.style.backgroundColor = color;
+    iCSR.Me = function (ctx) {
+        var _fieldtype = ctx.CurrentFieldSchema.FieldType;
+        var _fieldname = ctx.CurrentFieldSchema.RealFieldName;
+        //console.log(_fieldname,'\ttype:\t',_fieldtype ,ctx.CurrentFieldSchema);
+        if (iCSR.Template[_fieldname]) return iCSR.Template[_fieldname].call(this, ctx);
+        var n = 1;
+        var tracetxt = '';
+        var templatename;
+        for (templatename in iCSR.Template) {
+            if (iCSR.Template.hasOwnProperty(templatename)) {
+                var desc = '';
+                try {
+                    desc = iCSR.CFG[templatename].iCSRdescription;
+                } catch (e) {
+                    desc = 'no description';
                 }
-            });
-        };
-        iCSR.hideRows = function (ctx, rows) {
-
-        };
-
-    };
-
-    /*DUPLICATES *****************************************************************************/
-    /*
-     Usage: in OnPostRender
-     new iCSR.Control.duplicates(ctx,{title:'Title',color:'pink',buttonlabel:['Show Duplicates', 'Hide Duplicates']});
-     */
-    iCSR.Control.duplicates = function (ctx, cfg) {
-        var check = cfg ? cfg.title : 'Title', //name of Item field to check for duplicates
-            color = cfg ? cfg.color : 'ligthcoral',
-            buttonlabel = cfg ? cfg.buttonlabel : ['Show Duplicates', 'Hide Duplicates'],
-            all = [], //holds all values
-            duplicates = [], //holds all duplicate TR elements, EXCLUDING the first value
-            duplicatesShown = true,
-            button = document.createElement('BUTTON');
-        ctx.ListData.Row.forEach(function (item) {
-            if (all.indexOf(item[check]) > -1) {
-                var TR = document.getElementById(GenerateIIDForListItem(ctx, item));
-                TR.style.backgroundColor = color;
-                duplicates.push(TR);
+                tracetxt += '\n\t\tiCSR.Template.' + templatename + '\t\t\t' + desc;
             }
-            all.push(item[check]);
-        });
-        button.onclick = function (event) {
-            event.preventDefault();
-            duplicatesShown = !duplicatesShown;
-            duplicates.forEach(function (TR) {
-                TR.style.display = duplicatesShown ? 'table-row' : 'none';
-            });
-            button.innerHTML = buttonlabel[duplicatesShown / 1];
-        };
-        document.getElementById('CSRListViewControlDiv' + ctx.wpq).appendChild(button);
-        button.click(); //first init hide duplicates
+        }
+        iCSR.tracewarning('No iCSR.Template definition for:', _fieldname, '(' + _fieldtype + ')', '\n\tCall iCSR from your own Fields with:', tracetxt);
     };
-
-//endregion --------------------------------------------------------------------------------------- iCSR.Control
-
-//region iCSR.Template ------------------------------------------------------------------------------### iCSR.Template
 
 //region --- iCSR.Template.Status ------------------------------------------------------------------ ### iCSR.Template.Status
     iCSR.CFG.Status = {
         iCSRid: 'Status',
-        trace: 4,//custom tracelevel for this template
         colors: {
             "Not Started": 'lightgray',
             "Deferred": 'pink',
@@ -985,9 +1015,9 @@
                     iCSRdescription: 'Background colored'
                 }
             }
-        }
+        },
+        iCSRdescription: 'colorcode text/label based values'
     };
-
     iCSR.Template.Status = function (ctx) {
         var html;
         var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Status, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
@@ -1000,6 +1030,8 @@
             }
             config.color = config.colors[config.value];
             iCSR.CSS.appendTemplateCSS(template.CSS, config);
+            if (config.value === "Waiting on someone else") config.value = "Waiting";
+            config.value = iCSR.Str.nowordbreak(config.value);
             html = replacetokens(template.container);
             iTrace(1, 'Status HTML:\n', html);
         } else {
@@ -1010,76 +1042,94 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Template.Status
 
 //region --- iCSR.Template.DueDate ----------------------------------------------------------------- ### iCSR.Template.DueDate
-    /**
-     *
-     * @type {{iCSRid: string, trace: number, ranges: Array, labels: string[], textcolor: string, interactive: boolean, html: string, Classcontainer: string, templates: {default: {container: string, CSS: {container: string, containerDiv: string, iCSRdescription: string}}}, iCSRdescription: string}}
-     */
+    //noinspection HtmlUnknownAttribute
     iCSR.CFG.DueDate = {
         iCSRid: 'DueDate',
-        trace: 4,//custom tracelevel for this template
-        ranges: ('#f55,-21,#f7a,-14,#fab,-7,#fda,-10,pink,0,#cf9,7,#9fa').split(','),
+        ranges: ('#f55,-21,#f7a,-14,#fab,-7,#fda,0,#cf9,7,#9fa').split(','),
         labels: ['No Due Date', 'days left', 'days past'],
-        //colors: ['red', 'orange', 'green'],
-        textcolor: 'black',
-        interactive: iCSR.CFG.interactive || true,
-        html: '[absdays] [label]',
+        onclick: "onclick='{event.stopPropagation();}'",
+        onchange: "onchange=\"iCSR.SP.UpdateItem(false,'[ID]','[Name]',new Date(this.value))\" ",
+        textcolor: 'inherit',
+        width: "150px",
+        height: '20px',
+        paddingcontainer: "padding:0px 3px 0px 3px",
+        interactive: iCSR.CFG.interactive || false,
+        datepicker_chrome: "[absdays] [label] <input type='date' min='2000-12-31' [onclick] [onchange] value='[datepickervalue]' style='background-color:[color]'>",
+        //interactive for non Chrome browser
+        onclickSubtract: "onclick=\"iCSR.SP.UpdateItem(false,'[ID]','[Name]',iCSR.Date.add('[value]',-1))\" ",
+        onclickAdd: "onclick=\"iCSR.SP.UpdateItem(false,'[ID]','[Name]',iCSR.Date.add('[value]',1))\" ",
+        nextday: "next day",
+        previousday: "previous day",
+        setpreviousday: "<DIV class='[Classcontainer]update [Classcontainer]yesterday' [onclickSubtract]> [previousday] </DIV>",
+        setnextday: "<DIV class='[Classcontainer]update [Classcontainer]tomorrow' [onclickAdd]> [nextday] </DIV>",
+        datepicker: "<DIV class='iCSRdatepicker'>[setpreviousday] [setnextday]</DIV>",
+        datepicknodate: "<div onclick=\"iCSR.SP.UpdateItem(false,'[ID]','[Name]',iCSR.Date.add(false,0))\" >[label_nodate]</div>",
+        //non-interactive
+        input: "<DIV class='iCSRdaycount'>[absdays] [label]</DIV><DIV class='iCSRdate'>[value]</DIV>[datepicker]",
+        html: "",
         Classcontainer: 'iCSR_DueDate_Container',
         templates: {
             default: {
-                container: "<div class='[Classcontainer]' style='background-color:[color]'>[html] [value]</div>",
+                container: "<div class='[Classcontainer]' style='background-color:[color]'>[input]</div>",
                 CSS: {
-                    container: ".[Classcontainer] {}",
-                    containerDiv: ".[Classcontainer]>div {position:relative;float:left;}",
+                    container: ".[Classcontainer] {width:[width];color:[textcolor];[paddingcontainer];height:[height];padding:-2px 2px 0px 2px;}",
+                    daycount: ".iCSRdaycount {position:relative;float:left;}",
+                    date: ".iCSRdate {position:relative;float:right;}",
+                    datepicker: ".iCSRdatepicker {position:relative;z-index:3;width:100%;height:[height];backgrouand:pink}",
+                    dayselect: ".[Classcontainer]tomorrow,.[Classcontainer]yesterday {display:block;font-size:14px;position:absolute;width:60%}",
+                    yesterday: ".[Classcontainer]yesterday {left:0%}",
+                    tomorrow: ".[Classcontainer]tomorrow {right:0%;text-align:right}",
+                    update: ".[Classcontainer]update {width:20px;height:[height];font-weight:bold;opacity:0}",
+                    updatehover: ".[Classcontainer]update:hover {color:white;font-weight:bold;opacity:1;cursor:pointer;background:grey}",
+                    input: ".[Classcontainer]>input {width:125px;border:none;margin-top:-4px;}",
                     iCSRdescription: 'reusable generic CSS for DateTime'
                 }
             }
         },
-        iCSRdescription: 'iCSR DueDate configuration'
+        iCSRdescription: 'color code DateTime values from calculated x days past or x days to go'
     };
     /**
-     *
-     * @param ctx
-     * @returns {*}
-     * @constructor
+     * @return {boolean}
      */
     iCSR.Template.DueDate = function (ctx) {
         var html;
         var config = iCSR.fn.getconfig(ctx, iCSR.CFG.DueDate, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
         var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
         var template = iCSR.fn.getconfigTemplate(config);
-        iCSR.CSS.appendTemplateCSS(template.CSS, config);
-        var color = 0;
-        while (Number(config.ranges[color + 1]) < config.days) color += 2; //loop to find color
-        config.color = config.ranges[color];
-        config.label = config.labels[config.days > 0 ? 1 : 2];
-        html = config.days ? replacetokens(template.container) : config.labels[0];
-        iCSR.DOM.waitforelement(config.iid, function () { //TODO: (low) CSR fix elementfound (tried it twice, ask on SO)
-            var TR = document.getElementById(config.iid); //temp fix, elementfound doesn't work
-            var TD = TR.cells[config.counter]; //current column
-            if (Number(config.days))(config.TD ? TD : TR).style.backgroundColor = config.color;
-        }, 10);
+        if (ctx.inGridMode) {
+            ctx.ListSchema.Field.AllowGridEditing = false;
+            return config.value;
+            //return window.RenderFieldValueDefault(ctx);
+        }
+        if (!config.interactive) {
+            //	config.input="[datepicker_chrome]";
+            //config.input='[datepicker]';
+        }
+        iCSR.CSS.appendTemplateCSS(template.CSS, config, true);
+        config.ranges = iCSR.fn.extractcolors(config.ranges);//make sure it is an array: color,days,color,days
+        var colornr = 0;
+        while (Number(config.ranges[colornr + 1]) < config.days) colornr += 2; //loop to find color
+        config.color = config.ranges[colornr];
+        config.label_nodate = config.labels[0];
+        config.label_future = config.labels[1];
+        config.label_past = config.labels[2];
+        config.label = config.days > 0 ? config.label_future : config.label_past;
+
+        if (typeof config.days === 'number') {
+            //iCSR.DOM.waitforelement(config.iid, function () {// color TD cell or TR row
+            //    var TR = document.getElementById(config.iid);
+            //    var TD = TR.cells[config.counter]; //current column
+            //    (config.TD ? TD : TR).style.backgroundColor = config.color;
+            //}, 10);
+            html = template.container;
+        } else {
+            html = config.datepicknodate;
+        }
+        html = replacetokens(html);
         iTrace(1, 'DateTime HTML:\n', html);
         return html;
     };
-    iCSR.Template.colorDate = function (ctx) {
-        var id = GenerateIID(ctx), //TR id
-            ranges = (this.ranges || '#f55,-21,#f7a,-14,#fab,-7,#fda,-10,pink,0,#cf9,7,#9fa').split(','), //default range
-            labels = this.labels || ['No Due Date', 'days left', 'days past'], //default labels
-            color = 0, //first defined color in range
-            fieldschema = ctx.CurrentFieldSchema, //store so it can be used inside the waitforelement function
-            value = ctx.CurrentItem[fieldschema.Name],
-            days = GetDaysAfterToday(new Date(value));
-        var colorelement = this.element || 'TD';
-        while (Number(ranges[color + 1]) < days) color += 2; //loop to find color
-        //noinspection JSUnusedLocalSymbols
-        iCSR.DOM.waitforelement(id, function () { //TODO: (low) CSR fix elementfound (tried it twice, ask on SO)
-            var TR = document.getElementById(id); //temp fix, elementfound doesn't work
-            var TD = false;//TR.cells[fieldschema.counter - 1]; //current column
-            if (Number(days))(colorelement === 'TD' ? TD : TR).style.backgroundColor = ranges[color];
-        }, 10);
-        var html = isNaN(days) ? labels[0] : "<div style='background-color:{0}'>{1} {2}</div>";
-        return String.format(html, ranges[color], Math.abs(days), labels[days > 0 ? 1 : 2]);
-    };
+
 //endregion ---------------------------------------------------------------------------------------- iCSR.Template.DueDate
 
 //region --- iCSR.Template.PercentComplete --------------------------------------------------------- ### iCSR.Template.PercentComplete
@@ -1091,7 +1141,7 @@
         colors: ['transparent', 'red', 'orangered', 'indianred', 'goldenrod', 'goldenrod', 'goldenrod', 'yellowgreen', 'mediumseagreen', 'forestgreen', 'green'],
         width: '180px',
         resourcelinks: 'https://jsfiddle.net/dannye/bes5ttmt/',
-        objectDescription: 'iCSR progressBar configuration'
+        iCSRdescription: 'display progress bar from 0.0 to 1.0 number field'
     };
 
     /**
@@ -1205,19 +1255,17 @@
 
 //region --- iCSR.Template.Priority ---------------------------------------------------------------- ### iCSR.Template.Priority
     /** IDE ignore definitions in String (escaped double quotes to keep onclick working and img src references which IDE can't recognize*/
-    //noinspection BadExpressionStatementJS,HtmlUnknownTarget
+//noinspection BadExpressionStatementJS,HtmlUnknownTarget
     /**
      * Template Configuration
      */
     iCSR.CFG.Priority = {
         iCSRid: 'Priority',
-        trace: 4,//custom tracelevel for this template
         values: {
             '(1) High': 'lightcoral',
             '(2) Normal': 'orange',
             '(3) Low': 'lightgreen'
         },
-        //colors: ['red', 'orange', 'green'],
         textcolor: 'black',
         interactive: iCSR.CFG.interactive || true,
         width: '110px', //total width
@@ -1239,8 +1287,7 @@
                     containerDiv: ".[Classcontainer]>div {position:relative;float:left;}",
                     choice: ".[Classchoice] {cursor:pointer;opacity:.2}",
                     choicehover: ".[Classchoice]:hover {opacity:1;border-color:black}",
-                    iCSRdescription: 'reusable generic CSS for KPI indicators',
-                    demoware: "body::after{color:#FCD500;background:#005AA9;content:'[demonotice]';position:fixed;bottom:30px;width:100%;left:0px;font-size:21px;padding:5px;text-align:center;}"
+                    iCSRdescription: 'reusable generic CSS for KPI indicators'
                 }
             },
             iCSRbar: {
@@ -1269,7 +1316,7 @@
                 item: "<span class='[classname]' onclick=\"[click]\"><img src='[layouts]/kpinormal-[nr].gif'></span>" //default sharepoint images in the layouts folder
             }
         },
-        iCSRdescription: 'iCSR priority configuration'
+        iCSRdescription: 'colorcode (1) (2) (3) Priority values'
     };
     iCSR.Template.Priority = function (ctx) {
         var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
@@ -1280,7 +1327,6 @@
         iCSR.CSS.appendTemplateCSS(template.CSS, config);
 
         config.nr = "0"; //trick replacement in accepting first value as 0 string
-//    iCSR.traceon(0);
         iTrace(0, config.iCSRid, 'config.template =', config.template, '\n config:', config, '\n item:', template.item);
         for (var keyvalue in config.values) { // jshint ignore:line, Object has those keyvalues
             config.keyvalue = keyvalue;
@@ -1303,16 +1349,127 @@
 
 //endregion ---------------------------------------------------------------------------------------- iCSR.Template
 
+//region iCSR.Controllers ------------------------------------------------------------------------- ### iCSR.Controllers (OnPostRender)
+
+//region iCSR.Control.table--------------------------------------------------------------------- ### iCSR.Control.table
 
     /**
-     * iCSR.Me
+     *  iCSR CONTROL:table - start definition*****************************************************************
+     *
      * @param ctx
-     * @returns {*}
-     * @constructor
      */
+    iCSR.Control.table = function (ctx) {
+        ctx = ctx || window.ctx;
+        var tableControl = this;
+        tableControl.table = document.getElementById(ctx.clvp.tab.id);
+        tableControl.columnNumbers = {};
+        tableControl.columns = {};
+        tableControl.columnNames = ctx.ListSchema.Field.map(function (field) {
+            tableControl.columnNumbers[field.Name] = field.counter;
+            tableControl.columns[field.Name] = {
+                counter: field.counter,
+                hidden: false
+            };
+            return (field.Name);
+        });
+
+        function getColumnArray(columns) {
+            columns = typeof columns === 'object' ? columns : [columns]; //make sure it is an array
+            return columns.map(function (column) { //make it an array of columnNRs
+                return typeof column === "string" ? tableControl.columnNumbers[column] : column;
+            });
+        }
+
+        //execute action on all rows and cells
+        tableControl.actions = function (table, rowaction, cellaction) {
+            Array.prototype.slice.call(table.rows).forEach(function (row, rownr) {
+                rowaction && rowaction(row);
+                Array.prototype.slice.call(row.cells).forEach(function (cell, colnr) {
+                    cellaction && cellaction(cell, rownr, colnr);
+                });
+            });
+        };
+        tableControl.hideheaders = function (el, hide) { //walk up the DOM to the table and hide the header row
+            var headerRow = el ? GetAncestor(el, 'TABLE').firstChild : tableControl.table.firstChild;
+            if (hide) {
+                headerRow.style.visibility = 'hidden'; //hide headers
+            } else {
+                headerRow.style.display = 'none'; //hide headers
+            }
+        };
+        tableControl.hideColumns = function (columns, display) { //array of mixed numbers/strings
+            columns = getColumnArray(columns);
+            display = display || 'none';
+            //var table = document.getElementById(ctx.clvp.tab.id);
+            tableControl.actions(tableControl.table, false,
+                function (cell, rownr, colnr) {
+                    var name = tableControl.columnNames[colnr];
+                    if (columns.indexOf(colnr) > -1) {
+                        cell.style.display = display;
+                        console.log(name, tableControl.columns[name]);
+                        tableControl.columns[name].hidden = display === 'none';
+                    }
+                });
+        };
+        tableControl.showColumns = function () {
+            tableControl.hideColumns(tableControl.columnNames, 'table-cell');
+        };
+        tableControl.colorColumns = function (columnNames, color) { //array of mixed numbers/strings
+            tableControl.actions(tableControl.table, false, function (cell, rownr, colnr) {
+                if (columnNames.indexOf(tableControl.columnNames[colnr]) > -1) {
+                    cell.style.backgroundColor = color;
+                }
+            });
+        };
+        iCSR.hideRows = function (ctx, rows) {
+
+        };
+
+    };
+//endregion
+
+//region iCSR.Control.duplicates --------------------------------------------------------------- ### iCSR.Control.duplicates
+    /**
+     Usage: in OnPostRender
+     new iCSR.Control.duplicates(ctx,{title:'Title',color:'pink',buttonlabel:['Show Duplicates', 'Hide Duplicates']});
+     */
+    iCSR.Control.duplicates = function (ctx, cfg) {
+        var check = cfg ? cfg.title : 'Title', //name of Item field to check for duplicates
+            color = cfg ? cfg.color : 'ligthcoral',
+            buttonlabel = cfg ? cfg.buttonlabel : ['Show Duplicates', 'Hide Duplicates'],
+            all = [], //holds all values
+            duplicates = [], //holds all duplicate TR elements, EXCLUDING the first value
+            duplicatesShown = true,
+            button = document.createElement('BUTTON');
+        ctx.ListData.Row.forEach(function (item) {
+            if (all.indexOf(item[check]) > -1) {
+                var TR = document.getElementById(GenerateIIDForListItem(ctx, item));
+                TR.style.backgroundColor = color;
+                duplicates.push(TR);
+            }
+            all.push(item[check]);
+        });
+        button.onclick = function (event) {
+            event.preventDefault();
+            duplicatesShown = !duplicatesShown;
+            duplicates.forEach(function (TR) {
+                TR.style.display = duplicatesShown ? 'table-row' : 'none';
+            });
+            button.innerHTML = buttonlabel[duplicatesShown / 1];
+        };
+        document.getElementById('CSRListViewControlDiv' + ctx.wpq).appendChild(button);
+        button.click(); //first init hide duplicates
+    };
+//endregion
+
+//endregion --------------------------------------------------------------------------------------- iCSR.Control
 
 
-//region ctx object inspector can be used from the F12 console - type 'ic' in the console
+//region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
+    /**
+     * @param ctx_object
+     * @param fieldnames
+     */
     iCSR.SP.getctxobjectinfo = function (ctx_object, fieldnames) {
         var fields = {};
         ctx_object.forEach(function (field) {
@@ -1333,10 +1490,10 @@
             }
         });
     }
-//endregion
-//iCSR.init();
-    SP.SOD.notifyScriptLoadedAndExecuteWaitingJobs('iCSR');
+//endregion ---------------------------------------------------------------------------------------- ctx object inspector
 
-///////
-    console.info('iCSR scriptfile loaded');
-})(window);
+    if (iCSR.hasOwnProperty('_DEMO')) iCSR.DOM.footer();
+    iCSR.init();
+    SP.SOD.notifyScriptLoadedAndExecuteWaitingJobs('iCSR');
+})
+(window);

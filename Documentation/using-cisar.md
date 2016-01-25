@@ -33,6 +33,6 @@ Now the cool stuff happens
 No Save, No reload required
 **now that is cool Live coding** (*eat your heart out Visual Studio*)
 
-### Animated GIF :
+## Using the iCSR library in your CSR file
 
-![](https://camo.githubusercontent.com/bd4fb80242629bb90f40644b5a14c59376da667c/68747470733a2f2f7261772e6769746875622e636f6d2f616e647265692d6d61726b6565762f63697361722f6d61737465722f63697361722e676966)
+The iCSR library must be loaded **before** your CSR code.
