@@ -75,7 +75,7 @@ iCSR has multiple (configurable) levels of console.log traces
 
 ![](http://i.imgur.com/NkVJTL7.jpg)
 
-## oh.. and one more thing.. ehm.. line of code..
+## ![](http://static.webshopapp.com/shops/024703/files/009122098/48x48x2/leesbril-steve-jobs-rond-randloos-en-tijdloos.jpg) oh.. and one more thing.. ehm.. line of code..
 
     iCSR.Interactive = true
 
