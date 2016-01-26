@@ -34,7 +34,7 @@ No Save, No reload required
 **now that is cool Live coding** (*eat your heart out Visual Studio*)
 
 
-## Using the iCSR library in your CSR file
+## Using the iCSR.js library in your CSR file
 
 The iCSR.js library must be loaded **before** your CSR code.
 
