@@ -37,12 +37,19 @@
 
 ## Project goals:
 
+For the full story see: [Why I wrote iCSR.js](https://github.com/365CSI/iCSR/blob/master/Documentation/why-iCSR-was-developed.md)
+
+In short:
+
 * Help people get started with CSR development in 5 minutes  
 (including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en))
-* Learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
+* Let people learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
 * No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
 ## Installation
+
+##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/blob/master/Documentation/using-cisar.md)
+
 
 1. #### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
 
