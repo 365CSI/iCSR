@@ -1,6 +1,6 @@
-# CSR development with Cisar Chrome plugin
+# CSR development with Cisar Chrome extension
 
-The free [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) was developed by [Adrey Markeev](http://sharepoint.stackexchange.com/users/1430/andrey-markeev)
+The free [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) was developed by [Adrey Markeev](http://sharepoint.stackexchange.com/users/1430/andrey-markeev)
 
 It makes creating CSR files and JSlink connections a breeze.
 
@@ -13,7 +13,7 @@ So you need Write access to that Library (a Site Collection Owner has access and
 ## Your first CSR file
 
  1. Use the Chrome Browser (*No support for FireFox or Microsoft Internet Explorer yet*)
- 2. Install the [**Cisar Chrome plugin**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+ 2. Install the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
  3. Close the F12 Developer Tools Console (if open at all)
  4. Browse to a Task List View
  5. Open F12 Developer Tools

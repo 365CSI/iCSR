@@ -1,8 +1,8 @@
 # iCSR documentation
 
-## Using the Chrome Cisar Plugin
+## Using the Chrome Cisar extension
 
-* [Installing and using the Cisar Plugin for the first time](./sing-cisar.md)
+* [Installing and using the Cisar extension for the first time](./sing-cisar.md)
 
 ## iCSR and iCSR.Me Templates
 
