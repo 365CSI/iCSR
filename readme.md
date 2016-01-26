@@ -6,7 +6,7 @@
 
 ## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/blob/master/Documentation/using-cisar.md)
+##### Impatient? Skip the explanations: [get going in 5 minutes](./Documentation/using-cisar.md)
 
 #### iCSR.js is a support library for writing **less** JavaScript code
 
@@ -37,24 +37,24 @@
 
 ## Project goals:
 
-For the full story see: [Why I wrote iCSR.js](https://github.com/365CSI/iCSR/blob/master/Documentation/why-iCSR-was-developed.md)
+For the full story see: [Why I wrote iCSR.js](./Documentation/why-iCSR-was-developed.md)
 
 In short:
 
 * Help people get started with CSR development in 5 minutes  
 (including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en))
-* Let people learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) source code.
+* Let people learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](./iCSR.js) source code.
 * No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
 ## Installation
 
-##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/blob/master/Documentation/using-cisar.md)
+##### Impatient? Skip the explanations: [get going in 5 minutes](./Documentation/using-cisar.md)
 
 
 1. #### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
 
 
-2. #### Add [iCSR.js](https://github.com/365CSI/iCSR/blob/master/iCSR.js) to your environment
+2. #### Add [iCSR.js](./iCSR.js) to your environment
 
 * [In the Style Library](./documentation/)
 
