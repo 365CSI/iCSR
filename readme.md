@@ -6,9 +6,9 @@
 
 ## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/blob/master/Documentation/using-cisar.md)
+##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/blob/master/Documentation/using-cisar.md)
 
-#### A support library for writing **less** JavaScript code
+#### iCSR.js is a support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
