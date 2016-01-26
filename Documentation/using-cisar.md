@@ -15,7 +15,7 @@ So you need Write access to that Library (a Site Collection Owner has access and
  1. Use the Chrome Browser (*No support for FireFox or Microsoft Internet Explorer yet*)
  2. Install the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
  3. Close the F12 Developer Tools Console (if open at all)
- 4. Browse to a Task List View
+ 4. Browse to a Task List View (with some Task Items displayed in the View)
  5. Open F12 Developer Tools
  6. Select the **Cisar** Tab
    ![](http://i.imgur.com/X13jT80.jpg)
@@ -33,6 +33,45 @@ Now the cool stuff happens
 No Save, No reload required
 **now that is cool Live coding** (*eat your heart out Visual Studio*)
 
+
 ## Using the iCSR library in your CSR file
 
-The iCSR library must be loaded **before** your CSR code.
+The iCSR.js library must be loaded **before** your CSR code.
+
+Replace the code Cisar created with the (slightly modified) code:
+
+    function execCSR() {
+      SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function() {
+        function init() {
+          iCSR.traceon(0);//set to a a higher value to display more logging in the console
+          //iCSR.Interactive=false
+          SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
+            Templates: {
+              Fields: {
+                "Priority": {
+                  View: iCSR.Me
+                },
+                "Status": {
+                  View: iCSR.Me//.bind({colors:"lightcoral,limegreen,grey,wheat,pink"})
+                },
+                "DueDate": {
+                  View: iCSR.Me.bind({ranges:'lightcoral,-5,pink,-1,orange,0,lightgreen,5,lightgreen'})
+                },
+                "PercentComplete":{
+                  View: iCSR.Me.bind({barcolor:'#0072C6',color:'beige'})
+                }
+              }//Fields
+            }//Templates
+          });
+        }//init
+        RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens("~siteCollection/Style Library/csr_test.js"), init);
+        init();
+      });
+    };
+    var script='https://365csi.nl/iCSR/iCSR.js';
+    SP.SOD.registerSod("iCSR", script);
+    SP.SOD.executeFunc("iCSR", null, execCSR );
+    if(typeof iCSR!=='undefined') execCSR();
+
+
+## cool?
