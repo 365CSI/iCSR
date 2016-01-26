@@ -37,7 +37,7 @@
 
 ## Project goals:
 
-For the full story see: [Why I wrote iCSR.js](https://github.com/365CSI/iCSR/Documentation/why-iCSR-was-developed.md)
+For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
 
 In short:
 
