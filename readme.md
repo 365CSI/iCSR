@@ -6,7 +6,7 @@
 
 ## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
-##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/Documentation/using-cisar.md)
+##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
 #### iCSR.js is a support library for writing **less** JavaScript code
 
@@ -48,11 +48,9 @@ In short:
 
 ## Installation
 
-##### Impatient? Skip the explanations: [get going in 5 minutes](https://github.com/365CSI/iCSR/Documentation/using-cisar.md)
-
+##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
 1. #### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
-
 
 2. #### Add [iCSR.js](./iCSR.js) to your environment
 
