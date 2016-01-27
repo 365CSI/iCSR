@@ -62,7 +62,7 @@ In short:
 
 ## Usage
 
-#### Ready made [iCSR-Templates](iCSR-Templates)
+#### Ready made [iCSR-Templates](iCSR-Templates.md)
 
 * PercentComplete
 * Today calculations & coloring
