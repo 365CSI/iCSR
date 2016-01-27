@@ -62,7 +62,7 @@ In short:
 
 ## Usage
 
-#### Ready made [iCSR.Me Templates](iCSR-Templates)
+#### Ready made [iCSR-Templates](iCSR-Templates)
 
 * PercentComplete
 * Today calculations & coloring
@@ -77,7 +77,7 @@ iCSR has multiple (configurable) levels of console.log traces
 
 ![](http://i.imgur.com/NkVJTL7.jpg)
 
-## ![](http://static.webshopapp.com/shops/024703/files/009122098/48x48x2/leesbril-steve-jobs-rond-randloos-en-tijdloos.jpg) oh.. and one more thing.. ehm.. line of code..
+## ![](http://th.downloadblog.it/h57RNZTWa_IIoH3Y9fs71eZKLwI=/64x64/http://media.downloadblog.it/e/e64/steve-jobs-apple.jpg) oh.. and one more thing.. ehm.. line of code..
 
     iCSR.Interactive = true
 
