@@ -2,44 +2,65 @@
 
 # iCSR.Template.DueDate
 
-    "[FieldName]":{
-            View:iCSR.Template
+![](https://365csi.nl/iCSR/images/duedate.jpg)
+
+    "DueDate":{
+            View:iCSR.Me
+    }
+
+or
+
+    "[fieldname]":{
+            View:iCSR.Template.DueDate
     }
 
 ### Custom configuration
+
     "[FieldName]":{
             View:iCSR.Template.bind({
                 ranges:['','',''] //array of:  color,daycount
             })
     }
 
-##### ranges
-defines an array of date ranges
+| property  | description | example |
+| ------------- | ------------- | --- |
+| ranges | defines an array of date ranges| ['#f55', -21 ,'#f7a', -14 ,'#fab', -7 ,'#fda', -10 ,'pink', 0 ,'#cf9', 7 ,'#9fa']
+| labels | default value: | ['No Due Date', 'days left', 'days past']|
+| nextday | | "next day" |
+| previousday | | "previous day" |
 
-    ['#f55', -21 ,'#f7a', -14 ,'#fab', -7 ,'#fda', -10 ,'pink', 0 ,'#cf9', 7 ,'#9fa']
 
-older
+---
+---
 
 ![](https://365csi.nl/iCSR/iCSR_names_Progress.png)
 
 # iCSR.Template.Progress
 
+![](https://365csi.nl/iCSR/images/progress.jpg)
+
+---
+---
+
+
+
 ![](https://365csi.nl/iCSR/iCSR_names_Priority.png)
 
 # iCSR.Template.Priority
+
+![](https://365csi.nl/iCSR/images/priority.jpg)
+
+
+---
+---
+
 
 ![](https://365csi.nl/iCSR/iCSR_names_Status.png)
 
 # iCSR.Template.Status
 
-## iCSR and iCSR.Me Templates
+![](https://365csi.nl/iCSR/images/status.jpg)
 
-* Progress
-* Priority
-* DueDate
-* Status
-
-for now all in one file documentation: [iCSR Templates](./iCSR_Templates.md)
 
 ## Using iCSR on your own (non-Task List) SharePoint Fields
 

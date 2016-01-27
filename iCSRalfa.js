@@ -112,7 +112,6 @@
      * Initialize iCSR
      */
     iCSR.init = function () {
-        console.info('%c iCSR - Proof of Concept - ' + iCSR._VERSION + ' ', iCSR.CFG.colorBlueYellow + ';font-size:20px;');
         //if (SP) {
         //    //SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function () {
         //        iTrace(0, 'initialized SharePoint clienttemplates.js');
@@ -158,47 +157,53 @@
      * Nested [[token]] does not work, creates '[token',']' array
      *
      * */
+    iCSR.Tokens.maxtokenstringlength = 15;
     /**
-     * Convert one String to an array, split on specified token indicator
-     * "Hello [var]" -> 'Hello','var',
+     * Convert one String to an array, split on specified token indicator [] or () or whatever
+     * "Hello [location]" -> 'Hello','location',
+     * "svgcircle(20)" -> 'svgcircle','20'
      *
-     * @param str
+     * @param _tokenstring
      * @param _tokenidentifier
      * @returns {string[]|*|Array}
      */
     iCSR.Tokens.StringToTokenArray = function (_tokenstring, _tokenidentifier) {
-        //TODO: (normal) fix nested word[[token]]word issue : 'word','[token',']' - probably escape both tokens or something
-        //TODO: (low) rewrite to fix "[var]var[var]" which replaces all occurences (minor issues?)
-        var _regexArray = ['(.+?)'];//match any wordlength
-        _tokenidentifier = _tokenidentifier || '[]';//default token is [tokenname]
-        var _chunksize = parseInt(_tokenidentifier.length / 2);//split _tokenindentifier in 2 parts (ready for identiefiers like ##tokenname##)
-        _tokenidentifier = _tokenidentifier.match(new RegExp('.{1,' + _chunksize + '}', 'g'));//split in chunck size
         var _tokenized = _tokenstring;
-        if (_tokenidentifier.length === 2) {
-            _regexArray.unshift('\\' + _tokenidentifier[0]);//add escaped leading identifier
-            _regexArray.push('\\' + _tokenidentifier[1]);//add second escaped identifier
-            var regExpStr = _regexArray.join('');
-            var regExp = new RegExp(regExpStr, 'g');
-            _tokenized = str.split(regExp);
-            //TODO: (normal) post process _tokenized, delete undefined references?
+        if (typeof _tokenized === 'string') {
+            var _regexArray = ['(.+?)'];//match any wordlength
+            _tokenidentifier = _tokenidentifier || '[]';//default token is [tokenname]
+            var _chunksize = parseInt(_tokenidentifier.length / 2);//split _tokenindentifier in 2 parts (ready for identiefiers like ##tokenname##)
+            _tokenidentifier = _tokenidentifier.match(new RegExp('.{1,' + _chunksize + '}', 'g'));//split identifier in chunck size
+            if (_tokenidentifier.length === 2) {
+                _regexArray.unshift('\\' + _tokenidentifier[0]);//add escaped leading identifier
+                _regexArray.push('\\' + _tokenidentifier[1]);//add second escaped identifier
+                var regExpStr = _regexArray.join('');
+                var regExp = new RegExp(regExpStr, 'g');
+                _tokenized = _tokenstring.split(regExp);
+                iTrace(4, 'iCSR.Tokens.StringToTokenArray with: ', _tokenidentifier, {
+                    "_tokenstring": _tokenstring,
+                    "_tokenized": _tokenized
+                });
+            } else {
+                iCSR.traceerror('invalid _tokenidentifier', _tokenidentifier);
+            }
         } else {
-            iCSR.traceerror('invalid _tokenidentifier', _tokenidentifier);
+            iCSR.tracewarning('iCSR.Tokens.StringToTokenArray with: ', _tokenstring);
         }
-        iTrace(3, 'iCSR.Tokens.StringToTokenArray with: ', _tokenidentifier, '\n' + _tokenstring, '\n' + _tokenized);
         return _tokenized;
     };
 
     /**
      *
-     * @param token
+     * @param _tokenstring
      * @param _tokenconfig
      * @returns {*}
      */
     iCSR.Tokens.replacetoken = function (_tokenstring, _tokenconfig) {
         var _tokenized = _tokenstring;
-        if (_tokenized !== '.') {//allways ignore tokens
+        if (_tokenized !== "" && _tokenized !== "." && _tokenized !== "iCSR") {//allways ignore these tokens
             if (_tokenconfig.hasOwnProperty(_tokenstring)) {
-                _tokenized = _tokenconfig[token]; // predefined tokens defined in .config object take precedence over token
+                _tokenized = _tokenconfig[_tokenstring]; // predefined tokens defined in .config object take precedence over token
                 if (typeof _tokenized === 'function') {
                     //TODO: (normal) ?? do we want to allow script creation... cool to investigate how far this would lead
                 }
@@ -209,44 +214,55 @@
                     _parameters = _functionDef[1];
                 _tokenized = iCSR.Tokens.callfunction(_functionname, _parameters);
             }
-            if (_tokenstring === _tokenized) {
+            if (_tokenstring === _tokenized) {//nothing was changed
                 var strippedtoken = iCSR.Str.alphanumeric(_tokenstring);
                 if (strippedtoken === _tokenstring) {//token is not declared yet
                     _tokenized = '[' + _tokenstring + ']';
-                    iTrace(3, 'replacetoken UNTOUCHED: ', _tokenized);
+                    iTrace(4, 'replacetoken UNTOUCHED: ', _tokenized);
                 }
             } else {
-//                iTrace(3, 'replacetoken:', _tokenstring, '\n', _tokenized);
-                if (iCSR.tracelevel > 2) console.log('\t\t', _tokenstring, ' ==> ', _tokenized);
+                if (_tokenized) {
+                    iTrace(3, 'replacetoken:', _tokenstring, ' ==> ', _tokenized);
+                }
             }
         }
         return _tokenized;
     };
 
+
     /**
      * replace 'Hello [location]!' with propertyvalue from _tokenconfig {location:'World'}  => 'Hello World!'
+     * The functions loops to de-token any nested token definitions eg: location="from [countryname]"
+     *
      * @param _string
      * @param _tokenconfig
      * @returns {*}
      */
     iCSR.Tokens.replace = function (_string, _tokenconfig) {
-        if (!_string) return _string;
+        if (!_string) {
+            iCSR.tracewarning('empty _string in Token replace');
+            return _string;
+        }
 
         _tokenconfig = _tokenconfig || this; //tokens defined in optional .bind(config)
-        var tokenized;//working array breaking string into tokens
-        var tokencount = 1;
+        var _tokenized;//working array breaking string into tokens
+        var tokencount = 1;//count how many tokens are in the array, to break out of the loop when all work is done
         var loop;
         for (loop = 0; loop < 10; loop++) {//too lazy to develop recursive code
-            tokenized = iCSR.Tokens.StringToTokenArray(_string, '[]');//make array
-            iTrace(3, 'tokenized before processing\n', tokenized);
-            tokenized = tokenized.map(function (token) {
-                return iCSR.Tokens.replacetoken(token, _tokenconfig);
-            }); // jshint ignore:line
-            _string = tokenized.join('');//make it one string again
-            if (tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
-            tokencount = tokenized.length;
+            _tokenized = iCSR.Tokens.StringToTokenArray(_string, '[]');//make array
+            if (_tokenized.length > 1 || _tokenized.length === 1 && _tokenized[0].length < iCSR.Tokens.maxtokenstringlength) {
+                _tokenized = _tokenized.map(function (token) {
+                    return iCSR.Tokens.replacetoken(token, _tokenconfig);
+                });// jshint ignore:line
+            }
+            _string = _tokenized.join('');//make it one string again
+            if (_tokenized.length === tokencount) break;//exit loop if no more tokens need to be replaced
+            tokencount = _tokenized.length;
         }
-        iTrace(2, 'replacetokens', '(' + typeof _string + ') tokenized in ', loop, 'iterations\nstring:', _string, '\narray:', tokenized);
+        iTrace(3, 'replacetokens', '(' + typeof _string + ') _tokenized in ', loop, 'iterations', {
+            "string": _string,
+            "array": _tokenized
+        });
         return _string;
     };
 
@@ -298,7 +314,7 @@
         if (iCSR.Tokens.hasfunction(_functionname)) {
             try {
                 var tokenfunction = iCSR.Tokens.functions[_functionname];
-                iTrace(2, 'call: ', _functionname, '(', _parameters, ')\n', tokenfunction);
+                iTrace(2, 'call: ', _functionname, '(', _parameters, ')\n\t', tokenfunction);
                 tokenfunctionResult = tokenfunction.call(this, _parameters);//TODO: use Template config scope
             } catch (e) {
                 iCSR.catch(e, 'callfunction:' + _functionname);
@@ -326,6 +342,10 @@
         consoleObject(iCSR.Template);
         consoleObject(iCSR.Control);
     };
+    iCSR.traceheader = function () {
+        console.clear();
+        console.info('%c iCSR.js - ' + iCSR._VERSION + ' ', iCSR.CFG.colorBlueYellow + ';font-size:20px;');
+    };
     iCSR.trace = function (tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) {
         //TODO: (low) refactor to get rid of those ugly vars
         var p1 = '';
@@ -333,7 +353,7 @@
             tracelevel = 0;
             p1 = tracelevel;
         }
-        var tracelevelcolors = ['background:beige;', 'background:green', 'background:lightgreen', 'background:lightcoral;'];
+        var tracelevelcolors = ['background:beige;', 'background:green', 'background:lightgreen', 'background:lightcoral;', 'background:indianred;'];
         var tracelevelcolor = tracelevelcolors[tracelevel];
         if (iCSR.CFG.errorcount < 1) {
             if (iCSR.CFG.tracing && console && iCSR.tracelevel >= tracelevel) {
@@ -359,6 +379,7 @@
     };
 //iCSR.tracelevel = 0; //1 to 3 for more and more detailed console tracing
     iCSR.traceon = function (setlevel) {
+        iCSR.traceheader();
         if (typeof setlevel === 'undefined')setlevel = 1;
         iCSR.tracelevel = setlevel || 0; //default tracelevel
         iCSR.CFG.tracing = true; //extra information in the F12 Developer console
@@ -1042,15 +1063,13 @@
         if (iCSR.CFG.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
             var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
             var template = iCSR.fn.getconfigTemplate(config);
-            if (config.FieldType === 'Choice') {
-                config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
-            }
+            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
             config.color = config.colors[config.value];
             iCSR.CSS.appendTemplateCSS(template.CSS, config);
             if (config.value === "Waiting on someone else") config.value = "Waiting";
             config.value = iCSR.Str.nowordbreak(config.value);
             html = replacetokens(template.container);
-            iTrace(1, 'Status HTML:\n', html);
+            iTrace(1, 'Status HTML:\n\t', html);
         } else {
             html = config.value;
         }
@@ -1059,7 +1078,7 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Template.Status
 
 //region --- iCSR.Template.DueDate ----------------------------------------------------------------- ### iCSR.Template.DueDate
-    //noinspection HtmlUnknownAttribute
+//noinspection HtmlUnknownAttribute
     iCSR.CFG.DueDate = {
         iCSRid: 'DueDate',
         ranges: ('#f55,-21,#f7a,-14,#fab,-7,#fda,0,#cf9,7,#9fa').split(','),
@@ -1143,7 +1162,7 @@
             html = config.datepicknodate;
         }
         html = replacetokens(html);
-        iTrace(1, 'DateTime HTML:\n', html);
+        iTrace(1, 'DateTime HTML:\n\t', html);
         return html;
     };
 
@@ -1339,29 +1358,47 @@
         var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
 
         var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
-
         var template = iCSR.fn.getconfigTemplate(config);
         iCSR.CSS.appendTemplateCSS(template.CSS, config);
 
-        config.nr = "0"; //trick replacement in accepting first value as 0 string
-        iTrace(0, config.iCSRid, 'config.template =', config.template, '\n config:', config, '\n item:', template.item);
+        config.nr = "0"; //trick replacement in accepting first value as "0" string instead of empty string
+        iTrace(1, 'Configured: ', 'iCSR.Template.' + config.iCSRid, {
+            "config": config,
+            "template": template
+        });
+        template.htmlparts = [];
+
         for (var keyvalue in config.values) { // jshint ignore:line, Object has those keyvalues
             config.keyvalue = keyvalue;
             var iscurrent = config.value === keyvalue;
             config.click = replacetokens(config.clickupdate);
             config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
             if (!config.interactive) config.classname += ' NonInteractive';//add CSS class for non-interactive Template
-            config.color = config.colors ? config.colors[config.nr] : config.values[config.keyvalue];
+            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
+            config.color = config.colors ? config.colors[config.keyvalue] : config.values[config.keyvalue];
             config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
-            var item = replacetokens(template.item || config.template);
-            if (iscurrent || config.interactive) config.html += item;
+            template.htmlitem = template.item || config.template;
+            var item = replacetokens(template.htmlitem);
+            if (iscurrent) template.htmlcurrentindex = template.htmlparts.length;
+            template.htmlparts.push(item);
+            iTrace(2, 'item:', config.nr, 'iCSR.Template.' + config.iCSRid, ':', item, {
+                'config': config,
+                'template': template
+            });
             config.nr++;
         }
-        var html = replacetokens(config.interactive ? template.container : config.html);
-        iTrace(1, 'Priority HTML:\n', html);
+        template.htmlcurrentchoice = template.htmlparts[template.htmlcurrentindex];
+        config.interactive = template.htmlcurrentchoice.indexOf('onclick') > -1;
+        config.html = config.interactive ? template.htmlparts.join('') : template.htmlcurrentchoice;
+        var html = replacetokens(template.container);
+        iTrace(0, 'Output: ', 'iCSR.Template.' + config.iCSRid, {
+            "html": html,
+            "config": config,
+            "template": template
+        });
         return html;
     };
-
+//--
 //endregion iCSR.Template.Priority ----------------------------------------------------------------- ### iCSR.Template.Priority
 
 //endregion ---------------------------------------------------------------------------------------- iCSR.Template
@@ -1485,14 +1522,14 @@
     /**
      * Full screen settings from core.js
      */
-    //SetFullScreenMode(true);
-    //_ToggleFullScreenMode();
-    //GetCookie('WSS_FullScreenMode');
+//SetFullScreenMode(true);
+//_ToggleFullScreenMode();
+//GetCookie('WSS_FullScreenMode');
 
 //endregion
 
 
-    //region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
+//region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
     /**
      * @param ctx_object
      * @param fieldnames
@@ -1509,7 +1546,6 @@
         return (fields);
     };
     if (!window.ic) {
-        //noinspection JSUnusedGlobalSymbols
         Object.defineProperty(window, 'ic', {
             configurable: true,
             get: function () {
@@ -1520,8 +1556,8 @@
 //endregion ---------------------------------------------------------------------------------------- ctx object inspector
 
     if (iCSR.hasOwnProperty('_DEMO')) iCSR.DOM.footer();
-    //iCSR.init();//executing inside declaration seems to stall CSR template
-    console.info('iCSR loaded');
+//iCSR.init();//executing inside declaration seems to stall CSR template
+    iCSR.traceheader();
     SP.SOD.notifyScriptLoadedAndExecuteWaitingJobs('iCSR');
 })
 (window);
