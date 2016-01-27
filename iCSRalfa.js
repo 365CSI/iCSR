@@ -6,7 +6,6 @@
 (function (window) {
     window.iCSR = window.iCSR || {};//One Namespace for all iCSR functionality
     var iCSR = window.iCSR;//just to be sure, in case iCSR is hosted in another Namespace
-    console.log(this);
     Object.defineProperties(iCSR, {
         _VERSION: {
             value: '0.8', writable: false
