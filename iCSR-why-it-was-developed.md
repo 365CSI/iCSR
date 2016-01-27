@@ -30,7 +30,7 @@ Alas the generic topic *JavaScript Client Side development* makes CSR informatio
 
 Andrei Markeev has by far [the best blogposts](http://www.codeproject.com/Articles/amarkeev#Article) on the topic. And wrote the **cool** [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *(I have been in this Internet business for 26 years; when I say cool it  **is** cool)*
 
-The [blogposts on MSDN](https://code.msdn.microsoft.com/sharepoint/Client-side-rendering-JS-2ed3538a) you are bound to find demonstrate, to be honest, sometimes too sloppy coding. There is only one [video on Channel9](https://channel9.msdn.com/blogs/OfficeDevPnP/Client-Side-Rendering)
+The [blogposts on MSDN](https://code.msdn.microsoft.com/sharepoint/Client-side-rendering-JS-2ed3538a) are not too bad but require JavaScript knowledge. There is only one [video on Channel9](https://channel9.msdn.com/blogs/OfficeDevPnP/Client-Side-Rendering)
 
 On [StackExchange/SharePoint](http://sharepoint.stackexchange.com/) the [number of CSR questions](http://sharepoint.stackexchange.com/search?tab=newest&q=csr) is disappointing. In the 6 months I have been [active](http://sharepoint.stackexchange.com/users/32871/danny-engelman) on this platform I have seen about a dozen serious questions (and answers)
 
