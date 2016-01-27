@@ -1,16 +1,11 @@
 # How iCSR came to be
 
-With the release of Office365 SharePoint Online and the App model my old front-end heart lightened up.
-Although I did .ASP development in the previous century, SharePoint .Net development never made sense to me.
-
-To me SharePoint was (and is) a box of Lego bricks.
-Tinkering with the back-end is like taking a blow-torch to re-shape your new Corvette, you should only do that when your name is Foose.
-
 #### What is Client Side Rendering
 
 In the old days website pages were built on the Server, then delivered the complete page to Client.
 
 With modern technologies the Server delivers data and layout information to the Client.
+
 **Then the Client Renders the data in the Browser**
 
 This saves loads of work server-side. And, more important, allows the Client to be more dynamic (using AJAX & SPA technologies) No more *click-and-wait-till-a-new-page-is-loaded*
@@ -39,7 +34,7 @@ The Microsoft, now open-source initiative, [PnP - Patterns and Practives](http:/
 And the gurus have moved on to the *latest and greatest* : [ngOfficeUIFabric](https://github.com/ngOfficeUIFabric/ng-officeuifabric).
 They are busy writing [Angular 2.0 (beta)](https://angular.io/) Directives in [Typescript](http://www.typescriptlang.org/) only.
 
-What I feel is lacking is basic entry level tools to apply CSR
+Lacking is basic entry level tools to apply CSR
 
 #### The ViewMaster365 Add-in
 
