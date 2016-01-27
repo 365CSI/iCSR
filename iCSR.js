@@ -162,7 +162,7 @@
      * Convert one String to an array, split on specified token indicator
      * "Hello [var]" -> 'Hello','var',
      *
-     * @param str
+     * @param _tokenstring
      * @param _tokenidentifier
      * @returns {string[]|*|Array}
      */
@@ -179,7 +179,7 @@
             _regexArray.push('\\' + _tokenidentifier[1]);//add second escaped identifier
             var regExpStr = _regexArray.join('');
             var regExp = new RegExp(regExpStr, 'g');
-            _tokenized = str.split(regExp);
+            _tokenized = _tokenstring.split(regExp);
             //TODO: (normal) post process _tokenized, delete undefined references?
         } else {
             iCSR.traceerror('invalid _tokenidentifier', _tokenidentifier);
@@ -190,7 +190,7 @@
 
     /**
      *
-     * @param token
+     * @param _tokenstring
      * @param _tokenconfig
      * @returns {*}
      */
@@ -198,7 +198,7 @@
         var _tokenized = _tokenstring;
         if (_tokenized !== '.') {//allways ignore tokens
             if (_tokenconfig.hasOwnProperty(_tokenstring)) {
-                _tokenized = _tokenconfig[token]; // predefined tokens defined in .config object take precedence over token
+                _tokenized = _tokenconfig[_tokenstring]; // predefined tokens defined in .config object take precedence over token
                 if (typeof _tokenized === 'function') {
                     //TODO: (normal) ?? do we want to allow script creation... cool to investigate how far this would lead
                 }
