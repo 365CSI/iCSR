@@ -70,3 +70,5 @@ Replace the code Cisar created with the (slightly modified) code:
     if (typeof iCSR !== 'undefined') executeCSR();//line is required to keep Cisar doing live edits, can be omitted in production
 
 ## cool?
+
+You can play with the ``//commented`` lines to quickly see what iCSR.js does
