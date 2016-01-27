@@ -1,42 +1,61 @@
-(function (window) {// Office365/SharePoint Client Side Rendering JavaScript programming education and support library
+/**
+ * iCSR.js - Office365/SharePoint (CSR) Client Side Rendering JavaScript programming support library
+ * http://iCSR.gitbub.io
+ * license: MIT
+ */
+(function (window) {
     window.iCSR = window.iCSR || {};//One Namespace for all iCSR functionality
-    var iCSR = window.iCSR;//just to be sure, in case iCSR is added to another Namespace
+    var iCSR = window.iCSR;//just to be sure, in case iCSR is hosted in another Namespace
+    console.log(this);
     Object.defineProperties(iCSR, {
         _VERSION: {
-            value: '0.6', writable: false
+            value: '0.7', writable: false
         },
         _DEMO: {
-            value: true, writable: true
+            value: true, writable: true//set value: to false when you have downloaded iCSR.js to use in your Production environment
+        },
+        ReloadCSSforeveryItem: {
+            value: true, writable: true//Re-applies CSS for every item; easy for Cisar developing, set value: to false in Production
         },
         Interactive: {//(optional) indicates default setting (overrides Template config!) to be used by all iCSR Templates
             value: true, writable: true
-        },
-        ReloadCSSforeveryItem: {//Re-applies CSS for every item; easy for Cisar developing, set to false for delivery
-            value: true, writable: true
         }
     });
-    /* iCSR - Client Side Rendering IKEA style
-
-     http://iCSR.github.io
-
-     History: december 2015 - first Proof of Concept
-
-     Wishlist:
-     - view item by groupmembership
-
-     JavaScript style notes
-     - I am sorry, I could NOT find a use for jQuery
-     - _ prefixed variables are local and safe to minify/obfuscate
-     - Global namespace iCSR holds all content
-     - .Me function auto executes Templates and Controls based on the ctx object fieldnames or fieldtypes
-     - iCSR.CFG = generic configurations for Templates and Controls
-     - iCSR.SP = SharePoint related code (can be in other places as well)
-     - iCSR.CSS = CSS code
-     - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
-     - iCSR.Template = ready made functionality
-     - iCSR.fn = generic support functions
-     - iCSR.Str = String functions
-     - iCSR.Date = Date functions
+    /**
+     * How to use/read/change this file iCSR.js
+     *
+     * iCSR.js was written to be used by both entry-level CSR(JavaScript) users and more advanced developers
+     *
+     * Github
+     * - please use Github for questions, feature requests
+     * if you make changes please Fork the source on GitHub and make a Pull Request
+     *
+     * File layout
+     * - (un)collapse regions with Ctrl(shift) + and - (available in decent IDEs like WebStorm or Visual Studio)
+     *
+     * in F12 Developers console
+     * - use 'ic' to display ctx object information
+     * - add iCSR.traceon(2) to set tracelevel and output to console
+     *
+     * JavaScript style notes
+     * - I am sorry, I could NOT find any use for jQuery
+     * - iCSR Global namespace holds all content (apart from the ic F12 console inspector)
+     * - _ (underscore) prefixed variables are local and safe to minify/obfuscate
+     *
+     * Sub Namespaces:
+     * - iCSR.CFG = generic configurations for Templates and Controls
+     * - iCSR.SP = SharePoint related code (can be in other places as well)
+     * - iCSR.fn = generic support functions
+     * - iCSR.Str = String functions
+     * - iCSR.Date = Date functions
+     * - iCSR.CSS = CSS code
+     * - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
+     * - iCSR.Template = IKEA style CSR Templates
+     *
+     * Functions:
+     * - .Me function auto executes Templates and Controls based on the ctx object fieldnames or fieldtypes
+     *
+     *
      */
 
 //region JSHINT
@@ -84,12 +103,7 @@
             interactive: false,
             colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
             tracing: true,
-            colors: { //predefined colors for fieldnames
-                "Default": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
-                "Priority": ['', 'lightcoral', 'pink', 'orange', 'lightgreen'],
-                objectDescription: 'custom colors matching SharePoint internal fieldnames'
-            },
-            objectDescription: 'iCSR global configurations'
+            objectDescription: 'iCSR.CFG global configurations' // extra descriptions inside objects so it can be displayed in the F12 console
         };
 //endregion --------------------------------------------------------------------------------------- iCSR Namespaces
 
@@ -145,35 +159,65 @@
      *
      * */
     /**
+     * Convert one String to an array, split on specified token indicator
+     * "Hello [var]" -> 'Hello','var',
+     *
+     * @param str
+     * @param _tokenidentifier
+     * @returns {string[]|*|Array}
+     */
+    iCSR.Tokens.StringToTokenArray = function (_tokenstring, _tokenidentifier) {
+        //TODO: (normal) fix nested word[[token]]word issue : 'word','[token',']' - probably escape both tokens or something
+        //TODO: (low) rewrite to fix "[var]var[var]" which replaces all occurences (minor issues?)
+        var _regexArray = ['(.+?)'];//match any wordlength
+        _tokenidentifier = _tokenidentifier || '[]';//default token is [tokenname]
+        var _chunksize = parseInt(_tokenidentifier.length / 2);//split _tokenindentifier in 2 parts (ready for identiefiers like ##tokenname##)
+        _tokenidentifier = _tokenidentifier.match(new RegExp('.{1,' + _chunksize + '}', 'g'));//split in chunck size
+        var _tokenized = _tokenstring;
+        if (_tokenidentifier.length === 2) {
+            _regexArray.unshift('\\' + _tokenidentifier[0]);//add escaped leading identifier
+            _regexArray.push('\\' + _tokenidentifier[1]);//add second escaped identifier
+            var regExpStr = _regexArray.join('');
+            var regExp = new RegExp(regExpStr, 'g');
+            _tokenized = str.split(regExp);
+            //TODO: (normal) post process _tokenized, delete undefined references?
+        } else {
+            iCSR.traceerror('invalid _tokenidentifier', _tokenidentifier);
+        }
+        iTrace(3, 'iCSR.Tokens.StringToTokenArray with: ', _tokenidentifier, '\n' + _tokenstring, '\n' + _tokenized);
+        return _tokenized;
+    };
+
+    /**
      *
      * @param token
      * @param _tokenconfig
      * @returns {*}
      */
-    iCSR.Tokens.replacetoken = function (token, _tokenconfig) {
-        var _tokenized = token;
+    iCSR.Tokens.replacetoken = function (_tokenstring, _tokenconfig) {
+        var _tokenized = _tokenstring;
         if (_tokenized !== '.') {//allways ignore tokens
-            if (_tokenconfig.hasOwnProperty(token)) {
+            if (_tokenconfig.hasOwnProperty(_tokenstring)) {
                 _tokenized = _tokenconfig[token]; // predefined tokens defined in .config object take precedence over token
                 if (typeof _tokenized === 'function') {
                     //TODO: (normal) ?? do we want to allow script creation... cool to investigate how far this would lead
                 }
             }
             if (iCSR.Tokens.hasfunction(_tokenized)) {
-                var functionDef = iCSR.fn.tokenArray(token, '()'),//token functions like: svgcircle(20)
-                    functionname = functionDef[0],
-                    parameters = functionDef[1];
-                _tokenized = iCSR.Tokens.callfunction(functionname, parameters);
+                var _functionDef = iCSR.Tokens.StringToTokenArray(_tokenstring, '()'),//token functions like: svgcircle(20)
+                    _functionname = _functionDef[0],
+                    _parameters = _functionDef[1];
+                _tokenized = iCSR.Tokens.callfunction(_functionname, _parameters);
             }
-            if (token === _tokenized) {
-                var strippedtoken = iCSR.Str.alphanumeric(token);
-                if (strippedtoken === token) {//token is not declared yet
-                    _tokenized = '[' + token + ']';
+            if (_tokenstring === _tokenized) {
+                var strippedtoken = iCSR.Str.alphanumeric(_tokenstring);
+                if (strippedtoken === _tokenstring) {//token is not declared yet
+                    _tokenized = '[' + _tokenstring + ']';
                     iTrace(3, 'replacetoken UNTOUCHED: ', _tokenized);
                 }
             } else {
-//                iTrace(3, 'replacetoken:', token, '\n', _tokenized);
-                if (iCSR.tracelevel > 2) console.log('\t\t', token, ' ==> ', _tokenized);
+//                iTrace(3, 'replacetoken:', _tokenstring, '\n', _tokenized);
+                if (iCSR.tracelevel > 2) console.log('\t\t', _tokenstring, ' ==> ', _tokenized);
             }
         }
         return _tokenized;
@@ -193,7 +237,7 @@
         var tokencount = 1;
         var loop;
         for (loop = 0; loop < 10; loop++) {//too lazy to develop recursive code
-            tokenized = iCSR.fn.tokenArray(_string, '[]');//make array
+            tokenized = iCSR.Tokens.StringToTokenArray(_string, '[]');//make array
             iTrace(3, 'tokenized before processing\n', tokenized);
             tokenized = tokenized.map(function (token) {
                 return iCSR.Tokens.replacetoken(token, _tokenconfig);
@@ -226,15 +270,15 @@
 
     /**
      *
-     * @param functionname
+     * @param _functionname
      * @returns {boolean}
      */
-    iCSR.Tokens.hasfunction = function (functionname) {
-        iTrace(5, 'hasfunction:', typeof functionname, functionname);
+    iCSR.Tokens.hasfunction = function (_functionname) {
+        iTrace(5, 'hasfunction:', typeof _functionname, _functionname);
         var hasFunction = false;
-        if (typeof(functionname) === 'string') {
-            functionname = functionname.split('(')[0];
-            if (iCSR.Tokens.functions.hasOwnProperty(functionname)) {
+        if (typeof(_functionname) === 'string') {
+            _functionname = _functionname.split('(')[0];
+            if (iCSR.Tokens.functions.hasOwnProperty(_functionname)) {
                 hasFunction = true;
             }
         }
@@ -243,25 +287,25 @@
 
     /**
      *
-     * @param functionname
-     * @param parameters
+     * @param _functionname
+     * @param _parameters
      * @param silent
      * @returns {*}
      */
-    iCSR.Tokens.callfunction = function (functionname, parameters, silent) {
-        iTrace(1, 'callfunction:', silent ? '(silent)' : '', functionname, '(', parameters, ')');
+    iCSR.Tokens.callfunction = function (_functionname, _parameters, silent) {
+        iTrace(1, 'callfunction:', silent ? '(silent)' : '', _functionname, '(', _parameters, ')');
         var tokenfunctionResult;
-        if (iCSR.Tokens.hasfunction(functionname)) {
+        if (iCSR.Tokens.hasfunction(_functionname)) {
             try {
-                var tokenfunction = iCSR.Tokens.functions[functionname];
-                iTrace(2, 'call: ', functionname, '(', parameters, ')\n', tokenfunction);
-                tokenfunctionResult = tokenfunction.call(this, parameters);//TODO: use Template config scope
+                var tokenfunction = iCSR.Tokens.functions[_functionname];
+                iTrace(2, 'call: ', _functionname, '(', _parameters, ')\n', tokenfunction);
+                tokenfunctionResult = tokenfunction.call(this, _parameters);//TODO: use Template config scope
             } catch (e) {
-                iCSR.catch(e, 'callfunction:' + functionname);
+                iCSR.catch(e, 'callfunction:' + _functionname);
             }
         } else {
             if (!silent) {
-                iCSR.traceerror('Missing tokenfunction', '', functionname);
+                iCSR.traceerror('Missing tokenfunction', '', _functionname);
             }
         }
         return tokenfunctionResult;
@@ -325,13 +369,13 @@
     iCSR.traceoff = function (setlevel) {
         iCSR.CFG.tracing = setlevel ? iCSR.traceon(setlevel) : false; //disable tracing
     };
-    iCSR.catch = function (e, functionname, functionreference) { //generic try/catch error reporting
+    iCSR.catch = function (e, _functionname, functionreference) { //generic try/catch error reporting
         // Compare as objects
         if (e.constructor === SyntaxError) {
-            iCSR.traceerror(functionname, 'programming error!', functionreference); // There's something wrong with your code, bro
+            iCSR.traceerror(_functionname, 'programming error!', functionreference); // There's something wrong with your code, bro
         }
         // Get the error type as a string for reporting and storage
-        iCSR.traceerror(functionname, e.constructor.name, functionreference, e); // SyntaxError
+        iCSR.traceerror(_functionname, e.constructor.name, functionreference, e); // SyntaxError
     };
 //endregion ---------------------------------------------------------------------------------------- ### iCSR.info
 
@@ -406,33 +450,6 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Date
 
 //region iCSR.fn - utility functions----------------------------------------------------------------### iCSR.fn
-    /**
-     * "Hello [var]" -> 'Hello','var',
-     *
-     * @param str
-     * @param identifiers
-     * @returns {string[]|*|Array}
-     */
-    iCSR.fn.tokenArray = function (str, identifiers) {
-        //TODO: (normal) fix nested word[[token]]word issue : 'word','[token',']' - probably escape both tokens or something
-        //TODO: (low) rewrite to fix "[var]var[var]" which replaces all occurences (minor issues?)
-        var regexArray = ['(.+?)'];//match any wordlength
-        identifiers = identifiers || '[]';//default
-        var chunksize = parseInt(identifiers.length / 2);//split indentifiers in 2 parts
-        identifiers = identifiers.match(new RegExp('.{1,' + chunksize + '}', 'g'));//split in chunck size
-        var tokenized = str;
-        if (identifiers.length === 2) {
-            regexArray.unshift('\\' + identifiers[0]);//add escaped leading identifier
-            regexArray.push('\\' + identifiers[1]);//add second escaped identifier
-            var regExpStr = regexArray.join('');
-            var regExp = new RegExp(regExpStr, 'g');
-            tokenized = str.split(regExp);
-            //TODO: (normal) post process tokenized, delete undefined references?
-        } else {
-            iCSR.traceerror('invalid identifiers', identifiers);
-        }
-        return tokenized;
-    };
     /**
      * @return {string}
      */
@@ -902,7 +919,7 @@
         helplinks += "<a href='https://github.com/365CSI/iCSR/blob/master/Documentation/quickstart.md' target='_new'>iCSR Quickstart</a>";
         helplinks += "<br><a href='http://iCSR.github.io' target='_new'>iCSR on GitHub</a>";
         helplinks += "<br><a href='http://davidbau.com/colors/' target='_new'>colornames</a>";
-        helplinks = "<div class='helplinks'>"+helplinks+"</div>";
+        helplinks = "<div class='helplinks'>" + helplinks + "</div>";
         var html = "<table><tr><td><img src='https://365csi.nl/iCSR/ipcountlogo'></td><td valign='top'>" + helplinks + "</td></tr></table>";//referenced image counts how many request are made
         iCSR.DOM.waitforelement('contentRow', function () {
             iCSR.DOM.appendHTML(document.body, html, 'DIV', 'iCSRlogo');
@@ -1464,8 +1481,18 @@
 
 //endregion --------------------------------------------------------------------------------------- iCSR.Control
 
+//region code snippets for future features
+    /**
+     * Full screen settings from core.js
+     */
+    //SetFullScreenMode(true);
+    //_ToggleFullScreenMode();
+    //GetCookie('WSS_FullScreenMode');
 
-//region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
+//endregion
+
+
+    //region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
     /**
      * @param ctx_object
      * @param fieldnames
@@ -1493,7 +1520,8 @@
 //endregion ---------------------------------------------------------------------------------------- ctx object inspector
 
     if (iCSR.hasOwnProperty('_DEMO')) iCSR.DOM.footer();
-    iCSR.init();
+    //iCSR.init();//executing inside declaration seems to stall CSR template
+    console.info('iCSR loaded');
     SP.SOD.notifyScriptLoadedAndExecuteWaitingJobs('iCSR');
 })
 (window);
