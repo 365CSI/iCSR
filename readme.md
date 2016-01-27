@@ -62,12 +62,14 @@ In short:
 
 ## Usage
 
-#### Ready made iCSR.Me Templates
+#### Ready made [iCSR.Me Templates](iCSR-Templates)
 
 * PercentComplete
 * Today calculations & coloring
 * Priority
 * Status
+
+#### For (wannabe) CSR developers : Tracing iCSR JavaScript execution
 
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.  
 Making learning JavaScript hopefully a bit easier.
