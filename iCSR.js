@@ -3,12 +3,13 @@
  * http://iCSR.gitbub.io
  * license: MIT
  */
-(function (window) {
-    window.iCSR = window.iCSR || {};//One Namespace for all iCSR functionality
-    var iCSR = window.iCSR;//just to be sure, in case iCSR is hosted in another Namespace
+(function (global) {
+    global.iCSR = global.iCSR || {};//One Namespace for all iCSR functionality
+    var iCSR = global.iCSR;
+    window.iCSR = iCSR;//just to be sure, in case iCSR is hosted in another Namespace
     Object.defineProperties(iCSR, {
         _VERSION: {
-            value: '0.8', writable: false
+            value: '0.9', writable: false
         },
         _DEMO: {
             value: true, writable: true//set value: to false when you have downloaded iCSR.js to use in your Production environment
@@ -41,18 +42,16 @@
      * - iCSR Global namespace holds all content (apart from the ic F12 console inspector)
      * - _ (underscore) prefixed variables are local and safe to minify/obfuscate
      *
-     * Sub Namespaces:
-     * - iCSR.CFG = generic configurations for Templates and Controls
-     * - iCSR.SP = SharePoint related code (can be in other places as well)
+     * main Sub Namespaces: (there are more, see Namespaces Region below)
+     * - iCSR.Template = IKEA style CSR Templates
+     * - iCSR.SP = SharePoint related code
      * - iCSR.fn = generic support functions
      * - iCSR.Str = String functions
      * - iCSR.Date = Date functions
      * - iCSR.CSS = CSS code
-     * - iCSR.Control = constructors to be called by user (new iCSR.table) or other code
-     * - iCSR.Template = IKEA style CSR Templates
      *
      * Functions:
-     * - .Me function auto executes Templates and Controls based on the ctx object fieldnames or fieldtypes
+     * - iCSR.Me - auto executes Templates and Controls based on the ctx object fieldnames or fieldtypes
      *
      *
      */
@@ -100,7 +99,6 @@
     iCSR.Tokens = iCSR.Tokens || {};        // String functions and Custom function declarations for handling [token] in Strings
     iCSR.CFG = iCSR.CFG || {                // configuration options for all Templates
             interactive: false,
-            colorBlueYellow: 'background:#005AA9;color:#FCD500;font-weight:bold;',
             tracing: true,
             objectDescription: 'iCSR.CFG global configurations' // extra descriptions inside objects so it can be displayed in the F12 console
         };
@@ -146,15 +144,15 @@
 
 //region iCSR.Tokens ------------------------------------------------------------------------------ ### iCSR.Tokens
     /**
-     * Strings may contain [token] tokens to be replaced by a corresponding config.[token] value
-     *
-     * config.firstword ='Hello';
-     * config.location='[firstword] World';
-     * iCSR.Tokens.replace( '[location]!' );   ==>  'Hello World!'
-     *      *
-     * Known issues:
-     * Nested [[token]] does not work, creates '[token',']' array
-     *
+     * Strings may contain [token] tokens to be replaced by a corresponding config.[token] value     *
+     *                                                                                               *
+     * config.firstword ='Hello';                                                                    *
+     * config.location='[firstword] World';                                                          *
+     * iCSR.Tokens.replace( '[location]!' );   ==>  'Hello World!'                                   *
+     *                                                                                               *
+     * Known issues:                                                                                 *
+     * Nested [[token]] does not work, creates '[token',']' array                                    *
+     *                                                                                               *
      * */
     iCSR.Tokens.maxtokenstringlength = 15;
     /**
@@ -171,13 +169,12 @@
         if (typeof _tokenized === 'string') {
             var _regexArray = ['(.+?)'];//match any wordlength
             _tokenidentifier = _tokenidentifier || '[]';//default token is [tokenname]
-            var _chunksize = parseInt(_tokenidentifier.length / 2);//split _tokenindentifier in 2 parts (ready for identiefiers like ##tokenname##)
-            _tokenidentifier = _tokenidentifier.match(new RegExp('.{1,' + _chunksize + '}', 'g'));//split identifier in chunck size
+            var _halflength = parseInt(_tokenidentifier.length / 2);//split _tokenindentifier in 2 parts (ready for identiefiers like ##tokenname##)
+            _tokenidentifier = _tokenidentifier.match(new RegExp('.{1,' + _halflength + '}', 'g'));//split identifier in chunck size
             if (_tokenidentifier.length === 2) {
                 _regexArray.unshift('\\' + _tokenidentifier[0]);//add escaped leading identifier
                 _regexArray.push('\\' + _tokenidentifier[1]);//add second escaped identifier
-                var regExpStr = _regexArray.join('');
-                var regExp = new RegExp(regExpStr, 'g');
+                var regExp = new RegExp(_regexArray.join(''), 'g');
                 _tokenized = _tokenstring.split(regExp);
                 iTrace(4, 'iCSR.Tokens.StringToTokenArray with: ', _tokenidentifier, {
                     "_tokenstring": _tokenstring,
@@ -343,7 +340,7 @@
     };
     iCSR.traceheader = function () {
         console.clear();
-        console.info('%c iCSR.js - ' + iCSR._VERSION + ' ', iCSR.CFG.colorBlueYellow + ';font-size:20px;');
+        console.info('%c iCSR.js - ' + iCSR._VERSION + ' ', 'background:#005AA9;color:#FCD500;font-weight:bold;font-size:20px;');
     };
     iCSR.trace = function (tracelevel, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) {
         //TODO: (low) refactor to get rid of those ugly vars
@@ -356,7 +353,7 @@
         var tracelevelcolor = tracelevelcolors[tracelevel];
         if (iCSR.CFG.errorcount < 1) {
             if (iCSR.CFG.tracing && console && iCSR.tracelevel >= tracelevel) {
-                console.info('%c iCSR ' + '%c ' + tracelevel + ' ' + p1 + '', iCSR.CFG.colorBlueYellow, tracelevelcolor, p2 || '', p3 || '', p4 || '', p5 || '', p6 || '', p7 || '', p8 || '', p9 || '', p10 || '', p11 || '', p12 || '', p13 || '', p14 || '', p15 || '');
+                console.info('%c iCSR ' + '%c ' + tracelevel + ' ' + p1 + '', 'background:#005AA9;color:#FCD500;font-weight:bold;', tracelevelcolor, p2 || '', p3 || '', p4 || '', p5 || '', p6 || '', p7 || '', p8 || '', p9 || '', p10 || '', p11 || '', p12 || '', p13 || '', p14 || '', p15 || '');
             }
         }
     };
@@ -627,7 +624,7 @@
                 if (customtemplate.hasOwnProperty(key)) template[key] = customtemplate[key];
             }
         } else {
-            template.item = iCSR.Tokens.replace(config.template);
+            if (config.template) template.item = iCSR.Tokens.replace(config.template);
             //template.item = "<div class='[classname]' onclick=\\"[click]\\">" + config.template + "</div>";
         }
         //JavaScript variables are references, so we can also overwrite the input config
@@ -635,7 +632,11 @@
         return template;//also return a copy because the Template function uses a local var (for now)
     };
 
-
+    iCSR.fn.getFunctionName = function (fn) {
+        var f = typeof fn === 'function';
+        var s = f && ((fn.name && ['', fn.name]) || fn.toString().match(/function ([^\(]+)/));
+        return (!f && 'not a function') || (s && s[1] || 'anonymous');
+    };
 //endregion --------------------------------------------------------------------------------------- iCSR.fn
 
 //region iCSR.CSS - CSS operations------------------------------------------------------------------### iCSR.CSS
@@ -753,18 +754,29 @@
     iCSR = iCSR || {};
     iCSR.SP = {}; //namespace for SP related stuff
 
-    iCSR.SPStatus = function (text, color, title, first) {
+    iCSR.SP.SPStatuscount = 0;
+    iCSR.SPStatus = function (text, color, title, first, permanent) {
         SP.SOD.executeFunc("sp.js", "SP.ClientContext", function () {
             var Status = SP.UI.Status;
             if (!text || color === 0) {
                 Status.removeAllStatus(true);
             }
             if (text) {
-                var status = Status.addStatus(title || 'iCSR Demo', text, first || false);
-                Status.setStatusPriColor(status, color || 'yellow');
-                window.setTimeout(function () {
-                    Status.removeStatus(status);
-                }, 5000);
+                iCSR.SP.SPStatuscount++;
+                if (iCSR.SP.SPStatuscount === 10) {
+                    var status = Status.addStatus('iCSR', 'Too many errors', false);
+                    Status.setStatusPriColor(status, 'red');
+                } else if (iCSR.SP.SPStatuscount < 10) {
+                    var status = Status.addStatus(title || 'iCSR Demo', text, first || false);
+                    Status.setStatusPriColor(status, color || 'yellow');
+                    if (!permanent) {
+                        window.setTimeout(function () {
+                            iCSR.SP.SPStatuscount--;
+                            Status.removeStatus(status);
+                        }, 5000);
+                    }
+                }
+
             }
         });
     };
@@ -986,30 +998,44 @@
      * @returns {*}
      * @constructor
      */
+    iCSR._ERRORCOUNT = 0;
     iCSR.Me = function (ctx) {
-        var _fieldtype = ctx.CurrentFieldSchema.FieldType;
-        var _fieldname = ctx.CurrentFieldSchema.RealFieldName;
-        //console.log(_fieldname,'\ttype:\t',_fieldtype ,ctx.CurrentFieldSchema);
-        if (iCSR.Template[_fieldname]) return iCSR.Template[_fieldname].call(this, ctx);
-        var n = 1;
-        var tracetxt = '';
-        var templatename;
-        for (templatename in iCSR.Template) {
-            if (iCSR.Template.hasOwnProperty(templatename)) {
-                var desc = '';
-                try {
-                    desc = iCSR.CFG[templatename].iCSRdescription;
-                } catch (e) {
-                    desc = 'no description';
-                }
-                tracetxt += '\n\t\tiCSR.Template.' + templatename + '\t\t\t' + desc;
-            }
+        try {
+            var _fieldtype = ctx.CurrentFieldSchema.FieldType;
+            var _fieldname = ctx.CurrentFieldSchema.RealFieldName;
+            //console.log(_fieldname,'\ttype:\t',_fieldtype ,ctx.CurrentFieldSchema);
+            if (iCSR.Template[_fieldname]) return iCSR.Template[_fieldname].call(this, ctx);
+            var warning = 'No Template for: iCSR.' + _fieldname;
+            iCSR.tracewarning(warning, '(' + _fieldtype + ')');
+            iCSR.SPStatus(warning, 'yellow', 'iCSR:', false, true);
+        } catch (e) {
+            console.error(e);
+            iCSR.SPStatus(e.message, 'red', 'iCSR error:', false, true);
         }
-        iCSR.tracewarning('No iCSR.Template definition for:', _fieldname, '(' + _fieldtype + ')', '\n\tCall iCSR from your own Fields with:', tracetxt);
     };
 
 //region --- iCSR.Template.Status ------------------------------------------------------------------ ### iCSR.Template.Status
-    iCSR.CFG.Status = {
+    iCSR.Template.Status = function (ctx) {
+        var templateId = 'Status';
+        var html;
+        var config = iCSR.fn.getconfig(ctx, iCSR.Template[templateId].configuration, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+
+        if (config.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
+            var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
+            var template = iCSR.fn.getconfigTemplate(config);
+            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
+            config.color = config.colors[config.value];
+            iCSR.CSS.appendTemplateCSS(template.CSS, config);
+            if (config.value === "Waiting on someone else") config.value = "Waiting";
+            config.value = iCSR.Str.nowordbreak(config.value);
+            html = replacetokens(template.container);
+            iTrace(1, 'Status HTML:\n\t', html);
+        } else {
+            html = config.value;
+        }
+        return html;
+    };
+    iCSR.Template.Status.configuration = {
         iCSRid: 'Status',
         colors: {
             "Not Started": 'lightgray',
@@ -1055,30 +1081,54 @@
         },
         iCSRdescription: 'colorcode text/label based values'
     };
-    iCSR.Template.Status = function (ctx) {
-        var html;
-        var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Status, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
-        iCSR.CFG.colorGroupheaders = false;
-        if (iCSR.CFG.colorGroupheaders || !iCSR.SP.isGroupHeader(ctx)) {
-            var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
-            var template = iCSR.fn.getconfigTemplate(config);
-            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
-            config.color = config.colors[config.value];
-            iCSR.CSS.appendTemplateCSS(template.CSS, config);
-            if (config.value === "Waiting on someone else") config.value = "Waiting";
-            config.value = iCSR.Str.nowordbreak(config.value);
-            html = replacetokens(template.container);
-            iTrace(1, 'Status HTML:\n\t', html);
-        } else {
-            html = config.value;
-        }
-        return html;
-    };
 //endregion --------------------------------------------------------------------------------------- iCSR.Template.Status
 
 //region --- iCSR.Template.DueDate ----------------------------------------------------------------- ### iCSR.Template.DueDate
-//noinspection HtmlUnknownAttribute
-    iCSR.CFG.DueDate = {
+    /**
+     * @return {boolean}
+     */
+    iCSR.Template.DueDate = function (ctx) {
+        var templateId = 'DueDate';
+        var html;
+        var config = iCSR.fn.getconfig(ctx, iCSR.Template[templateId].configuration, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+        var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
+        var template = iCSR.fn.getconfigTemplate(config);
+
+        if (ctx.inGridMode) {
+            ctx.ListSchema.Field.AllowGridEditing = false;
+            return config.value;
+            //return window.RenderFieldValueDefault(ctx);
+        }
+        if (!config.interactive) {
+            //	config.input="[datepicker_chrome]";
+            //config.input='[datepicker]';
+        }
+        iCSR.CSS.appendTemplateCSS(template.CSS, config, true);
+        config.ranges = iCSR.fn.extractcolors(config.ranges);//make sure it is an array: color,days,color,days
+        var colornr = 0;
+        while (Number(config.ranges[colornr + 1]) < config.days) colornr += 2; //loop to find color
+        config.color = config.ranges[colornr];
+        config.label_nodate = config.labels[0];
+        config.label_future = config.labels[1];
+        config.label_past = config.labels[2];
+        config.label = config.days > 0 ? config.label_future : config.label_past;
+
+        if (typeof config.days === 'number') {
+            //iCSR.DOM.waitforelement(config.iid, function () {// color TD cell or TR row
+            //    var TR = document.getElementById(config.iid);
+            //    var TD = TR.cells[config.counter]; //current column
+            //    (config.TD ? TD : TR).style.backgroundColor = config.color;
+            //}, 10);
+            html = template.container;
+        } else {
+            html = config.datepicknodate;
+        }
+        html = replacetokens(html);
+        iTrace(1, 'DateTime HTML:\n\t', html);
+        return html;
+    };
+    //noinspection HtmlUnknownAttribute
+    iCSR.Template.DueDate.configuration = {
         iCSRid: 'DueDate',
         ranges: ('#f55,-21,#f7a,-14,#fab,-7,#fda,0,#cf9,7,#9fa').split(','),
         labels: ['No Due Date', 'days left', 'days past'],
@@ -1123,68 +1173,17 @@
         },
         iCSRdescription: 'color code DateTime values from calculated x days past or x days to go'
     };
-    /**
-     * @return {boolean}
-     */
-    iCSR.Template.DueDate = function (ctx) {
-        var html;
-        var config = iCSR.fn.getconfig(ctx, iCSR.CFG.DueDate, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
-        var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
-        var template = iCSR.fn.getconfigTemplate(config);
-        if (ctx.inGridMode) {
-            ctx.ListSchema.Field.AllowGridEditing = false;
-            return config.value;
-            //return window.RenderFieldValueDefault(ctx);
-        }
-        if (!config.interactive) {
-            //	config.input="[datepicker_chrome]";
-            //config.input='[datepicker]';
-        }
-        iCSR.CSS.appendTemplateCSS(template.CSS, config, true);
-        config.ranges = iCSR.fn.extractcolors(config.ranges);//make sure it is an array: color,days,color,days
-        var colornr = 0;
-        while (Number(config.ranges[colornr + 1]) < config.days) colornr += 2; //loop to find color
-        config.color = config.ranges[colornr];
-        config.label_nodate = config.labels[0];
-        config.label_future = config.labels[1];
-        config.label_past = config.labels[2];
-        config.label = config.days > 0 ? config.label_future : config.label_past;
-
-        if (typeof config.days === 'number') {
-            //iCSR.DOM.waitforelement(config.iid, function () {// color TD cell or TR row
-            //    var TR = document.getElementById(config.iid);
-            //    var TD = TR.cells[config.counter]; //current column
-            //    (config.TD ? TD : TR).style.backgroundColor = config.color;
-            //}, 10);
-            html = template.container;
-        } else {
-            html = config.datepicknodate;
-        }
-        html = replacetokens(html);
-        iTrace(1, 'DateTime HTML:\n\t', html);
-        return html;
-    };
 
 //endregion ---------------------------------------------------------------------------------------- iCSR.Template.DueDate
 
 //region --- iCSR.Template.PercentComplete --------------------------------------------------------- ### iCSR.Template.PercentComplete
     /**
      *
-     */
-    iCSR.CFG.PercentComplete = {
-        CSSid: 'iCSRprogressBar', //class name for all progressBars
-        colors: ['transparent', 'red', 'orangered', 'indianred', 'goldenrod', 'goldenrod', 'goldenrod', 'yellowgreen', 'mediumseagreen', 'forestgreen', 'green'],
-        width: '180px',
-        resourcelinks: 'https://jsfiddle.net/dannye/bes5ttmt/',
-        iCSRdescription: 'display progress bar from 0.0 to 1.0 number field'
-    };
-
-    /**
-     *
      * @param ctx
      */
     iCSR.Template.PercentComplete = function (ctx) {
-        var config = iCSR.fn.getconfig(ctx, iCSR.CFG.PercentComplete, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+        var templateId = 'PercentComplete';
+        var config = iCSR.fn.getconfig(ctx, iCSR.Template[templateId].configuration, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
         config.cssreload = true; //force reloading of CSS when live-testing config settings
         config.barid = ctx.wpq + '_' + config.ID; //unique id to this progressBar//TODO (high) move to getconfig
         if (config.unique) config.CSSid += config.barid; //custom class for every progressBar
@@ -1198,6 +1197,13 @@
             };
         }
         return new iCSR.Control.PercentComplete(config).html();
+    };
+    iCSR.Template.PercentComplete.configuration = {
+        CSSid: 'iCSRprogressBar', //class name for all progressBars
+        colors: ['transparent', 'red', 'orangered', 'indianred', 'goldenrod', 'goldenrod', 'goldenrod', 'yellowgreen', 'mediumseagreen', 'forestgreen', 'green'],
+        width: '180px',
+        resourcelinks: 'https://jsfiddle.net/dannye/bes5ttmt/',
+        iCSRdescription: 'display progress bar from 0.0 to 1.0 number field'
     };
 //region --- iCSR.Control.PercentComplete ---------------------------------------------------------- ### iCSR.Control.PercentComplete
     iCSR.Control.PercentComplete = function (config) {
@@ -1289,12 +1295,54 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Template.PercentComplete
 
 //region --- iCSR.Template.Priority ---------------------------------------------------------------- ### iCSR.Template.Priority
+    iCSR.Template.Priority = function (ctx) {
+        var templateId = 'Priority';
+        var config = iCSR.fn.getconfig(ctx, iCSR.Template[templateId].configuration, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
+
+        var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
+        var template = iCSR.fn.getconfigTemplate(config);
+        iCSR.CSS.appendTemplateCSS(template.CSS, config);
+
+        config.nr = "0"; //trick replacement in accepting first value as "0" string instead of empty string
+        iTrace(1, 'Configured: ', 'iCSR.Template.' + templateId, {
+            "config": config,
+            "template": template
+        });
+        template.htmlparts = [];
+
+        for (var keyvalue in config.values) { // jshint ignore:line, Object has those keyvalues
+            config.keyvalue = keyvalue;
+            var iscurrent = config.value === keyvalue;
+            config.click = replacetokens(config.clickupdate);
+            config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
+            if (!config.interactive) config.classname += ' NonInteractive';//add CSS class for non-interactive Template
+            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
+            config.color = config.colors ? config.colors[config.keyvalue] : config.values[config.keyvalue];
+            config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
+            template.htmlitem = template.item || config.template;
+            var item = replacetokens(template.htmlitem);
+            if (iscurrent) template.htmlcurrentindex = template.htmlparts.length;
+            template.htmlparts.push(item);
+            iTrace(2, 'item:', config.nr, 'iCSR.Template.' + templateId, ':', item, {
+                'config': config,
+                'template': template
+            });
+            config.nr++;
+        }
+        template.htmlcurrentchoice = template.htmlparts[template.htmlcurrentindex];
+        config.interactive = template.htmlcurrentchoice.indexOf('onclick') > -1;
+        config.html = config.interactive ? template.htmlparts.join('') : template.htmlcurrentchoice;
+        var html = replacetokens(template.container);
+        iTrace(0, 'Output: ', 'iCSR.Template.' + templateId, {
+            "html": html,
+            "config": config,
+            "template": template
+        });
+        return html;
+    };
+    //noinspection BadExpressionStatementJS,HtmlUnknownTarget
     /** IDE ignore definitions in String (escaped double quotes to keep onclick working and img src references which IDE can't recognize*/
-//noinspection BadExpressionStatementJS,HtmlUnknownTarget
-    /**
-     * Template Configuration
-     */
-    iCSR.CFG.Priority = {
+    iCSR.Template.Priority.configuration = {
         iCSRid: 'Priority',
         values: {
             '(1) High': 'lightcoral',
@@ -1353,50 +1401,7 @@
         },
         iCSRdescription: 'colorcode (1) (2) (3) Priority values'
     };
-    iCSR.Template.Priority = function (ctx) {
-        var config = iCSR.fn.getconfig(ctx, iCSR.CFG.Priority, this); //this = ctx.CurrentFieldSchema;//if not .bind() scope then this is CurrentFieldSchema
 
-        var replacetokens = iCSR.Tokens.replace.bind(config); //bind the current config to the function
-        var template = iCSR.fn.getconfigTemplate(config);
-        iCSR.CSS.appendTemplateCSS(template.CSS, config);
-
-        config.nr = "0"; //trick replacement in accepting first value as "0" string instead of empty string
-        iTrace(1, 'Configured: ', 'iCSR.Template.' + config.iCSRid, {
-            "config": config,
-            "template": template
-        });
-        template.htmlparts = [];
-
-        for (var keyvalue in config.values) { // jshint ignore:line, Object has those keyvalues
-            config.keyvalue = keyvalue;
-            var iscurrent = config.value === keyvalue;
-            config.click = replacetokens(config.clickupdate);
-            config.classname = config[iscurrent ? 'Classcurrent' : 'Classchoice'];
-            if (!config.interactive) config.classname += ' NonInteractive';//add CSS class for non-interactive Template
-            config.colors = iCSR.fn.extractcolors(config.colors, config.Choices);
-            config.color = config.colors ? config.colors[config.keyvalue] : config.values[config.keyvalue];
-            config.label = iscurrent ? config.shortlabel : '&nbsp;&nbsp;';
-            template.htmlitem = template.item || config.template;
-            var item = replacetokens(template.htmlitem);
-            if (iscurrent) template.htmlcurrentindex = template.htmlparts.length;
-            template.htmlparts.push(item);
-            iTrace(2, 'item:', config.nr, 'iCSR.Template.' + config.iCSRid, ':', item, {
-                'config': config,
-                'template': template
-            });
-            config.nr++;
-        }
-        template.htmlcurrentchoice = template.htmlparts[template.htmlcurrentindex];
-        config.interactive = template.htmlcurrentchoice.indexOf('onclick') > -1;
-        config.html = config.interactive ? template.htmlparts.join('') : template.htmlcurrentchoice;
-        var html = replacetokens(template.container);
-        iTrace(0, 'Output: ', 'iCSR.Template.' + config.iCSRid, {
-            "html": html,
-            "config": config,
-            "template": template
-        });
-        return html;
-    };
 //--
 //endregion iCSR.Template.Priority ----------------------------------------------------------------- ### iCSR.Template.Priority
 
