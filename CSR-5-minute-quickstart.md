@@ -65,7 +65,7 @@ Replace the code Cisar created with the (slightly modified) code:
         init();
       });
     };
-    SP.SOD.registerSod("iCSR", 'https://365csi.nl/iCSR/iCSRalfa.js');//register external library as iCSR
+    SP.SOD.registerSod("iCSR", 'https://365csi.nl/iCSR/iCSR.js');//register external library as iCSR
     SP.SOD.executeFunc("iCSR", null, executeCSR );//load the iCSR library
     if (typeof iCSR !== 'undefined') executeCSR();//line is required to keep Cisar doing live edits, can be omitted in production
 
