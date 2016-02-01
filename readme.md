@@ -152,4 +152,4 @@ Amsterdam, february 2016
 
 [Danny Engelman](mailto:danny@engelman.nl)
 
-![](http://i.imgur.com/oxedw2u.jpg)
+![](http://i.imgur.com/TKbGDpS.jpg)
