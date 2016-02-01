@@ -115,7 +115,6 @@ The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introd
 
     iCSR.TemplateManager.RegisterTemplate('Planner', function () {
             var planner = this;
-            planner.state = 0;
             if (planner.CurrentItem.Status === planner.states[0]) {
                 planner.state = 0;
             } else if (planner.CurrentItem.Status === planner.states[3]) {
@@ -129,13 +128,12 @@ The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introd
             planner.textcolor = planner.textcolors[planner.state];
             planner.output = "<div style='background:[color];color:[textcolor];padding:0px 2px'>[value]</div>";
         },//end function
-        {//iCSR configuration
+        { //iCSR configuration
             colors: iCSR.CFG.color.msYellowRedBlueGreen,//Microsoft colors: yellow,red,blue,green
             textcolors: ['slate', 'lightgrey', 'slate', 'slate'],
             states: ['Not Started', 'Late', 'In progress', 'Completed']
-        }
-        //end configuration
-    );//end RegisterTemplate
+        } //end configuration
+    );    //end RegisterTemplate
 
 ## Future development
 
