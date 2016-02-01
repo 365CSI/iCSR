@@ -54,3 +54,5 @@ With the above experiences in mind I rewrote my ViewMaster365 codebase and made 
 * Entry level coding (*Yes, this means code **re-usablity** prevails over performance*)
 * Microsoft no longer supports IE9, so neither do I
 
+
+
