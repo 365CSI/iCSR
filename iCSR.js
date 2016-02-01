@@ -1351,7 +1351,7 @@
         ];
         iCSR.CSS.addStylesheetWithRules('iCSR', demoCSS);
         var helplinks = "<h3>Support Links:</h3>";
-        helplinks += "<a href='https://github.com/365CSI/iCSR/blob/master/Documentation/quickstart.md' target='_new'>iCSR Quickstart</a>";
+        helplinks += "<a href='https://github.com/365CSI/iCSR/blob/master/CSR-5-minute-quickstart.md' target='_new'>iCSR Quickstart</a>";
         helplinks += "<br><a href='http://iCSR.github.io' target='_new'>iCSR on GitHub</a>";
         helplinks += "<br><a href='http://davidbau.com/colors/' target='_new'>colornames</a>";
         helplinks = "<div class='helplinks'>" + helplinks + "</div>";
