@@ -107,9 +107,9 @@ The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introd
 
     View: iCSR.Planner
 
-##### which displays:
+##### which displays (the Due Date in 4 state colors):
 
-![](http://i.imgur.com/fPoIZsq.jpg)
+![](http://i.imgur.com/fQEL21t.jpg)
 
 ##### The iCSR Template is registered as:
 
