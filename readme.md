@@ -82,7 +82,10 @@ In short:
 
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.  
 Making learning JavaScript hopefully a bit easier.
-iCSR has multiple (configurable) levels of console.log traces
+iCSR has multiple (configurable) levels of console.log traces that can be activated with:
+
+      iCSR.traceon( 1 , true ); // tracelevel:0-5 , clear console
+
 
 ![](http://i.imgur.com/NkVJTL7.jpg)
 
