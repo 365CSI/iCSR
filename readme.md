@@ -4,6 +4,8 @@
 
 ## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
+![](http://i.imgur.com/TKbGDpS.jpg)
+
 ##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
 #### iCSR.js is a framework/support library for writing **less** JavaScript code
