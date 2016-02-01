@@ -18,17 +18,9 @@ or
 
     "[FieldName]":{
             View:iCSR.Template.bind({
-                ranges:['','',''] //array of:  color,daycount
+                ranges:['#fab', -7 , 'pink', 0 , '#cf9' , 7 , '#9fa' ] //array of:  color,daycount
             })
     }
-
-| property  | description | example |
-| ------------- | ------------- | --- |
-| ranges | defines an array of date ranges| ['#f55', -21 ,'#f7a', -14 ,'#fab', -7 ,'#fda', -10 ,'pink', 0 ,'#cf9', 7 ,'#9fa']
-| labels | default value: | ['No Due Date', 'days left', 'days past']|
-| nextday | | "next day" |
-| previousday | | "previous day" |
-
 
 ---
 ---
