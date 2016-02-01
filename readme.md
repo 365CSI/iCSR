@@ -95,6 +95,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
 
 ##### Makes fields fully interactive in Views... who needs Forms?
 
+![](http://i.imgur.com/TKbGDpS.jpg)
 ----------
 
 Amsterdam, january 2016
