@@ -97,6 +97,45 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
 
+## Adding more Templates
+
+The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introducing-office-365-planner/) breaks Tasks in 4 States: 'Not Started', 'Late', 'In progress', 'Completed'
+
+##### To add a Template with the same Planner colorscheme:
+
+    View: iCSR.Planner
+
+##### which displays:
+
+![](http://i.imgur.com/fPoIZsq.jpg)
+
+##### The iCSR Template is registered as:
+
+    iCSR.TemplateManager.RegisterTemplate('Planner', function () {
+            var planner = this;
+            planner.state = 0;
+            if (planner.CurrentItem.Status === planner.states[0]) {
+                planner.state = 0;
+            } else if (planner.CurrentItem.Status === planner.states[3]) {
+                planner.state = 3;
+            } else if (planner.days < 0) {
+                planner.state = 1;
+            } else {
+                planner.state = 2;
+            }
+            planner.color = planner.colors[planner.state];
+            planner.textcolor = planner.textcolors[planner.state];
+            planner.output = "<div style='background:[color];color:[textcolor];padding:0px 2px'>[value]</div>";
+        },//end function
+        {//iCSR configuration
+            colors: iCSR.CFG.color.msYellowRedBlueGreen,//Microsoft colors: yellow,red,blue,green
+            textcolors: ['slate', 'lightgrey', 'slate', 'slate'],
+            states: ['Not Started', 'Late', 'In progress', 'Completed']
+        }
+        //end configuration
+    );//end RegisterTemplate
+
+
 ----------
 
 Amsterdam, february 2016

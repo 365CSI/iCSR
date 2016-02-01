@@ -314,10 +314,9 @@
                 }
                 planner.color = planner.colors[planner.state];
                 planner.textcolor = planner.textcolors[planner.state];
-                planner.output = "<div style='background:[color];color:[textcolor]'>[value]</div>";
+                planner.output = "<div style='background:[color];color:[textcolor];padding:0px 2px'>[value]</div>";
             },//end function
             {//iCSR configuration for Status
-                colors1: "khaki,tomato,darkturquoise,lightgreen",
                 colors: iCSR.CFG.color.msYellowRedBlueGreen,//Microsoft colors: yellow,red,blue,green
                 textcolors: ['slate', 'lightgrey', 'slate', 'slate'],
                 states: ['Not Started', 'Late', 'In progress', 'Completed']
