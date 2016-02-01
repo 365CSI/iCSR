@@ -35,37 +35,18 @@ The iCSR.js library must be loaded **before** your CSR code.
 Replace the code Cisar created with the (slightly modified) code:
 
     function executeCSR() {//function gets called AFTER the iCSR library is loaded
-      console.log('executing CSR code');
       SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function() {//make sure clienttemplates is loaded
         function init() {
-          iCSR.traceon(1);//set to a a higher value to display more logging in the console
-          //iCSR.Interactive=false;//one switch to turn all interactive elements off
-          SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
-            Templates: {
-              Fields: {
-                "Priority": {
-                  View: iCSR.Me
-                  //View: iCSR.Me.bind({template:'kpi2',colors:"red,orange,green"})
-                  //View: iCSR.Me.bind({template:'svgcircle(20)',colors:"red,orange,green"})
-                },
-                "Status": {
-                  View: iCSR.Me//.bind({colors:"lightcoral,limegreen,grey,wheat,pink"})
-                },
-                "DueDate": {
-                  View: iCSR.Me//.bind({ranges:'lightcoral,-5,pink,-1,orange,0,lightgreen,5,lightgreen'})
-                },
-                "PercentComplete":{
-                  View: iCSR.Me.bind({barcolor:'#0072C6',color:'beige'})
-                }
-              }//Fields
-            }//Templates
-          });
-        }//init
+          iCSR.traceon(1,1);//tracelevel,clear console
+          var overrides=iCSR.overrides();//default overrides for default Task list fields
+          //overrides.Templates.Fields.DueDate.View=iCSR.Planner;
+          SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
+        };//init
         RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens("~siteCollection/Style Library/csr_test.js"), init);
         init();
-      });
-    };
-    SP.SOD.registerSod("iCSR", 'https://365csi.nl/iCSR/iCSRalfa.js');//register external library as iCSR
+      });//SPClientTemplates
+    };//executeCSR
+    SP.SOD.registerSod("iCSR", 'https://365csi.nl/iCSR/iCSR.js');//register external library as iCSR
     SP.SOD.executeFunc("iCSR", null, executeCSR );//load the iCSR library
     if (typeof iCSR !== 'undefined') executeCSR();//line is required to keep Cisar doing live edits, can be omitted in production
 
