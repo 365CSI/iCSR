@@ -88,7 +88,7 @@ iCSR has multiple (configurable) levels of console.log traces
 
 ## ![](http://th.downloadblog.it/h57RNZTWa_IIoH3Y9fs71eZKLwI=/64x64/http://media.downloadblog.it/e/e64/steve-jobs-apple.jpg) oh.. and one more thing.. ehm.. line of code..
 
-    iCSR.Interactive = true
+    iCSR.Interactive = true; // which is the default setting
 
 ##### Makes fields fully interactive in Views... who needs Forms?
 
