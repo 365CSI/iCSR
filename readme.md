@@ -14,13 +14,13 @@
 
 ##### Can be created with one **iCSR.Me** statement:
 
-    SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
-    Templates: {
-        Fields: {
-          "Priority":{
-            View : iCSR.Me
-          }
-    }
+            SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
+            Templates: {
+                Fields: {
+                  "Priority":{
+                    View : iCSR.Me
+                  }
+            }
 
 ##### or customized further with:
 
@@ -33,8 +33,8 @@
 
 ##### On a default Task list just one line:
 
-      var overrides = iCSR.overrides();
-      SPClientTemplates.TemplateManager.RegisterTemplateOverrides( overrides );
+          var overrides = iCSR.overrides();
+          SPClientTemplates.TemplateManager.RegisterTemplateOverrides( overrides );
 
 ##### will produce:
 
@@ -84,21 +84,22 @@ iCSR source-code is broken up in generic descriptive functions to be used in you
 Making learning JavaScript hopefully a bit easier.
 iCSR has multiple (configurable) levels of console.log traces that can be activated with:
 
-      iCSR.traceon( 1 , true ); // tracelevel:0-5 , clear console
+        iCSR.traceon( 1 , true ); // tracelevel:0-5 , clear console
 
 
 ![](http://i.imgur.com/NkVJTL7.jpg)
 
 ## ![](http://th.downloadblog.it/h57RNZTWa_IIoH3Y9fs71eZKLwI=/64x64/http://media.downloadblog.it/e/e64/steve-jobs-apple.jpg) oh.. and one more thing.. ehm.. line of code..
 
-    iCSR.Interactive = true; // which is the default setting
+        iCSR.Interactive = true; // which is the default setting
 
 ##### Makes fields fully interactive in Views... who needs Forms?
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
+
 ----------
 
-Amsterdam, january 2016
+Amsterdam, february 2016
 
 [Danny Engelman](mailto:danny@engelman.nl)
 
