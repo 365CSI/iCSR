@@ -8,7 +8,7 @@
 
 ##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
-#### iCSR.js is a framework/support library for writing **less** JavaScript code
+### iCSR.js is a framework/support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
