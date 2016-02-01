@@ -135,13 +135,19 @@ The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introd
         //end configuration
     );//end RegisterTemplate
 
+## Future development
+
+iCSR.js is MIT licensed, no restrictions on any usage
+
+### version 1.0 disclaimer:
+* Major work is done, I might tweak code a bit
+* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+
 
 ----------
 
 Amsterdam, february 2016
 
 [Danny Engelman](mailto:danny@engelman.nl)
-
-
 
 ![](http://i.imgur.com/oxedw2u.jpg)
