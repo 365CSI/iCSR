@@ -80,7 +80,7 @@ In short:
 * Priority
 * Status
 
-#### For (wannabe) CSR developers : Tracing iCSR JavaScript execution
+#### For CSR developers : Tracing iCSR JavaScript execution
 
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.  
 Making learning JavaScript hopefully a bit easier.
