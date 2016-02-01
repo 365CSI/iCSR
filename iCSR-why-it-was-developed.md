@@ -55,4 +55,4 @@ With the above experiences in mind I rewrote my ViewMaster365 codebase and made 
 * Microsoft no longer supports IE9, so neither do I
 
 
-
+![](http://i.imgur.com/oxedw2u.jpg)
