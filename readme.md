@@ -86,7 +86,7 @@ iCSR source-code is broken up in generic descriptive functions to be used in you
 Making learning JavaScript hopefully a bit easier.
 iCSR has multiple (configurable) levels of console.log traces that can be activated with:
 
-        iCSR.traceon( 1 , true ); // tracelevel:0-5 , clear console
+        iCSR.traceon( 3 , true ); // tracelevel:0-5 , clear console
 
 
 ![](http://i.imgur.com/NkVJTL7.jpg)
