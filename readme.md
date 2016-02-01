@@ -1,14 +1,12 @@
-### alfa version disclaimer:
-* iCSR has not yet reached version 1.0  
-* Is under active development  
+### version 1.0 disclaimer:
+* Major work is done, I might tweak code a bit
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
-* Code may change and refactored for the 1.0 release (hopefully in february)
 
 ## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
 
 ##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
-#### iCSR.js is a support library for writing **less** JavaScript code
+#### iCSR.js is a framework/support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
@@ -33,7 +31,18 @@
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
-##### *{5 minute video goes here}*
+##### On a default Task list just one line:
+
+      var overrides = iCSR.overrides();
+      SPClientTemplates.TemplateManager.RegisterTemplateOverrides( overrides );
+
+##### will produce:
+
+*all iCSR templates can be cofigured as per above .bind() example*
+
+![](http://i.imgur.com/oxedw2u.jpg)
+
+##### *{Haven't had time yet for a 5 minute video}*
 
 ## Project goals:
 
