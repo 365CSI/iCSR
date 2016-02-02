@@ -1,19 +1,26 @@
-# How iCSR came to be
+# Why iCSR.js was developed
+
+##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
 #### What is Client Side Rendering
 
-In the old days website pages were built on the Server, then delivered the complete page to Client.
+In the old days website pages were built on the Server,
+then delivered the complete page to Client.
 
-With modern technologies the Server delivers data and layout information to the Client.
+Since SharePoint 2013 the Server can deliver data and layout information to the Client.
 
-**Then the Client Renders the data in the Browser**
+**Then the Browser Client Renders the data**
 
-This saves loads of work server-side. And, more important, allows the Client to be more dynamic (using AJAX & SPA technologies) No more *click-and-wait-till-a-new-page-is-loaded*
+This saves loads of work server-side.
+
+And, more important, allows the Client to be more dynamic (using AJAX & SPA technologies)
+
+No more *click-and-wait-till-a-new-page-is-loaded*
 
 ##### Terms and Technologies
 
-* CSR - Client Side Rendering - **all** coding where JavaScript renders information on Client **Views & Forms**
-* CSR file - one .js file with CSR code
+* CSR - Client Side Rendering - **all** coding where JavaScript renders information on Client **Views and Forms**
+* CSR file - one .js JavaScript file with CSR code
 * Display Templates - CSR technology used to change the display of **Webparts** (mainly used for Search Dsiplay Templates)
 * JSlink - The Link on a WebPart, Field or View to one or more CSR files
 
@@ -23,7 +30,7 @@ On the Web you will see the terms CSR and JSlink (incorrectly) used interchangea
 
 Alas the generic topic *JavaScript Client Side development* makes CSR information hard to find in Google.
 
-Andrei Markeev has by far [the best blogposts](http://www.codeproject.com/Articles/amarkeev#Article) on the topic. And wrote the **cool** [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *(I have been in this Internet business for 26 years; when I say cool it  **is** cool)*
+Andrei Markeev has by far [the best blogposts](http://www.codeproject.com/Articles/amarkeev#Article) on the topic. And wrote the **cool** [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *(I have been in this Internet business for 26 years; when I say cool it*  **is** *cool)*
 
 The [blogposts on MSDN](https://code.msdn.microsoft.com/sharepoint/Client-side-rendering-JS-2ed3538a) are not too bad but require a fair amount of JavaScript knowledge to get started. There is only one [video on Channel9](https://channel9.msdn.com/blogs/OfficeDevPnP/Client-Side-Rendering)
 
@@ -36,7 +43,7 @@ They are busy writing [Angular 2.0 (beta)](https://angular.io/) Directives in [T
 
 Lacking is basic entry level tools to apply CSR
 
-#### The ViewMaster365 Add-in
+#### The 2014 ViewMaster365 Add-in
 
 In 2014 I developed the [ViewMaster365 App](http://ViewMaster365.com) to enhance the standard Task list **Views** with interactivity. (*Microsoft now uses the name 'Add-ins' for SharePoint 'Apps'*)
 
@@ -55,4 +62,4 @@ With the above experiences in mind I rewrote my ViewMaster365 codebase and made 
 * Microsoft no longer supports IE9, so neither do I
 
 
-![](http://i.imgur.com/oxedw2u.jpg)
+![](http://i.imgur.com/TKbGDpS.jpg)
