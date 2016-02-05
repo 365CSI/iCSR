@@ -19,6 +19,7 @@
 
 ##### Can be created with one **iCSR.Me** statement:
 
+```javascript
             SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
             Templates: {
                 Fields: {
@@ -26,13 +27,15 @@
                     View : iCSR.Me
                   }
             }
-
+```
 ##### or customized further with:
 
+```javascript
             View : iCSR.Me({
                                     colors: ['red','yellow','green'],
                                     style : '<span>[svgcircle(20)]</span>'
             					})
+```
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
@@ -116,6 +119,7 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 ##### The iCSR Template is registered as:
 
+```javascript
     iCSR.RegisterTemplate('Planner', function () {
             var planner = this;
             var state = 2; // default: In progress
@@ -136,6 +140,7 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
             states: ['Not Started', 'Late', 'In progress', 'Completed']
         }
     );//RegisterTemplate
+```
 
 ## Future development
 

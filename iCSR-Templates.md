@@ -177,13 +177,13 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` r
                 },
                 "MyStatus": {
                   View: iCSR.Status({   colors: {
-                                                               "Not Started": 'lightgray',
-                                                               "Deferred": 'pink',
-                                                               "Waiting on someone else": 'gold',
-                                                               "In Progress": 'orange',
-                                                               "Completed": 'lightgreen'
-                                                           }
-                                                    })
+                                                   "Not Started": 'lightgray',
+                                                   "Deferred": 'pink',
+                                                   "Waiting on someone else": 'gold',
+                                                   "In Progress": 'orange',
+                                                   "Completed": 'lightgreen'
+                                                }
+                                    })
                 },
                 "MyDueDate": {
                   View: iCSR.DueDate({ranges:'lightcoral,-5,pink,-1,orange,0,lightgreen,5,lightgreen'})
