@@ -26,7 +26,7 @@
 
 ##### or customized further with:
 
-            View : iCSR.Me.bind({
+            View : iCSR.Me({
                                     colors: ['red','yellow','green'],
                                     style : '<span>[svgcircle(20)]</span>'
             					})
@@ -40,7 +40,7 @@
 
 ##### will produce:
 
-*all iCSR templates can be cofigured as per above .bind() example*
+*all iCSR templates can be cofigured as per above example*
 
 ![](http://i.imgur.com/oxedw2u.jpg)
 

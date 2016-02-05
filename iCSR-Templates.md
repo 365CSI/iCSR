@@ -1,6 +1,6 @@
 ![](https://365csi.nl/iCSR/iCSR_names_DateTime.png)
 
-# iCSR.Template.DueDate
+# iCSR.DueDate
 
 ![](https://365csi.nl/iCSR/images/duedate.jpg)
 
@@ -11,13 +11,13 @@
 or
 
     "[fieldname]":{
-            View:iCSR.Template.DueDate
+            View:iCSR.DueDate
     }
 
 ### Custom configuration
 
     "[FieldName]":{
-            View:iCSR.Template.bind({
+            View:iCSR({
                 ranges:['#fab', -7 , 'pink', 0 , '#cf9' , 7 , '#9fa' ] //array of:  color,daycount
             })
     }
@@ -27,7 +27,7 @@ or
 
 ![](https://365csi.nl/iCSR/iCSR_names_Progress.png)
 
-# iCSR.Template.Progress
+# iCSR.Progress
 
 ![](https://365csi.nl/iCSR/images/progress.jpg)
 
@@ -38,7 +38,7 @@ or
 
 ![](https://365csi.nl/iCSR/iCSR_names_Priority.png)
 
-# iCSR.Template.Priority
+# iCSR.Priority
 
 ![](https://365csi.nl/iCSR/images/priority.jpg)
 
@@ -49,19 +49,19 @@ or
 
 ![](https://365csi.nl/iCSR/iCSR_names_Status.png)
 
-# iCSR.Template.Status
+# iCSR.Status
 
 ![](https://365csi.nl/iCSR/images/status.jpg)
 
 
 ## Using iCSR on your own (non-Task List) SharePoint Fields
 
-Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.Template.`` reference:
+Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` reference:
 
-* ``iCSR.Template.PercentComplete`` for progress bar number values between 0 and 1
-* ``iCSR.Template.Priority`` for Choice fields: ``(0) Label1`` , ``(1) Label2`` , ``(2) Label3`` ,
-* ``iCSR.Template.DueDate`` for DateTime fields
-* ``iCSR.Template.Status`` for Status fields (generic text labels)
+* ``iCSR.PercentComplete`` for progress bar number values between 0 and 1
+* ``iCSR.Priority`` for Choice fields: ``(0) Label1`` , ``(1) Label2`` , ``(2) Label3`` ,
+* ``iCSR.DueDate`` for DateTime fields
+* ``iCSR.Status`` for Status fields (generic text labels)
 
 ### Example
 
@@ -73,10 +73,10 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.Temp
             Templates: {
               Fields: {
                 "MyPriority": {
-                  View: iCSR.Template.Priority
+                  View: iCSR.Priority
                 },
                 "MyStatus": {
-                  View: iCSR.Template.Status.bind({   colors: {
+                  View: iCSR.Status({   colors: {
                                                                "Not Started": 'lightgray',
                                                                "Deferred": 'pink',
                                                                "Waiting on someone else": 'gold',
@@ -86,10 +86,10 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.Temp
                                                     })
                 },
                 "MyDueDate": {
-                  View: iCSR.Template.DueDate.bind({ranges:'lightcoral,-5,pink,-1,orange,0,lightgreen,5,lightgreen'})
+                  View: iCSR.DueDate({ranges:'lightcoral,-5,pink,-1,orange,0,lightgreen,5,lightgreen'})
                 },
                 "MyPercentComplete":{
-                  View: iCSR.Template.PercentComplete.bind({barcolor:'#0072C6',color:'beige'})
+                  View: iCSR.PercentComplete({barcolor:'#0072C6',color:'beige'})
                 }
               }//Fields
             }//Templates
