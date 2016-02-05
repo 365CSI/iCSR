@@ -2,13 +2,16 @@
 
 # iCSR.DueDate
 
+Calculates the date offset from Today, colors by specified range. The interactive version allows to change the date with **one click** to the previous or next day.
+
 ![](https://365csi.nl/iCSR/images/duedate.jpg)
 
+### Usage:
     "DueDate":{
             View:iCSR.Me
     }
 
-or
+or for any DateTime field:
 
     "[fieldname]":{
             View:iCSR.DueDate
@@ -17,7 +20,7 @@ or
 ### Custom configuration
 
     "[FieldName]":{
-            View:iCSR({
+            View:iCSR.DueDate({
                 ranges:['#fab', -7 , 'pink', 0 , '#cf9' , 7 , '#9fa' ] //array of:  color,daycount
             })
     }
@@ -54,7 +57,7 @@ or
 ![](https://365csi.nl/iCSR/images/status.jpg)
 
 
-## Using iCSR on your own (non-Task List) SharePoint Fields
+# Using iCSR on your own (non-Task List) SharePoint Fields
 
 Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` reference:
 
