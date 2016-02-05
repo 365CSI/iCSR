@@ -34,7 +34,7 @@ or for any DateTime field:
 
 ![](https://365csi.nl/iCSR/images/progress.jpg)
 
-#### Styles
+### Styles
 
 ##### default:
 
@@ -122,6 +122,25 @@ Can be re-configured with:
 
 ![](https://365csi.nl/iCSR/images/priority.jpg)
 
+### Styles
+
+##### default:
+
+    iCSR.Priority
+
+
+Custom HTML displaying current Priority, the dimmed colors allow to change Priority with **one click**
+
+![](http://i.imgur.com/uLtjDnu.jpg)
+
+
+##### kpi1, kpi2, kpi3, kpi4
+
+Using standard SharePoint KPI images from ``/_layouts/images/`` (_not interactive_)
+
+    iCSR.Priority( { style:'kpi1' } )
+
+![](http://i.imgur.com/ZttliEO.jpg)
 
 ---
 ---
