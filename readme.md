@@ -32,17 +32,19 @@
 
 ```javascript
             View : iCSR.Me({
-                                    colors: ['red','yellow','green'],
-                                    style : '<span>[svgcircle(20)]</span>'
-            					})
+                            colors: ['red','yellow','green'],
+                            style : '<span>[svgcircle(20)]</span>'
+                        })
 ```
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
 ##### On a default Task list just one line:
 
+```javascript
           var overrides = iCSR.overrides();
           SPClientTemplates.TemplateManager.RegisterTemplateOverrides( overrides );
+```
 
 ##### will produce:
 
