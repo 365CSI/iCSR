@@ -87,24 +87,24 @@ Into:
 
 Default PercentComplete configuration:
 
-                background: "lightgrey",
-                scalecolor: "grey",
-                scalesize: "75%",
-                barcolor: "#0072C6",//default SharePoint blue
-                color: "beige",
-                colorhover: "beige",
-                barcolorhover: "green",
-                onclick: "onclick=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]','[updatevalue]')\" ",
-                percentsign: "<span style='display:inline-block;text-align:right;font-size:70%'>&nbsp;%</span>",
-                rangecolor: "inherit",
-                rangelabelcolor: "inherit",
-                resettext: " reset to 0 ",
-                rangelabel: "<span style='color:[rangelabelcolor];display:inline-block;text-align:right;width:20px'>[valuenr]</span>[percentsign]",
-                onchange: " onchange=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]',String(Number(this.value)/100) )\" ",
-                oninput: " oninput=\"this.nextSibling.innerHTML=this.value;\" ",
-                width: "160px",
-                height: "15px",
-                rangeheight: "24px",
+    background: "lightgrey",
+    scalecolor: "grey",
+    scalesize: "75%",
+    barcolor: "#0072C6",//default SharePoint blue
+    color: "beige",
+    colorhover: "beige",
+    barcolorhover: "green",
+    onclick: "onclick=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]','[updatevalue]')\" ",
+    percentsign: "<span style='display:inline-block;text-align:right;font-size:70%'>&nbsp;%</span>",
+    rangecolor: "inherit",
+    rangelabelcolor: "inherit",
+    resettext: " reset to 0 ",
+    rangelabel: "<span style='color:[rangelabelcolor];display:inline-block;text-align:right;width:20px'>[valuenr]</span>[percentsign]",
+    onchange: " onchange=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]',String(Number(this.value)/100) )\" ",
+    oninput: " oninput=\"this.nextSibling.innerHTML=this.value;\" ",
+    width: "160px",
+    height: "15px",
+    rangeheight: "24px",
 
 Can be re-configured with:
 
