@@ -1,6 +1,9 @@
-### version 1.0 disclaimer:
-* Major work is done, I might tweak code a bit
-* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+* 1.0 - public release february 1st 2016
+* 1.1 - not made public
+* 1.2 - friday february 5th
+    * simplified ``iCSR.Me`` usage (javascript .bind notation is no longer needed)
+    * enhanced [token] replace functionality
+    * Progressbar now has a reset to 0 on mouseover
 
 ### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint CSR - Client Side Rendering  framework & support library (*IKEA style*)
 
