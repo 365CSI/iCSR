@@ -61,6 +61,56 @@ HTML5 [input type='range'](http://www.wufoo.com/html5/types/8-range.html) elemen
 
 ![](http://i.imgur.com/OseXPAe.jpg)
 
+iCSR converts the range (iCSR) style configuration
+
+From:
+
+    <div style='white-space:nowrap;background:[rangecolor];height:[rangeheight];margin-top:-5px'>
+      <input id='[id]' type='range'
+            [oninput]
+            [onchange]
+            min='0' value='[valuenr]' max='100' step=10>
+      [rangelabel]
+    </div>
+
+Into:
+
+    <div style="white-space:nowrap;background:inherit;height:24px;margin-top:-5px">
+      <input id="PercentComplete_1" type="range"
+		oninput="this.nextSibling.innerHTML=this.value;"
+		onchange="iCSR.SP.UpdateItem(this,'1','PercentComplete',String(Number(this.value)/100) )"
+		min="0" value="80" max="100" step="10">
+	  <span style="color:inherit;display:inline-block;text-align:right;width:20px">80</span>
+	  <span style="display:inline-block;text-align:right;font-size:70%"> %</span>
+    </div>
+
+
+Default PercentComplete configuration:
+
+                background: "lightgrey",
+                scalecolor: "grey",
+                scalesize: "75%",
+                barcolor: "#0072C6",//default SharePoint blue
+                color: "beige",
+                colorhover: "beige",
+                barcolorhover: "green",
+                onclick: "onclick=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]','[updatevalue]')\" ",
+                percentsign: "<span style='display:inline-block;text-align:right;font-size:70%'>&nbsp;%</span>",
+                rangecolor: "inherit",
+                rangelabelcolor: "inherit",
+                resettext: " reset to 0 ",
+                rangelabel: "<span style='color:[rangelabelcolor];display:inline-block;text-align:right;width:20px'>[valuenr]</span>[percentsign]",
+                onchange: " onchange=\"iCSR.SP.UpdateItem(this,'[ID]','[Name]',String(Number(this.value)/100) )\" ",
+                oninput: " oninput=\"this.nextSibling.innerHTML=this.value;\" ",
+                width: "160px",
+                height: "15px",
+                rangeheight: "24px",
+
+Can be re-configured with:
+
+    iCSR.PercentComplete( { barcolor:'green' } )
+
+
 ---
 ---
 
