@@ -164,6 +164,7 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` r
 
 ### Example
 
+```javascript
     function execCSR() {
       SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function() {
         function init() {
@@ -202,3 +203,4 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` r
     SP.SOD.registerSod("iCSR", script);
     SP.SOD.executeFunc("iCSR", null, execCSR );
     if(typeof iCSR!=='undefined') execCSR();
+```
