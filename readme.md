@@ -146,8 +146,6 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 iCSR.js is MIT licensed, no restrictions on any usage
 
-### version 1.0 disclaimer:
-* Major work is done, I might tweak code a bit
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
 
