@@ -62,4 +62,10 @@ With the above experiences in mind I rewrote my ViewMaster365 codebase and made 
 * Microsoft no longer supports IE9, so neither do I
 
 
+----------
+
+Amsterdam, february 2016
+
+:email: [Danny Engelman](mailto:danny@engelman.nl)
+
 ![](http://i.imgur.com/TKbGDpS.jpg)

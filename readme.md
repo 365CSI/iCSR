@@ -2,7 +2,7 @@
 * Major work is done, I might tweak code a bit
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
-## ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint 2013 Client Side Rendering (CSR) - IKEA style
+### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint CSR - Client Side Rendering  framework & support library (*IKEA style*)
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
 
@@ -27,8 +27,8 @@
 ##### or customized further with:
 
             View : iCSR.Me.bind({
-                                  colors:['red','yellow','green'],
-					              template:"<span>[svgcircle(20)]</span>"
+                                    colors: ['red','yellow','green'],
+                                    style : '<span>[svgcircle(20)]</span>'
             					})
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
@@ -101,7 +101,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
 
 ## Adding more Templates
 
-The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introducing-office-365-planner/) breaks Tasks in 4 States: 'Not Started', 'Late', 'In progress', 'Completed'
+The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States: 'Not Started', 'Late', 'In progress', 'Completed'
 
 ##### To add a Template with the same Planner colorscheme:
 
@@ -113,27 +113,26 @@ The new [Office365 Microsoft Planner](https://blogs.office.com/2015/09/22/introd
 
 ##### The iCSR Template is registered as:
 
-    iCSR.TemplateManager.RegisterTemplate('Planner', function () {
+    iCSR.RegisterTemplate('Planner', function () {
             var planner = this;
+            var state = 2; // default: In progress
             if (planner.CurrentItem.Status === planner.states[0]) {
-                planner.state = 0;
+                state = 0; // Not Started
             } else if (planner.CurrentItem.Status === planner.states[3]) {
-                planner.state = 3;
+                state = 3; // Completed
             } else if (planner.days < 0) {
-                planner.state = 1;
-            } else {
-                planner.state = 2;
+                state = 1; // Late
             }
-            planner.color = planner.colors[planner.state];
-            planner.textcolor = planner.textcolors[planner.state];
+            planner.color = planner.colors[ state ];
+            planner.textcolor = planner.textcolors[ state ];
             planner.output = "<div style='background:[color];color:[textcolor];padding:0px 2px'>[value]</div>";
-        },//end function
-        { //iCSR configuration
+        },//function
+        {//configuration
             colors: iCSR.CFG.color.msYellowRedBlueGreen,//Microsoft colors: yellow,red,blue,green
             textcolors: ['slate', 'lightgrey', 'slate', 'slate'],
             states: ['Not Started', 'Late', 'In progress', 'Completed']
-        } //end configuration
-    );    //end RegisterTemplate
+        }
+    );//RegisterTemplate
 
 ## Future development
 
@@ -148,6 +147,6 @@ iCSR.js is MIT licensed, no restrictions on any usage
 
 Amsterdam, february 2016
 
-[Danny Engelman](mailto:danny@engelman.nl)
+:email: [Danny Engelman](mailto:danny@engelman.nl)
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
