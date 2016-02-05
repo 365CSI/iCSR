@@ -149,7 +149,7 @@ Custom HTML displaying current Priority, the dimmed colors allow to change Prior
 
 ##### kpi1, kpi2, kpi3, kpi4
 
-Using standard SharePoint KPI images from ``/_layouts/images/`` (_not interactive_)
+Using standard SharePoint KPI images from ``/_layouts/images/`` (_also interactive_)
 
 ```javascript
     iCSR.Priority( { style:'kpi1' } )
