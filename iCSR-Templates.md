@@ -7,23 +7,29 @@ Calculates the date offset from Today, colors by specified range. The interactiv
 ![](https://365csi.nl/iCSR/images/duedate.jpg)
 
 ### Usage:
+
+```javascript
     "DueDate":{
             View:iCSR.Me
     }
+```
 
 or for any DateTime field:
 
+```javascript
     "[fieldname]":{
             View:iCSR.DueDate
     }
-
+```
 ### Custom configuration
 
+```javascript
     "[FieldName]":{
             View:iCSR.DueDate({
                 ranges:['#fab', -7 , 'pink', 0 , '#cf9' , 7 , '#9fa' ] //array of:  color,daycount
             })
     }
+```
 
 ---
 ---
@@ -65,6 +71,7 @@ iCSR converts the range (iCSR) style configuration
 
 From:
 
+```html
     <div style='white-space:nowrap;background:[rangecolor];height:[rangeheight];margin-top:-5px'>
       <input id='[id]' type='range'
             [oninput]
@@ -72,9 +79,11 @@ From:
             min='0' value='[valuenr]' max='100' step=10>
       [rangelabel]
     </div>
+```
 
 Into:
 
+```html
     <div style="white-space:nowrap;background:inherit;height:24px;margin-top:-5px">
       <input id="PercentComplete_1" type="range"
 		oninput="this.nextSibling.innerHTML=this.value;"
@@ -83,10 +92,11 @@ Into:
 	  <span style="color:inherit;display:inline-block;text-align:right;width:20px">80</span>
 	  <span style="display:inline-block;text-align:right;font-size:70%"> %</span>
     </div>
-
+```
 
 Default PercentComplete configuration:
 
+```javascript
     background: "lightgrey",
     scalecolor: "grey",
     scalesize: "75%",
@@ -105,11 +115,13 @@ Default PercentComplete configuration:
     width: "160px",
     height: "15px",
     rangeheight: "24px",
+```
 
 Can be re-configured with:
 
+```javascript
     iCSR.PercentComplete( { barcolor:'green' } )
-
+```
 
 ---
 ---
@@ -126,8 +138,9 @@ Can be re-configured with:
 
 ##### default:
 
+```javascript
     iCSR.Priority
-
+```
 
 Custom HTML displaying current Priority, the dimmed colors allow to change Priority with **one click**
 
@@ -138,7 +151,9 @@ Custom HTML displaying current Priority, the dimmed colors allow to change Prior
 
 Using standard SharePoint KPI images from ``/_layouts/images/`` (_not interactive_)
 
+```javascript
     iCSR.Priority( { style:'kpi1' } )
+```
 
 ![](http://i.imgur.com/ZttliEO.jpg)
 
