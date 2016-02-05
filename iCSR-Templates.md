@@ -34,6 +34,33 @@ or for any DateTime field:
 
 ![](https://365csi.nl/iCSR/images/progress.jpg)
 
+#### Styles
+
+##### default:
+
+    iCSR.PercentComplete
+
+Custom HTML progressbar with scale, all future values are settable with **one click**
+Hover over the left side of the progressbar to reset to 0
+
+![](http://i.imgur.com/RlzWYNs.jpg)
+
+##### progress:
+
+    iCSR.PercentComplete( { style:'progress' } )
+
+HTML5 [Progress](https://css-tricks.com/html5-progress-element/) element
+
+![](http://i.imgur.com/IqnlXcP.jpg)
+
+##### range:
+
+    iCSR.PercentComplete( { style:'range' } )
+
+HTML5 [input type='range'](http://www.wufoo.com/html5/types/8-range.html) element
+
+![](http://i.imgur.com/OseXPAe.jpg)
+
 ---
 ---
 
