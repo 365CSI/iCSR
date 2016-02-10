@@ -1,15 +1,3 @@
-* 1.0 - public release february 1st 2016
-* 1.1 - not made public
-* 1.2 - friday february 5th
-    * simplified ``iCSR.Me`` usage (javascript .bind notation is no longer needed)
-    * enhanced [token] replace functionality
-    * Progressbar now has a reset to 0 on mouseover
-* 1.3 / 1.4 - had so much fun with new functionality I never pushed them
-* 1.5 - wednesday february 10th
-    * major color enhancements
-    * added ``rowcolor`` and ``cellcolor`` options
-    * with automatic calculation of contrasting text-colors
-    * added more inspectors (type **ic** in developer-console)
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
@@ -157,10 +145,25 @@ Notes:
 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">iCSR.js</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://365CSI.nl" property="cc:attributionName" rel="cc:attributionURL">365CSI</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://iCSR.github.io" rel="dct:source">http://iCSR.github.io</a>.
 
-##### In normal words:
+#### In normal words:
 * CC: You are allowed to use this library for **all** (including commercial) purposes
 * BY: You may **not** remove the attribution from the source-code
 * That's it
+
+## Version History
+
+* 1.0 - public release february 1st 2016
+* 1.1 - not made public
+* 1.2 - friday february 5th
+    * simplified ``iCSR.Me`` usage (javascript .bind notation is no longer needed)
+    * enhanced [token] replace functionality
+    * Progressbar now has a reset to 0 on mouseover
+* 1.3 / 1.4 - had so much fun with new functionality I never pushed them
+* 1.5 - wednesday february 10th
+    * major color enhancements
+    * added ``rowcolor`` and ``cellcolor`` options
+    * with automatic calculation of contrasting text-colors
+    * added more inspectors (type **ic** in developer-console)
 
 ----------
 
