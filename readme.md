@@ -1,7 +1,6 @@
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
-
 ### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint CSR - Client Side Rendering  framework & support library (*IKEA style*)
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
@@ -54,6 +53,12 @@
 ## Project goals:
 
 For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
+
+##### I wanted to make my CSR development as easy as 1,2,3
+
+
+![](http://i.imgur.com/c8QRsaw.jpg)
+
 
 In short:
 
