@@ -4,6 +4,15 @@
     * simplified ``iCSR.Me`` usage (javascript .bind notation is no longer needed)
     * enhanced [token] replace functionality
     * Progressbar now has a reset to 0 on mouseover
+* 1.3 / 1.4 - had so much fun with new functionality I never pushed them
+* 1.5 - wednesday february 10th
+    * major color enhancements
+    * added ``rowcolor`` and ``cellcolor`` options
+    * with automatic calculation of contrasting text-colors
+    * added more inspectors (type **ic** in developer-console)
+
+* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+
 
 ### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint CSR - Client Side Rendering  framework & support library (*IKEA style*)
 
@@ -109,7 +118,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
 
 ## Adding more Templates
 
-The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States: 'Not Started', 'Late', 'In progress', 'Completed'
+The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States: 'Not Started' (yellow), 'Late' (red), 'In progress' (blue), 'Completed' (green)
 
 ##### To add a Template with the same Planner colorscheme:
 
@@ -117,39 +126,41 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 ##### which displays (the Due Date in 4 state colors):
 
-![](http://i.imgur.com/fQEL21t.jpg)
+![](http://i.imgur.com/VFwkN2L.jpg)
 
 ##### The iCSR Template is registered as:
 
 ```javascript
-    iCSR.RegisterTemplate('Planner', function () {
-            var planner = this;
-            var state = 2; // default: In progress
-            if (planner.CurrentItem.Status === planner.states[0]) {
-                state = 0; // Not Started
-            } else if (planner.CurrentItem.Status === planner.states[3]) {
-                state = 3; // Completed
-            } else if (planner.days < 0) {
-                state = 1; // Late
-            }
-            planner.color = planner.colors[ state ];
-            planner.textcolor = planner.textcolors[ state ];
-            planner.output = "<div style='background:[color];color:[textcolor];padding:0px 2px'>[value]</div>";
-        },//function
-        {//configuration
-            colors: iCSR.CFG.color.msYellowRedBlueGreen,//Microsoft colors: yellow,red,blue,green
-            textcolors: ['slate', 'lightgrey', 'slate', 'slate'],
-            states: ['Not Started', 'Late', 'In progress', 'Completed']
-        }
-    );//RegisterTemplate
+	iCSR.Template('Planner', function () {
+		var planner = this;
+		var status=planner.Item.Status;
+		planner.color=2;
+		if (status === 'Not Started') {
+			planner.color=0;
+		} else if (status === 'Completed') {
+			planner.color=3;
+		} else if (planner.days < 0) {
+			planner.color=1;// Late
+		}
+		},//function
+		{//config
+			rowcolor:true
+		}//config
+	);//RegisterTemplate
 ```
 
-## Future development
+Notes:
+* the [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) colors are predefined as msYellow, msRed, msBlue, msGreen
+* Every Template has a pre-configuration and post-execution proces taking care of generic programming tasks
 
-iCSR.js is MIT licensed, no restrictions on any usage
+## License
 
-* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">iCSR.js</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://365CSI.nl" property="cc:attributionName" rel="cc:attributionURL">365CSI</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://iCSR.github.io" rel="dct:source">http://iCSR.github.io</a>.
 
+##### In normal words:
+* CC: You are allowed to use this library for **all** (including commercial) purposes
+* BY: You may **not** remove the attribution from the source-code
+* That's it
 
 ----------
 
