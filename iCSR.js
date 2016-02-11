@@ -1,12 +1,12 @@
-/**********************************************************************************************************************************
+/*********************************************************************************************************************************
  * iCSR.js - Office365/SharePoint (CSR) Client Side Rendering JavaScript programming framework/support library
  * http://iCSR.gitbub.io
  * license: MIT
  */
 (function (global, document) {
     global.iCSR = {
-        _LICENSE:"<a rel='license' href='http://creativecommons.org/licenses/by/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by/4.0/88x31.png' /></a><br /><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>iCSR.js</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://365CSI.nl' property='cc:attributionName' rel='cc:attributionURL'>365CSI</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct='http://purl.org/dc/terms/' href='http://iCSR.github.io' rel='dct:source'>http://iCSR.github.io</a>",
-        _VERSION: '1.5',
+        _LICENSE:" Creative Commons Attribution License - iCSR by 365CSI (http://iCSR.github.io)",
+        _VERSION: '1.5.1',
         _Templates: [],              // Array of Registered iCSR.[name] Templates
         _DEMO: true,
         ReloadCSSforeveryItem: true,
@@ -43,7 +43,7 @@
         },
         interactive: true           // by default all Templates are interactive (or overriden in Template own config)
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * How to use/read/change this file iCSR.js
      *
      * iCSR.js was written to be used by both entry-level CSR(JavaScript) users and more advanced developers
@@ -87,7 +87,7 @@
 //endregion
 
 //region Global overrides ----- SharePoint core.js is not loaded yet ------------------------------ ### Global Functions
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Get Ancestor up in the DOM tree - SharePoint overloads this in (loaded later) core.js
      * @param _element
      * @param tagType
@@ -152,7 +152,7 @@
 
 //endregion --------------------------------------------------------------------------------------- Global Functions
 //region iCSR.info & iCSR.trace-------------------------------------------------------------------- ### iCSR.info
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Tracing to the F12 developers console
      * a cleanup, refactor and documentation is on the wish list
      * for now select the region and press ctrl -
@@ -234,7 +234,7 @@
 
 //endregion ---------------------------------------------------------------------------------------- ### iCSR.info
 //region --- iCSR._RegisterDefaultTemplates -------------------------------------------------------- ### iCSR._RegisterDefaultTemplates
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * One function to register all default iCSR Template: DueDate, PercentComplete, Priority, Planner
      *
      * for detailed documentation on Templates see github: http://iCSR.github.io
@@ -242,12 +242,12 @@
      */
     iCSR._RegisterDefaultTemplates = function () {
 //region --- iCSR.ExampleTemplate------------------------------------------------------------------- ### iCSR.ExampleTemplate
-        /******************************************************************************************************************
+        /****************************************************************************************************************************
          * Basic iCSR Template explaining the iCSR concepts
          * You can copy paste this RegisterTemplate function in your Cisar or other editor and continue with it
          */
         iCSR.Template('Example', function () { // the name will make the template available as: View:iCSR.iCSRexample
-                /******************************************************************************************************************
+                /****************************************************************************************************************************
                  * On execution the function gets the scope set to its iCSR template configuration (see iCSR configuration below)
                  * This configuration is a cumulative of: (see function iCSR.fn.get_configTemplate()
                  *  1 : default iCSR configuration (see TemplateManager)
@@ -266,7 +266,7 @@
                  *
                  * */
                 var example = this;                             // pointer so the code below is easier to read
-                /******************************************************************************************************************
+                /****************************************************************************************************************************
                  * output is required, this is the iCSR html sent back to SharePoint
                  * before SharePoint displays it in the Browser, iCSR will expand all [token] declarations
                  * with the values from the current scope
@@ -620,7 +620,7 @@
     ;//iCSR._RegisterDefaultTemplates
 //endregion --------------------------------------------------------------------------------------- iCSR._RegisterDefaultTemplates
 //region iCSR.TemplateManager - register CSR Templates with function and configurations------------ ### iCSR.TemplateManager
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Code level: ADVANCED
      *
      * Manages all iCSR Templates
@@ -664,7 +664,7 @@
             }
         };
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * iCSR.Me executes all (registered) templates with one statement, matching by fieldname
      * @param ctx
      * @returns {*}
@@ -733,7 +733,7 @@
         iTrace(1, _prefix + 'RegisterFunction', _templateIDname);
         iCSR[_templateIDname].executeTemplate = _templatefunction;      // create a function reference so it can be executed inside the Template function
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Main function to Register one iCSR Template
      * @param _templateIDname
      * @param _templatefunction
@@ -909,7 +909,7 @@
     };
 //endregion --------------------------------------------------------------------------------------- iCSR TemplateManager
 //region iCSR.Init -------------------------------------------------------------------------------- ### iCSR.init
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Initialize iCSR
      */
     iCSR.init = function () {
@@ -924,13 +924,13 @@
     };
 //endregion ---------------------------------------------------------------------------------------- iCSR.init
 //region iCSR.Tokens ---------- proces strings with [token] markers ------------------------------- ### iCSR.Tokens
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Code level: ADVANCED
      *
      * Processes all iCSR [tokens] in Strings
      *
      */
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Strings may contain [token] tokens to be replaced by a corresponding config.[token] value     *
      *                                                                                               *
      * config.firstword ='Hello';                                                                    *
@@ -941,7 +941,7 @@
      * Nested [[token]] does not work, creates '[token',']' array                                    *
      *                                                                                               *
      * */
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Convert one String to an array, split on specified token indicator [] or () or whatever
      * "Hello [location]" -> 'Hello','location',
      *
@@ -972,7 +972,7 @@
         }
         return _tokenized;
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param _tokenstring
      * @param _tokenconfig
@@ -1025,7 +1025,7 @@
         }
         return _tokenized;
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * replace 'Hello [location]!' with propertyvalue from _tokenconfig {location:'World'}  => 'Hello World!'
      * The functions loops to de-token any nested token definitions eg: location="from [countryname]"
      *
@@ -1133,7 +1133,7 @@
     _$Tokens.ensureTokenexists = function (_token, _tokendefault) {
         return _$Object._ensure_object_key_value(this, _token, _tokendefault);// 'this' is the bound config scope
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param _circleSize
      * @param _circleColor
@@ -1152,7 +1152,7 @@
         return "<img src='/layouts/images/" + iCSR.Str.alphanumeric(_imagename) + ".gif'/>";
     };
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param _functionname
      * @returns {boolean}
@@ -1169,7 +1169,7 @@
     };
 //endregion --------------------------------------------------------------------------------------- iCSR.Tokens
 //region iCSR.Str ------------- String utility functions ------------------------------------------ ### iCSR.Str
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Code level: MEDIUM
      *
      * Generic string functions
@@ -1196,14 +1196,14 @@
     };
 //endregion --------------------------------------------------------------------------------------- iCSR.Str
 //region iCSR.Date ------------ DateTime utility functions ---------------------------------------- ### iCSR.Date
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Code level: MEDIUM
      *
      * Generic Date functions (saves from using momentJS
      *
      */
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Returns a property array
      * @returns {{yyyy: number, MM: number, dd: number, hh: number, mm: number, ss: number}}
      * @param _date
@@ -1222,7 +1222,7 @@
         _date.yy = String(_date.yyyy).substring(2);
         return _date;
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Adds/substracts days from a given date (ignores time value)
      * @param _date
      * @param _numberOfDays
@@ -1242,7 +1242,7 @@
             _date.ss
         );
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Formats a date as string: iCSR.Date.format( new Date() , "yyyy-MM-dd" )  =>  "2016-2-1"
      *
      * TODO dates/months need leading zeros
@@ -1477,7 +1477,7 @@
     };
 //endregion --------------------------------------------------------------------------------------- iCSR.Object
 //region iCSR.fn -------------- utility functions --------------------------------------------------### iCSR.fn
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Code level: MEDIUM
      *
      * Generic iCSR utility functions
@@ -1605,7 +1605,7 @@
             iCSR.traceerror('_get_configTemplate error', e, '\nsuccesfull config declarations:', _config);
         }
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * pre-Process all configurations (global, Template, custom) into one configuration for a Template
      * @param _config
      * @returns {*}
@@ -1634,7 +1634,7 @@
 //SetFullScreenMode(true);//not available yet when CSR runs
 //_ToggleFullScreenMode();
 //GetCookie('WSS_FullScreenMode');
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * TODO: (high) refactor, store all Items from View
      */
     iCSR.fn.addItem = function (_config) {
@@ -1644,7 +1644,7 @@
         }
         iCSR.Items[_key].push(_config.value);
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * fixate the header of the SharePoint Table
      */
     iCSR.fn.fixedListViewHeader = function () { //create fixed header with scrolling body
@@ -1666,7 +1666,7 @@
      http://www.cssscript.com/animated-progress-indicators-with-vanilla-javascript-and-css/
      */
     //_$CSS.sheets = {};//TODO: more interactie CSS processing/changes; refactor to new iCSR.CSS.sheet();
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param id
      * @returns {Element}
@@ -1679,7 +1679,7 @@
         iTrace(2, 'added stylesheet', _styleEl.id);
         return _styleEl;
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * insert one CSS rule to an existing element
      * @param rule
      * @param _element
@@ -1696,7 +1696,7 @@
             iCSR.traceerror('Not a STYLE sheet', _element);
         }
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * append (create) StyleSheet and insert array of Rules
      * @param id - DOM element id
      * @param rules - Array of strings
@@ -1720,7 +1720,7 @@
         }
     };
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Append CSS from Template config definition to the page
      * @param CSS
      * @param _config
@@ -1795,7 +1795,7 @@
 //SOD functions
 //https://msdn.microsoft.com/en-us/library/office/ff408081(v=office.14).aspx
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param listID
      * @param ID
@@ -1840,7 +1840,7 @@
         GetAncestor(element, 'TD').style.opacity = '.1';                            // dim the element, will be redrawn after save by SharePoint
         iCSR.SP.UpdateListItem(false, ID, fieldname, value);
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *
      * @param ID
      * @param authorID
@@ -1867,7 +1867,7 @@
         );
     };
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * standard SharePoint refresh ListView
      * http://www.eliostruyf.com/ajax-refresh-item-rows-in-sharepoint-2013-view/
      *
@@ -1885,7 +1885,7 @@
         }
     };
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * @param renderCtx
      * @param fRenderHeaderColumnNames
      */
@@ -1977,7 +1977,7 @@
         }
         return _contrastcolor || false;                                                  // no contrast found, then return false
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * return a (choices) named value color object from a String or Array or Object
      * @returns {*}
      * @param _colorObject
@@ -2110,7 +2110,7 @@
             }
         });
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Wait for a DOM elemet to exist in the document
      * @param id
      * @param _callback
@@ -2144,7 +2144,7 @@
         _element.className = _className || _emptyString;
         return _parentelement.appendChild(_element);
     };
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Delete a DOM element
      * @param _element
      */
@@ -2174,7 +2174,7 @@
 //region iCSR.Controllers ------------------------------------------------------------------------- ### iCSR.Controllers (OnPostRender)
 
 //region iCSR.Control.table--------------------------------------------------------------------- ### iCSR.Control.table
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * Usage: in OnPostRender
      * new _$DOM.Control.attachAllOption( 'Colors' );
      *
@@ -2205,7 +2205,7 @@
         allinput.addEventListener("click", this.selectall);
     };
 
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      *  iCSR CONTROL:table - start definition*****************************************************************
      *
      * @param ctx
@@ -2281,7 +2281,7 @@
 //endregion
 
 //region iCSR.Control.duplicates --------------------------------------------------------------- ### iCSR.Control.duplicates
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      Usage: in OnPostRender
      new iCSR.Control.duplicates(ctx,{title:'Title',color:'pink',buttonlabel:['Show Duplicates', 'Hide Duplicates']});
      */
@@ -2317,7 +2317,7 @@
 //endregion --------------------------------------------------------------------------------------- iCSR.Control
 
 //region ----- ctx object inspector can be used from the F12 console - type 'ic' in the console ---- ### ctx object inspector
-    /******************************************************************************************************************
+    /****************************************************************************************************************************
      * @param _obj
      * @param fieldnames
      */
