@@ -1,7 +1,7 @@
 /*********************************************************************************************************************************
  * iCSR.js - Office365/SharePoint (CSR) Client Side Rendering JavaScript programming framework/support library
  * http://iCSR.gitbub.io
- * license: MIT
+ * license: CC-BY
  */
 (function (global, document) {
     global.iCSR = {
