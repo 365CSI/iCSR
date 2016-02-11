@@ -57,7 +57,7 @@ For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
 ##### I wanted to make my CSR development as easy as 1,2,3
 
 
-![](http://i.imgur.com/c8QRsaw.jpg)
+![](http://i.imgur.com/wO1PdOA.jpg)
 
 
 In short:
