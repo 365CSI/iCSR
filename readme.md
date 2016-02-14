@@ -16,9 +16,9 @@
             Templates: {
                 Fields: {
                   "Priority":{
-                    View : iCSR.Me   // <-- one iCSR statement in default CSR code
+                    View : iCSR.Me  // <-- one iCSR statement in standard SharePoint CSR code
                   }
-            }
+            };
 ```
 ##### or customized further with:
 
