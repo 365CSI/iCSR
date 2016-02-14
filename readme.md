@@ -82,6 +82,7 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
     2. In progress (blue)
     3. Completed (green)
 
+
 ##### To add an iCSR Template with the same Planner colorscheme for a standard SharePoint Tasks list:
 
             "DueDate" : {
