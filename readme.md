@@ -112,7 +112,18 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 Notes:
 * the [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) colors are predefined by iCSR.js as: msYellow, msRed, msBlue, msGreen
-* Every Template has a pre-configuration and post-execution proces taking care of generic programming tasks
+* iCSR does all pre-configuration and execution for you:
+  * so '*this*' refers to one ListItem Due Date
+  * contains all the information about that Item ( *this.Item* )
+  * and Today calculations you (may) want to use ( *this.days* )
+  * *this.output* ,
+
+  *not needed in this code, because it uses the default setting:*
+
+        "<div class='[Class]' style='background:[color];color:[textcolor]'>[value]</div>"
+
+  * is parsed by iCSR to create valid HTML
+  * which is then displayed by SharePoint
 
 ## Tracing what iCSR does
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.
