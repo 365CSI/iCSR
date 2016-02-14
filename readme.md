@@ -112,6 +112,7 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 Notes:
 * the [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) colors are predefined by iCSR.js as: msYellow, msRed, msBlue, msGreen
+* iCSR corrects the textcolor for background colors
 * iCSR does all pre-configuration and execution for you:
   * so '*this*' refers to one ListItem Due Date
   * contains all the information about that Item ( *this.Item* )
