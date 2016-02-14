@@ -1,7 +1,7 @@
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
-### iCSR.JS - SharePoint CSR - Client Side Rendering  framework & support library
+### iCSR.JS - SharePoint CSR - Client Side Rendering - ![](http://365csi.nl/iCSR/images/easydoesit.png) library
 
 ![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
 
