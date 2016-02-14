@@ -77,10 +77,10 @@ In short:
 
 The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States:
 
-0. Not Started (yellow)
-1. Late (red)
-2. In progress (blue)
-3. Completed (green)
+    0. Not Started (yellow)
+    1. Late (red)
+    2. In progress (blue)
+    3. Completed (green)
 
 ##### To add an iCSR Template with the same Planner colorscheme for a standard SharePoint Tasks list:
 
