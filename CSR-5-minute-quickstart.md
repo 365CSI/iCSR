@@ -4,7 +4,7 @@
 
 The free [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) (by [Adrey Markeev](http://sharepoint.stackexchange.com/users/1430/andrey-markeev)) makes creating CSR files and JSlink connections a breeze.
 
-Cisar writes files to the ``~sitecollection/Style Library``, So you need **Write access to the ``/Style Library``**
+Cisar writes files to the ``~sitecollection/Style Library``, So you need **Write access to the ``/Style Library``** (*A Site Collection administrator can grant it to you*)
 
 #### Your first CSR file
 
@@ -40,7 +40,9 @@ Replace the code Cisar created with the (slightly modified) code:
           iCSR.traceon(1,1);//tracelevel,clear console
           var overrides=iCSR.overrides();//default overrides for default Task list fields
           //overrides.Templates.Fields.DueDate.View=iCSR.Planner;
+
           SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
+
         };//init
         RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens("~siteCollection/Style Library/csr_test.js"), init);
         init();
