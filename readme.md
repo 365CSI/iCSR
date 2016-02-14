@@ -93,16 +93,11 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 ## The ONLY code required is:
 
 ```javascript
-	iCSR.Template('Planner', function () {
-                var status = this.Item.Status;
-                this.color=2;
-                if (status === 'Not Started') {
-                    this.color=0;
-                } else if (status === 'Completed') {
-                    this.color=3;
-                } else if (this.days < 0) {
-                    this.color=1;
-                }
+	iCSR.Template('Planner', function (ctx) {
+                this.color = '[msBlue]';
+                if (this.days < 0) this.color = '[msRed]';
+                if (this.Item.Status === 'Not Started') this.color = '[msYellow]';
+                if (this.Item.Status === 'Completed') this.color = '[msGreen]';
             },
                 {
                     rowcolor:true
@@ -111,20 +106,23 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 ```
 
 Notes:
-* the [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) colors are predefined by iCSR.js as: msYellow, msRed, msBlue, msGreen
-* iCSR corrects the textcolor for background colors
+* JavaScript not optimized and kept as short as possible for example purpose
+* the [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) colors are predefined by iCSR.js as iCSR Tokens
+* iCSR **[tokens]** available for Templates can be viewed by typing ``ic`` in the F12 Dev console
+* iCSR corrects the contrast textcolor for background colors (beige on msRed)
 * iCSR does all pre-configuration and execution for you:
   * so '*this*' refers to one ListItem Due Date
   * contains all the information about that Item ( *this.Item* )
   * and Today calculations you (may) want to use ( *this.days* )
+  * just like regular SharePoint CSR code you get the ```ctx`` object as parameter
   * *this.output* ,
 
   *not needed in this code, because it uses the default setting:*
 
         "<div class='[Class]' style='background:[color];color:[textcolor]'>[value]</div>"
 
-  * is parsed by iCSR to create valid HTML
-  * which is then displayed by SharePoint
+  * is parsed by iCSR to create valid HTML; which is then displayed by SharePoint
+
 
 ## Tracing what iCSR does
 iCSR source-code is broken up in generic descriptive functions to be used in your custom fields.
