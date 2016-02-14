@@ -3,16 +3,7 @@
 
 ![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
 
-<p style="text-align='right';">
-<img style="float: right;" src="http://365csi.nl/iCSR/images/easydoesit.png">
-</p>
-
-### SharePoint CSR - Client Side Rendering framework & support library
-
-
-##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
-
-### iCSR.js is a framework/support library for writing **less** JavaScript code
+### iCSR.js : A framework/support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
@@ -25,7 +16,7 @@
             Templates: {
                 Fields: {
                   "Priority":{
-                    View : iCSR.Me
+                    View : iCSR.Me   // <-- one iCSR statement in default CSR code
                   }
             }
 ```
@@ -55,21 +46,15 @@
 
 ##### *{Haven't had time yet for a 5 minute video}*
 
-## Project goals:
+## Project goal: make CSR development as easy as possible
 
 For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
-
-##### I wanted to make my CSR development as easy as 1,2,3
-
-
-![](http://i.imgur.com/wO1PdOA.jpg)
-
 
 In short:
 
 * Help people get started with CSR development in 5 minutes  
-(including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en))
-* Let people learn CSR (SharePoint JavaScript) development by disecting the [iCSR.js](./iCSR.js) source code.
+(including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) developed by Andrei Markeev)
+* Let people learn more JavaScript development by disecting the [iCSR.js](./iCSR.js) source code.
 * No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
 ## Installation
