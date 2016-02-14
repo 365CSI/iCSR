@@ -53,7 +53,7 @@ For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
 In short:
 
 * Help people get started with CSR development in 5 minutes  
-(including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) developed by Andrei Markeev)
+(including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *developed by Andrei Markeev*)
 * Let people learn more JavaScript development by disecting the [iCSR.js](./iCSR.js) source code.
 * No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
@@ -67,7 +67,7 @@ In short:
 
 ## Installation & Usage
 
-1. ##### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+1. ##### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) (*developed by Andrei Markeev*)
 
 2. ##### Add [iCSR.js](./iCSR.js) to your Site Collection Style Library  (*or reference the demo library for a quick start*)
 
@@ -75,36 +75,39 @@ In short:
 
 4. ##### Or create your own Template:
 
-The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States: 'Not Started' (yellow), 'Late' (red), 'In progress' (blue), 'Completed' (green)
+The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States:
 
+0. Not Started (yellow)
+1. Late (red)
+2. In progress (blue)
+3. Completed (green)
 
-##### To add a Template with the same Planner colorscheme:
+##### To add an iCSR Template with the same Planner colorscheme for a standard SharePoint Tasks list:
 
-    View: iCSR.Planner
-
-##### which displays (the Due Date in 4 state colors):
+            "DueDate" : {
+                          View: iCSR.Planner
+                        }
 
 ![](http://i.imgur.com/VFwkN2L.jpg)
 
-##### The iCSR Template is registered as:
+## The ONLY code required is:
 
 ```javascript
 	iCSR.Template('Planner', function () {
-		var planner = this;
-		var status=planner.Item.Status;
-		planner.color=2;
-		if (status === 'Not Started') {
-			planner.color=0;
-		} else if (status === 'Completed') {
-			planner.color=3;
-		} else if (planner.days < 0) {
-			planner.color=1;// Late
-		}
-		},//function
-		{//config
-			rowcolor:true
-		}//config
-	);//RegisterTemplate
+                var status = this.Item.Status;
+                this.color=2;
+                if (status === 'Not Started') {
+                    this.color=0;
+                } else if (status === 'Completed') {
+                    this.color=3;
+                } else if (this.days < 0) {
+                    this.color=1;
+                }
+            },
+                {
+                    rowcolor:true
+                }
+	);
 ```
 
 Notes:
