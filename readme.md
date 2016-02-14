@@ -3,7 +3,9 @@
 
 ![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
 
+<p align="right">
 <img style="float: right;" src="http://365csi.nl/iCSR/images/easydoesit.png">
+</p>
 
 ### SharePoint CSR - Client Side Rendering framework & support library
 
