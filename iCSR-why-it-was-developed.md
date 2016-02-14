@@ -1,5 +1,7 @@
 # Why iCSR.js was developed
 
+![](http://i.imgur.com/wO1PdOA.jpg)
+
 ##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
 #### What is Client Side Rendering
