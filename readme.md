@@ -67,13 +67,13 @@ In short:
 
 ## Installation & Usage
 
-1. #### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+1. ##### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
 
-2. #### Add [iCSR.js](./iCSR.js) to your Site Collection Style Library  (or reference the demo library for a quick start)
+2. ##### Add [iCSR.js](./iCSR.js) to your Site Collection Style Library  (*or reference the demo library for a quick start*)
 
-3. #### Use the [iCSR-Templates](iCSR-Templates.md)
+3. ##### Use the [iCSR-Templates](iCSR-Templates.md)
 
-4. #### Or create your own Template:
+4. ##### Or create your own Template:
 
 The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States: 'Not Started' (yellow), 'Late' (red), 'In progress' (blue), 'Completed' (green)
 
