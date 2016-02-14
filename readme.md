@@ -3,7 +3,7 @@
 
 ### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) SharePoint CSR - Client Side Rendering  framework & support library (*IKEA style*)
 
-![](http://i.imgur.com/TKbGDpS.jpg)
+![](http://i.imgur.com/wO1PdOA.jpg)
 
 ##### Impatient? Skip the explanations: [get going in 5 minutes](CSR-5-minute-quickstart.md)
 
