@@ -94,14 +94,14 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
 
 ```javascript
 	iCSR.Template('Planner', function (ctx) {
-                this.color = '[msBlue]';
-                if (this.days < 0) this.color = '[msRed]';
-                if (this.Item.Status === 'Not Started') this.color = '[msYellow]';
-                if (this.Item.Status === 'Completed') this.color = '[msGreen]';
-            },
-                {
-                    rowcolor:true
-                }
+                                    this.color = '[msBlue]';
+                                    if (this.days < 0) this.color = '[msRed]';
+                                    if (this.Item.Status === 'Not Started') this.color = '[msYellow]';
+                                    if (this.Item.Status === 'Completed') this.color = '[msGreen]';
+                                },
+                                    {
+                                        rowcolor:true
+                                    }
 	);
 ```
 
