@@ -1,9 +1,7 @@
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
-![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
-
-### iCSR.js : A framework/support library for writing **less** JavaScript code
+#### ![](https://365csi.nl/iCSR/ipcountlogo/index.php) A framework/support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
@@ -49,6 +47,8 @@
 ## Project goal: make CSR development as easy as possible
 
 For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
+
+![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
 
 In short:
 
