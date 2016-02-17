@@ -26,7 +26,7 @@ No more *click-and-wait-till-a-new-page-is-loaded*
 * Display Templates - CSR technology used to change the display of **Webparts** (mainly used for Search Dsiplay Templates)
 * JSlink - The Link on a WebPart, Field or View to one or more CSR files
 
-On the Web you will see the terms CSR and JSlink (incorrectly) used interchangeably. A JSlink can point to any (non-CSR) JavaScript file.
+On the Web you will see the terms CSR and JSlink (incorrectly) used interchangeably. A JSlink can point to any (non-CSR) JavaScript file, and CSR code can be executed without a JSLink.
 
 #### Getting into CSR (Client Side Rendering) development
 
