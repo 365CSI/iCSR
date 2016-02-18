@@ -160,8 +160,6 @@ Using standard SharePoint KPI images from ``/_layouts/images/`` (_also interacti
 ![](http://i.imgur.com/ZttliEO.jpg)
 
 ---
----
-
 
 ![](https://365csi.nl/icsr/iCSR_names_Status.png)
 
