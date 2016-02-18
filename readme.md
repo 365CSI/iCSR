@@ -16,7 +16,7 @@
                   "Priority":{
                     View : iCSR.Me  // <-- one iCSR statement in standard SharePoint CSR code
                   }
-            };
+            }}});
 ```
 ##### or customized further with:
 

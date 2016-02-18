@@ -1,12 +1,12 @@
 # iCSR default Templates
 
-![](https://365csi.nl/iCSR/iCSR_names_DateTime.png)
+![](https://365csi.nl/icsr/iCSR_names_DateTime.png)
 
 # iCSR.DueDate
 
 Calculates the date offset from Today, colors by specified range. The interactive version allows to change the date with **one click** to the previous or next day.
 
-![](https://365csi.nl/iCSR/images/duedate.jpg)
+![](https://365csi.nl/icsr/images/duedate.jpg)
 
 ### Usage:
 
@@ -36,11 +36,11 @@ or for any DateTime field:
 ---
 ---
 
-![](https://365csi.nl/iCSR/iCSR_names_Progress.png)
+![](https://365csi.nl/icsr/iCSR_names_Progress.png)
 
 # iCSR.Progress
 
-![](https://365csi.nl/iCSR/images/progress.jpg)
+![](https://365csi.nl/icsr/images/progress.jpg)
 
 ### Styles
 
@@ -130,11 +130,11 @@ Can be re-configured with:
 
 
 
-![](https://365csi.nl/iCSR/iCSR_names_Priority.png)
+![](https://365csi.nl/icsr/iCSR_names_Priority.png)
 
 # iCSR.Priority
 
-![](https://365csi.nl/iCSR/images/priority.jpg)
+![](https://365csi.nl/icsr/images/priority.jpg)
 
 ### Styles
 
@@ -163,11 +163,11 @@ Using standard SharePoint KPI images from ``/_layouts/images/`` (_also interacti
 ---
 
 
-![](https://365csi.nl/iCSR/iCSR_names_Status.png)
+![](https://365csi.nl/icsr/iCSR_names_Status.png)
 
 # iCSR.Status
 
-![](https://365csi.nl/iCSR/images/status.jpg)
+![](https://365csi.nl/icsr/images/status.jpg)
 
 
 # Using iCSR on your own (non-Task List) SharePoint Fields
@@ -216,7 +216,7 @@ Instead of using the generic ``iCSR.Me`` function reference, use the ``iCSR.`` r
         init();
       });
     };
-    var script='https://365csi.nl/iCSR/iCSR.js';
+    var script='https://365csi.nl/icsr/icsr.js';
     SP.SOD.registerSod("iCSR", script);
     SP.SOD.executeFunc("iCSR", null, execCSR );
     if(typeof iCSR!=='undefined') execCSR();
