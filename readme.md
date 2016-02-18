@@ -1,7 +1,7 @@
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
-### ![](https://365csi.nl/iCSR/ipcountlogo/index.php?1) A framework/support library for writing **less** JavaScript code
+### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) A framework/support library for writing **less** JavaScript code
 
 ##### Customized Views like:
 
@@ -48,13 +48,13 @@
 
 For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
 
-![](https://365csi.nl/iCSR/ipcountlogo/index.php) ![](http://365csi.nl/iCSR/images/iCSR_123.png)
+![](https://365csi.nl/icsr/ipcountlogo/index.php) ![](http://365csi.nl/icsr/images/iCSR_123.png)
 
 In short:
 
 * Help people get started with CSR development in 5 minutes  
 (including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *developed by Andrei Markeev*)
-* Let people learn more JavaScript development by disecting the [iCSR.js](./iCSR.js) source code.
+* Let people learn more JavaScript development by disecting the [iCSR.js](./icsr.js) source code.
 * No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
 
 ## ![](http://th.downloadblog.it/h57RNZTWa_IIoH3Y9fs71eZKLwI=/64x64/http://media.downloadblog.it/e/e64/steve-jobs-apple.jpg) oh.. and one more thing.. ehm.. line of code..
@@ -69,7 +69,7 @@ In short:
 
 1. ##### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) (*developed by Andrei Markeev*)
 
-2. ##### Add [iCSR.js](./iCSR.js) to your Site Collection Style Library  (*or reference the demo library for a quick start*)
+2. ##### Add [iCSR.js](./icsr.js) to your Site Collection Style Library  (*or reference the demo library for a quick start*)
 
 3. ##### Use the [iCSR-Templates](iCSR-Templates.md)
 
