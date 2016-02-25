@@ -1,6 +1,6 @@
 # iCSR.js 5 minute quickstart
 
-### Easy CSR development with Cisar Chrome extension
+## 1. Easy CSR development with Cisar Chrome extension
 
 The free [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) (by [Adrey Markeev](http://sharepoint.stackexchange.com/users/1430/andrey-markeev)) makes creating CSR files and JSlink connections a breeze.
 
@@ -27,32 +27,30 @@ Cisar writes files to the ``~sitecollection/Style Library``, So you need **Write
 No Save, No reload required
 **now that is cool Live coding** (*eat your heart out Visual Studio*)
 
+## 2. Use the JSLink Manager Bookmarklet
 
-## Using the iCSR.js library in your CSR file
+It makes managing JSLink connections on WebParts and Views easy
 
-The iCSR.js library must be loaded **before** your CSR code.
+* http://icsr.github.io/JSLinkManager.html
+
+## 3. Use the iCSR.js library in your CSR file
+
+Use the [JSLink Manager](http://icsr.github.io/JSLinkManager.html) so the iCSR library loads **before** your CSR code
+
+#### Example CSR code
 
 Replace the code Cisar created with the (slightly modified) code:
 
-    function executeCSR() {//function gets called AFTER the iCSR library is loaded
-      SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function() {//make sure clienttemplates is loaded
-        function init() {
-          iCSR.traceon(1,1);//tracelevel,clear console
-          var overrides=iCSR.overrides();//default overrides for default Task list fields
-          //overrides.Templates.Fields.DueDate.View=iCSR.Planner;
-
-          SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
-
-        };//init
-        RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens("~siteCollection/Style Library/csr_test.js"), init);
-        init();
-      });//SPClientTemplates
-    };//executeCSR
-    SP.SOD.registerSod("iCSR", 'https://365csi.nl/icsr/icsr.js');//register external library as iCSR
-    SP.SOD.executeFunc("iCSR", null, executeCSR );//load the iCSR library
-    if (typeof iCSR !== 'undefined') executeCSR();//line is required to keep Cisar doing live edits, can be omitted in production
-
-
-## cool?
-
-You can play with the ``//commented`` lines to quickly see what iCSR.js does
+```javascript
+  SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function() {
+    function init() {
+      iCSR.traceon(1,1);//tracelevel,clear console
+      var overrides=iCSR.overrides();//default overrides for default Task list fields
+      overrides.Templates.Fields.DueDate.View=iCSR.Me;
+      SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
+    };//init
+    var csrfile="~siteCollection/Style Library/csr_test.js";
+    RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens(csrfile), init);
+    init();
+  });//SPClientTemplates
+```
