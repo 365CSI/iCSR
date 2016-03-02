@@ -54,3 +54,7 @@ Replace the code Cisar created with the (slightly modified) code:
     init();
   });//SPClientTemplates
 ```
+## CSR resources
+
+* http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views
+* http://sharepoint.stackexchange.com/questions/73654/client-side-rendering-js-link-documentation
