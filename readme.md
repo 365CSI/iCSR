@@ -154,12 +154,17 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
     * enhanced [token] replace functionality
     * Progressbar now has a reset to 0 on mouseover
 * 1.3 / 1.4 - had so much fun with new functionality I never pushed them
-* 1.5 - wednesday february 10th
+* 1.5 - february 10th
     * major color enhancements
     * added ``rowcolor`` and ``cellcolor`` options
     * with automatic calculation of contrasting text-colors
     * added more inspectors (type **ic** in developer-console)
-
+* 1.9 - march 4th
+    * Planner Template matching the new Microsoft Planner
+    * bugfixes
+    * under the hood optimizations
+    * added [JSLinkManager](http://icsr.github.ion/JSLinkManager) as seperate Bookmarklet
+    * icColors inspector in console
 ----------
 
 Amsterdam, february 2016
@@ -167,3 +172,12 @@ Amsterdam, february 2016
 :email: [Danny Engelman](mailto:danny@engelman.nl)
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
+
+## More CSR /JSLink blogs
+
+* Andrei Markeev
+    * (aug 2014) - [Client Side Rendering: List Views](http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views)
+    * (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms)
+* Tobias zimmergren
+    * (dec 2012) - [SP 2013: Using the JSLink property to change the way your field or views are rendered in SharePoint 2013](https://zimmergren.net/sp-2013-using-the-spfield-jslink-property-to-change-the-way-your-field-is-rendered-in-sharepoint-2013)
+    * (dec 2012) - [SP 2013: Measuring performance on the JSLink property in SharePoint 2013](https://zimmergren.net/sp-2013-measuring-performance-on-the-jslink-property-in-sharepoint-2013)
