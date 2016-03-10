@@ -165,6 +165,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
     * under the hood optimizations
     * added [JSLinkManager](http://icsr.github.ion/JSLinkManager) as seperate Bookmarklet
     * icColors inspector in console
+
 ----------
 
 Amsterdam, february 2016
@@ -178,6 +179,23 @@ Amsterdam, february 2016
 * Andrei Markeev
     * (aug 2014) - [Client Side Rendering: List Views](http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views)
     * (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms)
+
 * Tobias zimmergren
     * (dec 2012) - [SP 2013: Using the JSLink property to change the way your field or views are rendered in SharePoint 2013](https://zimmergren.net/sp-2013-using-the-spfield-jslink-property-to-change-the-way-your-field-is-rendered-in-sharepoint-2013)
     * (dec 2012) - [SP 2013: Measuring performance on the JSLink property in SharePoint 2013](https://zimmergren.net/sp-2013-measuring-performance-on-the-jslink-property-in-sharepoint-2013)
+
+* Anton Vishnyakov
+    * (jul 2013) - [5 facts about JSLink you might not know](http://sharepoint-community.net/profiles/blogs/5-facts-about-jslink-in-sharepoint-2013-you-might-not-know)
+
+## Support Tools
+
+* BookMarklet [iCSR Link Manager](https://icsr.github.io/JSLinkManager.html)
+update JSLink settings on WebParts & Views, deploy JS files to Style Library
+
+* (Chrome Browser Extension) [Cisar](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
+Edit CSR files with Live Updating
+
+* (Chrome Browser Extension) [Chrome SP Editor](https://chrome.google.com/webstore/detail/chrome-sp-editor/ecblfcmjnbbgaojblcpmjoamegpbodhd/related?hl=en)
+Edit SharePoint files, add ScriptLinks to SiteCollection/Webs, manage Web Property Bag
+
+* ASPX Page [UserCustomActions](https://github.com/johnnliu/UserCustomActionsConfigPage)
