@@ -165,6 +165,10 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
     * under the hood optimizations
     * added [JSLinkManager](http://icsr.github.ion/JSLinkManager) as seperate Bookmarklet
     * icColors inspector in console
+* 1.9.9 - march 18th
+    * Performance enhancments
+    * Xhr module
+    * 2.0 preparation
 
 ----------
 
@@ -176,16 +180,28 @@ Amsterdam, february 2016
 
 ## More CSR /JSLink blogs
 
-* Andrei Markeev
-    * (aug 2014) - [Client Side Rendering: List Views](http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views)
-    * (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms)
+* (aug 2014) - [Client Side Rendering: List Views](http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views) - Andrei Markeev
 
-* Tobias zimmergren
-    * (dec 2012) - [SP 2013: Using the JSLink property to change the way your field or views are rendered in SharePoint 2013](https://zimmergren.net/sp-2013-using-the-spfield-jslink-property-to-change-the-way-your-field-is-rendered-in-sharepoint-2013)
-    * (dec 2012) - [SP 2013: Measuring performance on the JSLink property in SharePoint 2013](https://zimmergren.net/sp-2013-measuring-performance-on-the-jslink-property-in-sharepoint-2013)
+* (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms) - Andrei Markeev
 
-* Anton Vishnyakov
-    * (jul 2013) - [5 facts about JSLink you might not know](http://sharepoint-community.net/profiles/blogs/5-facts-about-jslink-in-sharepoint-2013-you-might-not-know)
+* (dec 2012) - [SP 2013: Using the JSLink property to change the way your field or views are rendered in SharePoint 2013](https://zimmergren.net/sp-2013-using-the-spfield-jslink-property-to-change-the-way-your-field-is-rendered-in-sharepoint-2013) - Tobias Zimmergren
+
+* (dec 2012) - [SP 2013: Measuring performance on the JSLink property in SharePoint 2013](https://zimmergren.net/sp-2013-measuring-performance-on-the-jslink-property-in-sharepoint-2013) - Tobias Zimmergren
+
+* (jul 2013) - [5 facts about JSLink you might not know](http://sharepoint-community.net/profiles/blogs/5-facts-about-jslink-in-sharepoint-2013-you-might-not-know) - Anton Vishnyakov
+
+* (may 2015) - [CSS registration & ScriptLink done the right way](http://yakovenkomax.com/cssregistration-and-scriptlink-done-the-right-way/) - Max Yokavenko
+
+##### SOD - Script On Demand
+
+* (feb 2013) - [SP-SOD How to use correctly](http://sharepoint.stackexchange.com/questions/58503/sp-sod-how-to-use-correctly) - Hugh Wood
+
+##### MDS - Minimal Download Strategy
+
+* (sep 2013) - [Minimal Download Strategy overview](https://msdn.microsoft.com/en-us/library/office/dn456544(v=office.15).aspx) - MSDN
+
+* (oct  2013) - [The correct way to execute JavaScript](http://www.wictorwilen.se/Tags/MDS) - Wictor Wilén
+* (aug 2012) - [Introduction to MDS](http://www.wictorwilen.se/sharepoint-2013---introduction-to-the-minimal-download-strategy-mds) - Wictor Wilén
 
 ## Support Tools
 
