@@ -184,6 +184,10 @@ Amsterdam, february 2016
 
 * (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms) - Andrei Markeev
 
+* (jan 2016) - [CSR overrides in detail](http://josharepoint.com/2016/01/14/sharepoint-2013-client-side-rendering-register-templates-overrides-in-detail/) - José Quinto
+
+* (aug 2013) - [JSLink and Display Templates](http://www.martinhatch.com/2013/08/jslink-and-display-templates-part-1.html) -Martin Hatch
+
 * (dec 2012) - [SP 2013: Using the JSLink property to change the way your field or views are rendered in SharePoint 2013](https://zimmergren.net/sp-2013-using-the-spfield-jslink-property-to-change-the-way-your-field-is-rendered-in-sharepoint-2013) - Tobias Zimmergren
 
 * (dec 2012) - [SP 2013: Measuring performance on the JSLink property in SharePoint 2013](https://zimmergren.net/sp-2013-measuring-performance-on-the-jslink-property-in-sharepoint-2013) - Tobias Zimmergren
@@ -202,6 +206,10 @@ Amsterdam, february 2016
 
 * (oct  2013) - [The correct way to execute JavaScript](http://www.wictorwilen.se/Tags/MDS) - Wictor Wilén
 * (aug 2012) - [Introduction to MDS](http://www.wictorwilen.se/sharepoint-2013---introduction-to-the-minimal-download-strategy-mds) - Wictor Wilén
+
+##### JavaScript
+
+* (mar 2016) - [You don't know JS about SharePoint mastering JS Performance](http://www.slideshare.net/Rencore/you-dont-know-js-about-sharepoint-mastering-javascript-performance-hugh-wood) - Hugh Wood
 
 ## Support Tools
 

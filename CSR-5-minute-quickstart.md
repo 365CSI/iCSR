@@ -50,11 +50,36 @@ Replace the code Cisar created with the (slightly modified) code:
       SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
     };//init
     var csrfile="~siteCollection/Style Library/csr_test.js";
-    RegisterModuleInit(SPClientTemplates.Utility.ReplaceUrlTokens(csrfile), init);
+    RegisterModuleInit(SPClientRenderer.ReplaceUrlTokens(csrfile), init);
     init();
   });//SPClientTemplates
 ```
-## CSR resources
+# More CSR Templates
 
-* http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views
-* http://sharepoint.stackexchange.com/questions/73654/client-side-rendering-js-link-documentation
+    SP.SOD.executeFunc("clienttemplates.js", "SPClientTemplates", function () {
+      iCSR.traceon(1);
+        function init() {
+            var overrides = {Templates: {Fields: {}}};
+            var Fields = overrides.Templates.Fields;
+            Fields.DueDate = {
+                View: iCSR.Me
+            };
+            Fields.PercentComplete = {
+                View: iCSR.Me
+            };
+            Fields.Priority = {
+                View: iCSR.Me
+            };
+            Fields.Status = {
+                View: iCSR.Me
+            };
+            SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrides);
+        }
+        var csrfile = "~siteCollection/Style Library/csr_demo.js";
+        if (console) console.info(csrfile);
+        csrfile=SPClientRenderer.ReplaceUrlTokens(csrfile);
+        RegisterModuleInit(csrfile, init);
+        init();
+    });
+
+
