@@ -199,7 +199,7 @@ Amsterdam, february 2016
 
 ## Support Tools
 
-* BookMarklet [iCSR Link Manager](https://icsr.github.io/JSLinkManager.html)
+* BookMarklet [iCSR Link Manager](https://365csi.nl/icsr/linkmanager.html)
 update JSLink settings on WebParts & Views, deploy JS files to Style Library
 
 * (Chrome Browser Extension) [Cisar](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
