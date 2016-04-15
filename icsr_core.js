@@ -22,6 +22,7 @@
  * - I am sorry, I could NOT find any use for jQuery
  *
  */
+
 /*global iCSR*/
 
 /*global document,window,navigator,setTimeout,event,console*/

@@ -1,4 +1,4 @@
-//region iCSR ---use CTRL +- in IDE to collapse regions-------------------------------------------- ### iCSR.header
+//region iCSR ---use CTRL +- in IDE to collapse regions---------------------------------------- ### iCSR.header
 /*********************************************************************************************************************************
  * icsr.js - Office365/SharePoint (CSR) Client Side Rendering JavaScript programming framework/support library
  *
@@ -22,6 +22,7 @@
  * - I am sorry, I could NOT find any use for jQuery
  *
  */
+
 /*global iCSR*/
 
 /*global document,window,navigator,setTimeout,event,console*/
@@ -29,7 +30,7 @@
 /*global Type,SP,SPClientTemplates,SPClientRenderer,_spPageContextInfo,PreventDefaultNavigation*/
 /*global ClientPivotControl,RenderHeaderTemplate,RegisterModuleInit,RegisterBeginEndFunctions,asyncDeltaManager*/
 /*global GenerateIIDForListItem, GetAncestor, AJAXRefreshView,ctx,GenerateIID,GetDaysAfterToday,_spYield,_v_dictSod,browseris*/
-//endregion iCSR.header --------------------------------------------------------------------------- ### iCSR.header
+//endregion iCSR.header ----------------------------------------------------------------------- ### iCSR.header
 
 Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
 (function (_window, document, iCSR) {
@@ -40,7 +41,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
     /* tracelevel in console, the higher the more output  */
     //console.groupCollapsed = console.group; /* uncomment for one long trace in console */
     var edittoken = '$edit';
-//region Global overrides ------------------------------------------------------------------------- ### Global Functions
+//region Global overrides --------------------------------------------------------------------- ### Global Functions
     function $isString(source) {
         return typeof source === 'string';
     }
@@ -140,7 +141,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
 
         if (groupedConsole) console.info('%cCreate Template: ' + templateIDname, iCSRcolors);
         iCSR[templateIDname] = function (ctx, CurrentFieldSchema, CurrentItem) {//, CurrentItem, ListSchema                        // create a named function in the global iCSR object
-//region CreateTemplate function ------------------------------------------------------------------ ### CreateTemplate function
+//region CreateTemplate function -------------------------------------------------------------- ### CreateTemplate function
             if (!$has(ctx, 'wpq')) {        // is this ctx the SharePoint ctx object?
                 if (groupedConsole) console.info('Template ', templateIDname, ' called from CSR Template definition with (optional) {} configuration');
                 /* Template function was called from CSR Template as Function **declaration** */
@@ -153,8 +154,8 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
                     console.groupCollapsed('%ciCSR.' + templateIDname, iCSRcolors);
                     console.info('configuration:', templateconfig);
                 }
-//region CreateTemplate function ------------------------------------------------------------------ ### CreateTemplate function INIT
-//region CreateTemplate function ------------------------------------------------------------------ ### CreateTemplate function config
+//region CreateTemplate function -------------------------------------------------------------- ### CreateTemplate function INIT
+//region CreateTemplate function -------------------------------------------------------------- ### CreateTemplate function config
                 // all var declarations at top for better minification
                 var element;
                 var config = {};
@@ -201,7 +202,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
                         config[edittoken] = 0;
                     }
                 });
-//endregion ---------------------------------------------------------------------------------------- ### CreateTempate function config
+//endregion ------------------------------------------------------------------------------------ ### CreateTempate function config
                 // ******** edge cases when iCSR is not applied
                 //ListSchema.Field.AllowGridEditing = false;//todo does this do anything?
                 //todo allow iCSR in groupheaders
@@ -215,8 +216,8 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
                 /* ==> attach methods so EACH Template ITEM function executes with its own config scope */
                 config.$replace = $replacetokens.bind(config);
 
-//endregion ---------------------------------------------------------------------------------------- ### CreateTempate function INIT
-//region CreateTemplate function ------------------------------------------------------------------ ### CreateTemplate function PRE PROCES
+//endregion ------------------------------------------------------------------------------------ ### CreateTempate function INIT
+//region CreateTemplate function -------------------------------------------------------------- ### CreateTemplate function PRE PROCES
                 if (groupedConsole) console.groupCollapsed('%cprocessing colors and styles', iCSRcolors, config);
 
                 if(!config.colors) config.colors="msRed|,|msYellow|,|msBlue|,|msGreen";
@@ -261,7 +262,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
                     }
                 });
                 if (groupedConsole) console.groupEnd();//processing colors and styles
-//endregion ---------------------------------------------------------------------------------------- ### CreateTempate function PRE Process
+//endregion ------------------------------------------------------------------------------------ ### CreateTempate function PRE Process
                 if (groupedConsole) console.groupCollapsed('%cProcessing (user) defined Template', iCSRcolors, templateIDname, config.id);
 
                 /* ==> execute the actual template function with config as 'this' scope and ctx as first parameter */
@@ -269,7 +270,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
                 /* ==> the Function does NOT have a return value, all data is on the config object and now processed */
 
                 if (groupedConsole) console.groupEnd();
-//region CreateTemplate function ------------------------------------------------------------------ ### CreateTemplate function POST Process
+//region CreateTemplate function -------------------------------------------------------------- ### CreateTemplate function POST Process
                 if (groupedConsole) console.info('%cpost-processor', iCSRcolors);
 
                 /* after the (user) template the config is post-processed */
@@ -292,12 +293,12 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
 
                 if (groupedConsole) console.groupEnd();//last replace .output
                 if (groupedConsole) console.groupEnd();
-//endregion ---------------------------------------------------------------------------------------- ### CreateTempate function POST Process
+//endregion ------------------------------------------------------------------------------------ ### CreateTempate function POST Process
                 /* return the HTML back to SharePoint CSR calling code */
                 return config.output;
 
             }//if ($has(ctx, 'wpq'))
-//endregion ---------------------------------------------------------------------------------------- ### CreateTempate function
+//endregion ------------------------------------------------------------------------------------ ### CreateTempate function
         };//end iCSR[templateIDname] function
 
         console.log((function () {        // EXCLUDE code from minified version
@@ -425,7 +426,7 @@ Type.registerNamespace('iCSR'); // MUST register it the SharePoint way
             if (groupedConsole) console.groupEnd();
         });
     };
-//endregion ---------------------------------------------------------------------------------------- ### iCSR.View
+//endregion ------------------------------------------------------------------------------------ ### iCSR.View
 
     console.group('%c iCSR.js - ' + iCSRversion + ' ', 'background:#005AA9;color:#FCD500;font-weight:bold;font-size:14px;');
     if (!groupedConsole) {
