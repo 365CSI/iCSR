@@ -1,7 +1,8 @@
+#### icsr.js  =  core + templates
 
-* [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
+### Watch the new [this is iCSR slidedeck](http://viewmaster365.com/intro)
 
-### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) A framework/support library for writing **less** JavaScript code
+### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) JavaScript framework for writing **less** JavaScript code
 
 ##### Customized Views like:
 
