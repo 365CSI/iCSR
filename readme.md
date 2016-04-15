@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/365CSI/iCSR.png?label=ready&title=Ready)](https://waffle.io/365CSI/iCSR)
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
@@ -11,56 +10,37 @@
 ##### Can be created with one **iCSR.Me** statement:
 
 ```javascript
-            SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
-            Templates: {
+            iCSR.Me({
                 Fields: {
                   "Priority":{
-                    View : iCSR.Me  // <-- one iCSR statement in standard SharePoint CSR code
-                  }
-            }}});
+                    View : iCSR.Priority
+           }});
 ```
+
 ##### or customized further with:
 
 ```javascript
-            View : iCSR.Me({
+            iCSR.Me({
+                Fields: {
+                  "Priority":{
+                    View : iCSR.Priority({
                             colors: ['red','yellow','green'],
-                            style : '<span>[svgcircle(20)]</span>'
+                            output : '<span>[svgcircle(20)]</span>'
                         })
+           }}});
 ```
 
 ![](http://i.imgur.com/pOMU6YW.jpg)  
 
-##### On a default Task list just one line:
+##### Default iCSR templates 'DueDate' , 'PercentComplete' , 'Priority' & 'Status'
 
-```javascript
-          var overrides = iCSR.overrides();
-          SPClientTemplates.TemplateManager.RegisterTemplateOverrides( overrides );
-```
-
-##### will produce:
-
-*all iCSR templates can be cofigured as per above example*
+##### can customize the whole View
 
 ![](http://i.imgur.com/oxedw2u.jpg)
 
-##### *{Haven't had time yet for a 5 minute video}*
-
-## Project goal: make CSR development as easy as possible
-
-For the full story see: [Why I wrote iCSR.js](iCSR-why-it-was-developed.md)
-
-![](https://365csi.nl/icsr/ipcountlogo/index.php) ![](http://365csi.nl/icsr/images/iCSR_123.png)
-
-In short:
-
-* Help people get started with CSR development in 5 minutes  
-(including installing the [**Cisar Chrome extension**](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) *developed by Andrei Markeev*)
-* Let people learn more JavaScript development by disecting the [iCSR.js](./icsr.js) source code.
-* No dependencies at all on jQuery, Angular, Bootstrap or **any** other .JS and .CSS files
-
 ## ![](http://th.downloadblog.it/h57RNZTWa_IIoH3Y9fs71eZKLwI=/64x64/http://media.downloadblog.it/e/e64/steve-jobs-apple.jpg) oh.. and one more thing.. ehm.. line of code..
 
-        iCSR.Interactive = true; // which is the default setting
+        iCSR.edit = true; // which is the default setting
 
 ##### Makes fields fully interactive in Views... who needs Forms?
 
@@ -101,7 +81,7 @@ The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/
                                     if (this.Item.Status === 'Completed') this.color = '[msGreen]';
                                 },
                                     {
-                                        rowcolor:true
+                                        colortag:'TR'
                                     }
 	);
 ```
@@ -170,6 +150,12 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
     * Performance enhancments
     * Xhr module
     * 2.0 preparation
+* 2.0 - april 10th - complete rewrite
+    * token separators are now || instead of []
+    * split into Core and Templates files
+    * the minified Core is 3 KB
+* 2.1 - april 15th
+    * internal code changes to deal with Microsofts New Library View in the future
 
 ----------
 
@@ -214,7 +200,7 @@ Amsterdam, february 2016
 
 ## Support Tools
 
-* BookMarklet [iCSR Link Manager](https://icsr.github.io/JSLinkManager.html)
+* BookMarklet [iCSR Link Manager](https://365csi.nl/icsr/linkmanager.html)
 update JSLink settings on WebParts & Views, deploy JS files to Style Library
 
 * (Chrome Browser Extension) [Cisar](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en)
