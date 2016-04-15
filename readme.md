@@ -154,7 +154,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
     * token separators are now || instead of []
     * split into Core and Templates files
     * the minified Core is 3 KB
-* 2.1 - april 10
+* 2.1 - april 15th
     * internal code changes to deal with Microsofts New Library View in the future
 
 ----------
