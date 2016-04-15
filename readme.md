@@ -128,6 +128,7 @@ iCSR has multiple (configurable) levels of console.log traces that can be activa
 
 ## Version History
 
+
 * 1.0 - public release february 1st 2016
 * 1.1 - not made public
 * 1.2 - friday february 5th
