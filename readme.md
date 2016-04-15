@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/365CSI/iCSR.png?label=ready&title=Ready)](https://waffle.io/365CSI/iCSR)
 
 * [Fork this code](https://github.com/365SI/iCSR#fork-destination-box) for learning and contribution purposes, I am open for **all** suggestions.
 
