@@ -1,6 +1,8 @@
 #### icsr.js  =  core + templates
 
-### Watch the new [this is iCSR slidedeck](http://viewmaster365.com/intro)
+* #### Watch the new [this is iCSR slidedeck](http://viewmaster365.com/intro)
+* #### Install the [Cisar Chrome Browser extension](http://viewmaster365.com/cisar) (by Andrei Markeev)
+* #### Install the [LinkManager Bookmarklet](http://viewmaster365.com/linkmanager)
 
 ### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) JavaScript framework for writing **less** JavaScript code
 
