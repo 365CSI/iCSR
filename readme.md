@@ -1,6 +1,6 @@
 #### icsr.js  =  core + templates
 
-#### Watch the slidedeck [This is iCSR](http://365CSI.nl/intro)
+## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
 #### Install the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
 #### Install the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
 
