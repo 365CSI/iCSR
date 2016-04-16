@@ -1,6 +1,6 @@
 #### icsr.js  =  core + templates
 
-#### Watch the slidedeck [this is iCSR](http://viewmaster365.com/intro)
+#### Watch the slidedeck [This is iCSR](http://viewmaster365.com/intro)
 #### Install the [Cisar Chrome Browser extension](http://viewmaster365.com/cisar) (by Andrei Markeev)
 #### Install the [LinkManager Bookmarklet](http://viewmaster365.com/linkmanager)
 
