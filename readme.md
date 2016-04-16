@@ -53,7 +53,7 @@
 
 1. ##### Install and learn to use the [Cisar Chrome extension](https://chrome.google.com/webstore/detail/cisar/nifbdojdggkboiifaklkamfpjcmgafpo?hl=en) (*developed by Andrei Markeev*)
 
-2. ##### Add [iCSR.js](./icsr.js) to your Site Collection Style Library  (*or reference the demo library for a quick start*)
+2. ##### Use the [LinkManager Bookmarklet](https://365csi.nl/icsr/linkmanager.html) to add [iCSR.js](./icsr.js) to your Site Collection Style Library
 
 3. ##### Use the [iCSR-Templates](iCSR-Templates.md)
 
