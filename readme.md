@@ -1,8 +1,8 @@
-#### icsr.js  =  core + templates
+#### icsr.js  =  core (3 KB) + templates (6 KB)
 
 ## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
-#### Install the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
-#### Install the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
+#### Manage iCSR and CSR files with the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
+#### for Live in-Browser editting of CSR files use the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
 
 ### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) JavaScript framework for writing **less** Client Side Rendering code
 
@@ -194,6 +194,8 @@ Amsterdam, february 2016
 ##### MDS - Minimal Download Strategy
 
 * (sep 2013) - [Minimal Download Strategy overview](https://msdn.microsoft.com/en-us/library/office/dn456544(v=office.15).aspx) - MSDN
+
+* (apr 2015) - [Using MDS with SP2013 Apps](https://www.itunity.com/article/minimal-download-strategy-sharepoint-2013-apps-1481) Scot Hillier
 
 * (oct  2013) - [The correct way to execute JavaScript](http://www.wictorwilen.se/Tags/MDS) - Wictor Wilén
 * (aug 2012) - [Introduction to MDS](http://www.wictorwilen.se/sharepoint-2013---introduction-to-the-minimal-download-strategy-mds) - Wictor Wilén
