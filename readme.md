@@ -1,8 +1,12 @@
 #### icsr.js  =  core (3 KB) + templates (6 KB)
 
 ## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
-#### Manage iCSR and CSR files with the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
-#### for Live in-Browser editting of CSR files use the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
+
+#### We are working on the june 2016 release... 3 click deployment.. and.. support for the New Library View
+
+## Getting started
+##### Manage iCSR and CSR files with the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
+##### for Live in-Browser editting of CSR files use the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
 
 ### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) JavaScript framework for writing **less** Client Side Rendering code
 
