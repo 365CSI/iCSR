@@ -171,6 +171,8 @@ Amsterdam, february 2016
 
 ## More CSR /JSLink blogs
 
+* (dec 2015) - [Pitfalls using CSR/JSLink](https://www.scnsoft.com/blog/pitfalls-of-using-jslink-with-sharepoint-apps-for-office-store)
+
 * (aug 2014) - [Client Side Rendering: List Views](http://www.codeproject.com/Articles/620110/SharePoint-Client-Side-Rendering-List-Views) - Andrei Markeev
 
 * (aug 2014) - [Client Side Rendering: List Forms](http://www.codeproject.com/Articles/610259/SharePoint-Client-Side-Rendering-List-Forms) - Andrei Markeev
