@@ -173,7 +173,7 @@ Amsterdam, february 2016
 
 ![](http://i.imgur.com/TKbGDpS.jpg)
 
-## More CSR /JSLink blogs
+## More CSR / JSLink blogs
 
 * (dec 2015) - [Pitfalls using CSR/JSLink](https://www.scnsoft.com/blog/pitfalls-of-using-jslink-with-sharepoint-apps-for-office-store)
 
@@ -193,22 +193,38 @@ Amsterdam, february 2016
 
 * (may 2015) - [CSS registration & ScriptLink done the right way](http://yakovenkomax.com/cssregistration-and-scriptlink-done-the-right-way/) - Max Yokavenko
 
+## More Display Templates blogs
+
+* (jan 2015) - [10 Display Templates Tricks](http://www.eliostruyf.com/10-sharepoint-display-template-tips-tricks/) - Elio Struyjf
+
+##### Microsoft documentation
+
+* [MSDN - Design Manager & Display Templates](https://msdn.microsoft.com/en-us/library/office/jj945138.aspx)
+* https://technet.microsoft.com/en-us/library/jj944947.aspx
+
 ##### SOD - Script On Demand
 
 * (feb 2013) - [SP-SOD How to use correctly](http://sharepoint.stackexchange.com/questions/58503/sp-sod-how-to-use-correctly) - Hugh Wood
 
 ##### MDS - Minimal Download Strategy
 
+* (dec 2015) - [CSR and MDS: 4 Steps to get the Best from both Worlds]()https://mariagraziamerlo.com/tag/client-side-rendering/)
 * (sep 2013) - [Minimal Download Strategy overview](https://msdn.microsoft.com/en-us/library/office/dn456544(v=office.15).aspx) - MSDN
-
 * (apr 2015) - [Using MDS with SP2013 Apps](https://www.itunity.com/article/minimal-download-strategy-sharepoint-2013-apps-1481) Scot Hillier
-
-* (oct  2013) - [The correct way to execute JavaScript](http://www.wictorwilen.se/Tags/MDS) - Wictor Wilén
+* (oct 2013) - [The correct way to execute JavaScript](http://www.wictorwilen.se/Tags/MDS) - Wictor Wilén
 * (aug 2012) - [Introduction to MDS](http://www.wictorwilen.se/sharepoint-2013---introduction-to-the-minimal-download-strategy-mds) - Wictor Wilén
+
+##### REST - JSON, PnP, Search API, Office Graph
+
+* (sep 2015) - [MSDN - SharePoint Search REST API overview](https://msdn.microsoft.com/en-us/library/office/jj163876.aspx)
+* (apr 2016) - [MSDN - OData query operations in SharePoint REST requests](https://msdn.microsoft.com/en-us/library/office/fp142385.aspx)
+* (may 2016) - [Making your REST calls simplete (verbose,nometadata)](http://sympmarc.com/2016/05/02/making-your-rest-calls-simpler-by-changing-the-metadata-setting/) - Marc Anderson
 
 ##### JavaScript
 
 * (mar 2016) - [You don't know JS about SharePoint mastering JS Performance](http://www.slideshare.net/Rencore/you-dont-know-js-about-sharepoint-mastering-javascript-performance-hugh-wood) - Hugh Wood
+* (dec 2009) - [Rendering: repaint, reflow/relayout, restyle](http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/)
+* (jun 2013) - [Is it time to drop jQuery? Essentials to learning JavaScript from a jQuery background](https://toddmotto.com/is-it-time-to-drop-jquery-essentials-to-learning-javascript-from-a-jquery-background/)
 
 ## Support Tools
 
@@ -222,3 +238,7 @@ Edit CSR files with Live Updating
 Edit SharePoint files, add ScriptLinks to SiteCollection/Webs, manage Web Property Bag
 
 * ASPX Page [UserCustomActions](https://github.com/johnnliu/UserCustomActionsConfigPage)
+
+### Environment changes for working with CSR & Display Templates
+
+* Change Style Library to list recent files first, list all files, (optional): show all items without folders to show recent files at the top
