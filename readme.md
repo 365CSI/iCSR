@@ -1,6 +1,12 @@
-#### icsr.js  =  Core (3 KB)  +  Templates (Priority, PercentComplete, Status, Date) (6 KB) 
+#### icsr.js  =  Core  +  Templates (Priority, PercentComplete, Status, Date)
 
-## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
+The minified version **icsr.min.js** is under 10 KB
+
+## Prerequisites 
+
+* Basic understanding of JavaScript
+* Basic understanding of SharePoint CSR (Client Side Rendering)
+* **Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)**
 
 ## Getting started
 
