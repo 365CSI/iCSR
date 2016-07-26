@@ -1,12 +1,16 @@
-#### icsr.js  =  core (3 KB) + templates (6 KB)
+#### icsr.js  =  Core (3 KB)  +  Templates (Priority, PercentComplete, Status, Date) (6 KB) 
 
 ## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
 
-#### We are working on the june 2016 release... 3 click deployment.. and.. support for the New Library View
 
 ## Getting started
-##### Manage iCSR and CSR files with the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
-##### for Live in-Browser editting of CSR files use the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
+
+* Use the [ViewMaster365.com](http://ViewMaster365.com) Bookmarklet to apply iCSR to an existing Tasklist in **10 seconds**
+
+### Developing with iCSR and creating your own CSR code
+
+* Manage iCSR and CSR files with the [LinkManager Bookmarklet](http://365CSI.nl/linkmanager)
+* for Live in-Browser editting of CSR files use the [Cisar Chrome Browser extension](http://365CSI.nl/cisar) (by Andrei Markeev)
 
 ### ![](https://365csi.nl/icsr/ipcountlogo/index.php?1) JavaScript framework for writing **less** Client Side Rendering code
 
@@ -216,15 +220,21 @@ Amsterdam, february 2016
 
 ##### REST - JSON, PnP, Search API, Office Graph
 
+* (oct 2013) - [MSDN - Get to know the SharePoint 2013 REST service](https://msdn.microsoft.com/en-us/library/office/fp142380.aspx)
 * (sep 2015) - [MSDN - SharePoint Search REST API overview](https://msdn.microsoft.com/en-us/library/office/jj163876.aspx)
 * (apr 2016) - [MSDN - OData query operations in SharePoint REST requests](https://msdn.microsoft.com/en-us/library/office/fp142385.aspx)
 * (may 2016) - [Making your REST calls simplete (verbose,nometadata)](http://sympmarc.com/2016/05/02/making-your-rest-calls-simpler-by-changing-the-metadata-setting/) - Marc Anderson
 
-##### JavaScript
+##### JavaScript, HTML, CSS
 
 * (mar 2016) - [You don't know JS about SharePoint mastering JS Performance](http://www.slideshare.net/Rencore/you-dont-know-js-about-sharepoint-mastering-javascript-performance-hugh-wood) - Hugh Wood
 * (dec 2009) - [Rendering: repaint, reflow/relayout, restyle](http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/)
 * (jun 2013) - [Is it time to drop jQuery? Essentials to learning JavaScript from a jQuery background](https://toddmotto.com/is-it-time-to-drop-jquery-essentials-to-learning-javascript-from-a-jquery-background/)
+* () - [CSS Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors)
+
+##### JavaScript Developer tools
+
+* [Meet the Microsoft F12 Developer tools](https://developer.microsoft.com/en-us/microsoft-edge/platform/documentation/f12-devtools-guide/)
 
 ## Support Tools
 
