@@ -62,8 +62,8 @@
 
 2. ##### Use the [LinkManager Bookmarklet](https://365csi.nl/icsr/linkmanager.html) to add [iCSR.js](./icsr.js) to your Site Collection Style Library
 
-3. ##### Use the [iCSR-Templates](iCSR-Templates.md)
-
+3. ##### Use the default iCSR Templates (included in icsr.js)
+4. 
 4. ##### Or create your own Template:
 
 The new [Office365 Microsoft Planner](http://www.learningsharepoint.com/2016/01/27/10-things-to-know-about-office-365-planner/) breaks Tasks in 4 States:
