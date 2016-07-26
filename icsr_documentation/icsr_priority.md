@@ -1,1 +1,3 @@
-![](icsr_priority.png)
+![](./icsr_priority.png)
+
+Priority

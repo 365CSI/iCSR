@@ -2,7 +2,6 @@
 
 ## Watch the slidedeck: [This is iCSR](http://365CSI.nl/intro)
 
-
 ## Getting started
 
 * Use the [ViewMaster365.com](http://ViewMaster365.com) Bookmarklet to apply iCSR to an existing Tasklist in **10 seconds**
