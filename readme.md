@@ -1,3 +1,8 @@
+### Be Aware!!
+
+* Summer 2017 Microsoft discontinued their own CSR technology in SharePoint Online "Modern Experiences"
+* Below CSR code does work in SPOnline "Classic Experiences"
+
 #### icsr.js  =  Core  +  Templates (Priority, PercentComplete, Status, Date)
 
 The minified version **icsr.min.js** is under 10 KB
